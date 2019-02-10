@@ -138,7 +138,7 @@ class Ldap {
 	// authentication public
 	public function ldap_bind_as($user,$user_passwd){
 		$this->write_log("[function]> ldap_bind_as");
-		$this->write_log("[ldap_bind_as]> ".$user.",".$user_passwd);
+		$this->write_log("[ldap_bind_as]> ".$user);
 		
 		if($this->make_ldap_bind_as($this->cnx,$user,$user_passwd)){
 			$this->write_log("[ldap_bind_as]> Bind was successfull");
@@ -150,7 +150,7 @@ class Ldap {
 	// authentication private
 	private function make_ldap_bind_as($conn,$user,$user_passwd){
 		$this->write_log("[function]> make_ldap_bind_as");
-		$this->write_log("[make_ldap_bind_as]> \$conn,".$user.",".$user_passwd);
+		$this->write_log("[make_ldap_bind_as]> \$conn,".$user);
 		$bind = @ldap_bind($conn,$user,$user_passwd);
 		if($bind ){
 			return true;
