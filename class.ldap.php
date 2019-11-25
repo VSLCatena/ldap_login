@@ -240,8 +240,8 @@ class Ldap {
 			$this->write_log("[check_ldap_group_membership]> OpenLDAP Mode");
 			// Do a member search for the user (OpenLDAP)
 			$search_filter = "(&(objectclass=$group_class)($group_cn))"; 
-			$this->write_log("[check_ldap_group_membership]> @ldap_search(\$this->cnx,'$base_dn', '$search_filter','$member_attr'");
-			$search = ldap_search($this->cnx, $base_dn, $search_filter,array($member_attr),0,0,5); //search for group
+			$this->write_log("[check_ldap_group_membership]> @ldap_search(\$this->cnx,'$group_dn', '$search_filter','$member_attr'");
+			$search = ldap_search($this->cnx, $group_dn, $search_filter,array($member_attr),0,0,5); //search for group
 			if($search){
 				$entries = ldap_get_entries($this->cnx,$search); //get group
 				$this->write_log("[ldap_get_entries]>". serialize($entries));
