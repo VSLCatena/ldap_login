@@ -337,7 +337,6 @@ class Ldap {
 		$group_filter = strlen($this->config['ld_group_filter'])<1?"cn=*":$this->config['ld_group_filter'];
 		$group_dn = is_null($group_dn)?$this->config['ld_group_user']:$group_dn;
 		$group_cn = ldap_explode_dn($group_dn,1)[0];
-		$user_cn = ldap_explode_dn($user_dn,1)[0];
 		$member_attr = $this->config['ld_group_member_attr'];
 		
 
@@ -368,14 +367,14 @@ class Ldap {
 				$this->write_log("[ldap_get_entries]>". serialize($entries));
 				$memberEntries=$entries[0][strtolower($member_attr)];
 				for($i=0;$i<$memberEntries['count'];$i++){
-					$memberEntry_cn = ldap_explode_dn($memberEntries[$i],1)[0];
-					$this->write_log("[check_ldap_group_membership]> Test ".$user_cn." == ".$memberEntry_cn." ?");
-					$this->write_log("[check_ldap_group_membership]> type/len of data: [" . gettype($memberEntry_cn) . ", " . strlen($memberEntry_cn) . "], [" . gettype($user_cn) . ", " .strlen($user_cn) . "]");
-					if($memberEntry_cn === $user_login){ // Match the attribute provided from the user.
-						$this->write_log("[check_ldap_group_membership]> $member_attr $memberEntry_cn matches $user_login");
+					$memberEntry_dn = $memberEntries[$i];
+					$this->write_log("[check_ldap_group_membership]> Test ".$user_dn." == ".$memberEntry_dn." ?");
+					$this->write_log("[check_ldap_group_membership]> type/len of data: [" . gettype($memberEntry_dn) . ", " . strlen($memberEntry_dn) . "], [" . gettype($user_dn) . ", " .strlen($user_dn) . "]");
+					if($memberEntry_dn === $user_dn){ // Match the user.
+						$this->write_log("[check_ldap_group_membership]> $member_attr $memberEntry_dn matches $user_login");
 						return true;
 					}
-					unset($memberEntry_cn);
+					unset($memberEntry_dn);
 				}
 				$this->write_log("[check_ldap_group_membership]> No matches found for $user_login in ". $group_cn);
 			}
