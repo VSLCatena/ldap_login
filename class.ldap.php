@@ -487,7 +487,7 @@ class Ldap {
 			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", array('cn','dn','member','objectclass'))){
 				$entry = ldap_get_entries($con, $parentData); #get all info from query
 				if($entry['count']>0){ //only if object person / group, will alway return 1 array!
-					$obj_group['objectclass']=$entry[0]['objectclass'][0];
+					$obj_group['objectclass']=$entry[0]['objectclass'];
 					$obj_group['cn']=$entry[0]['cn'][0];
 					$obj_group['dn']=$entry[0]['dn'];
 					$obj_group['memberCount']=$entry['0']['member']['count'] ?? 0;
@@ -517,7 +517,7 @@ class Ldap {
 					}
 				
 
-					if($obj_group['objectclass']=='groupOfNames'){
+					if(in_array('groupOfNames', $obj_group['objectclass'])){
 						#modify for next round	
 						$depth+=1;
 						foreach($obj_group['member'] as $key=>$value){
