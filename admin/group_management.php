@@ -182,17 +182,36 @@ function sync_usergroups_add($active,$grouplist,$userlist){
  * @since 2.10.1 
  *
  */
+	global $page;
+	global $ldap;
 	$inserts = array();
 	foreach ($active as $k1=>$v1){ //going through each active group
-			$page['infos'][] = l10n('group "%s" synced "%s" users',$k1,count($v1));																	  
-			foreach($v1 as $k2=>$v2){ //for every user in that group
-				if($v2['objectclass']=='inetOrgPerson'){ //only if it is an user						
-					$inserts[]=array(
-					  'group_id' => $grouplist[$k1], //corresponding id
-					  'user_id' => $userlist[$v2['cn']], //corresponding id
-					  );								
-				}
+			$gid=$grouplist[$k1];
+			if ($gid === null) {
+				$ldap->write_log('Group not found, ignoring group '.$k1);
+				continue;
 			}
+			$nb_inserted=0;
+			foreach($v1 as $k2=>$v2){ //for every user in that group
+				if(! in_array('inetOrgPerson', $v2['objectclass'])){ //only if it is an user
+					$ldap->write_log('Not a user, not considering '.json_encode($v2));
+					continue;
+				}
+				$attr=$ldap->config['ld_user_attr'];
+				$ldap->write_log('attr='.json_encode($attr));
+				$uid=$userlist[$v2[$attr]] ?? null;
+				if ($uid === null) {
+					$ldap->write_log('Unknown user in piwigo (never login?), ignoring '.json_encode($v2));
+					continue;
+				}
+				#$ldap->write_log('inserting '.json_encode($v2[$attr]));
+				$nb_inserted++;
+				$inserts[]=array(
+				  'group_id' => $gid, //corresponding id
+				  'user_id' => $uid, //corresponding id
+				  );
+			}
+			$page['infos'][] = l10n('group "%s" synced "%s" users',$k1,sprintf("%s/%s",$nb_inserted,count($v1)));
 		
 	}
 	mass_inserts(

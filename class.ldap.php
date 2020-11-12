@@ -481,14 +481,18 @@ class Ldap {
 
 	public function ldap_get_groups($ld_prim_group){
 		$master = array();
-		function ldap_get_group_data($group,$con,$depth,$path,$parent) {
+		function ldap_get_group_data($group,$con,$depth,$path,$parent,$attrs) {
 			
-			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", array('cn','dn','member','objectclass'))){
+			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", $attrs)){
 				$entry = ldap_get_entries($con, $parentData); #get all info from query
 				if($entry['count']>0){ //only if object person / group, will alway return 1 array!
-					$obj_group['objectclass']=$entry[0]['objectclass'];
-					$obj_group['cn']=$entry[0]['cn'][0];
-					$obj_group['dn']=$entry[0]['dn'];
+					foreach($attrs as $attr){
+						if (in_array($attr, array('dn', 'member', 'objectclass'))){
+							$obj_group[$attr]=$entry[0][$attr] ?? null;
+						} else { //cn (and ld_user_attr): unique value
+							$obj_group[$attr]=$entry[0][$attr][0] ?? null;
+						}
+					}
 					$obj_group['memberCount']=$entry['0']['member']['count'] ?? 0;
 					unset($entry['0']['member']['count']);	//remove awefull count key
 					$obj_group['member']=$entry[0]['member'] ?? null; //if entry has members than copy to object.
@@ -536,11 +540,15 @@ class Ldap {
 		}
 		
 		$this->write_log("[function]> ldap_get_groups");
+		$attrs = array('cn','dn','member','objectclass');
+		if (! in_array($this->config['ld_user_attr'], $attrs)){
+			$attrs[] = $this->config['ld_user_attr'];
+		}
 		$sr=ldap_search($this->cnx, $ld_prim_group, "(!(objectclass=organizationalUnit))", array('dn'));
 		$info = ldap_get_entries($this->cnx, $sr);
 		unset($info['count']);	
 		foreach($info as $k=>$v){
-		if (ldap_get_group_data($v['dn'],$this->cnx,$depth=0,$path="",$parent=null)){
+		if (ldap_get_group_data($v['dn'],$this->cnx,$depth=0,$path="",$parent=null,$attrs)){
 				
 			}
 		}
