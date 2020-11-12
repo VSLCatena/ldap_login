@@ -520,7 +520,9 @@ class Ldap {
 						#modify for next round	
 						$depth+=1;
 						foreach($obj_group['member'] as $key=>$value){
-							ldap_get_group_data($value,$con,$depth,$path,$obj_group);
+							if ($value !== $group) {
+								ldap_get_group_data($value,$con,$depth,$path,$obj_group,$attrs);
+							}
 						}
 						
 					}	
