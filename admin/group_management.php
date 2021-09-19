@@ -74,13 +74,13 @@ function sync_create_group($groups){
 				$query = '
 				SELECT COUNT(*)
 				FROM '.GROUPS_TABLE.'
-				WHERE name = \''.$tmp_group.'\'
+				WHERE name = \''.pwg_db_real_escape_string($tmp_group).'\'
 				;';
 				list($count) = pwg_db_fetch_row(pwg_query($query));
 				if ($count != 0)
 				{
 					$err=True;
-					$page['errors'][] = l10n('This name for the group ('. $tmp_group . ') already exist.');
+					$page['errors'][] = l10n('This name for the group (%s) already exist.', $tmp_group);
 				}
 				#delete sync / reverse sync
 			}
@@ -215,11 +215,11 @@ function sync_ldap(){
 
 	$users = sync_get_users();	
 	global $ldap;
+	global $page;
 	$ld_user_attr=$ldap->config['ld_user_attr'];
 	$users_ldap=$ldap->getUsers(null, $ld_user_attr);
 	if($users_ldap){
 		$diff = array_diff_key($users, array_flip($users_ldap));
-		global $page;
 		$page['infos'][] = l10n('"%s" users removed:', count($diff));																  
 		foreach($diff as $username => $id){
 			if($id >2){
@@ -230,7 +230,6 @@ function sync_ldap(){
 		
     }
 	else {
-    	global $page;
 		$page['errors'][] = l10n('An error occurred, please contact your webmaster or the plugin developer');
 	//delete_user .\piwigo\admin\include\functions.php
 	}
@@ -243,9 +242,9 @@ function sync_ldap(){
 
 
 // Save LDAP configuration when submitted
-if (isset($_POST['sync_action'])){
+if (isset($_POST['sync_action_submit']) || isset($_POST['sync_action_refresh'])){
 	$ldap->ldap_conn();
-	if($_POST['sync_action'] =='Submit') {
+	if(isset($_POST['sync_action_submit'])) {
 	
 		//activate groups.
 		if(!($ld_sync_data==null)){
@@ -300,7 +299,7 @@ if (isset($_POST['sync_action'])){
 	}
 
 	//Refresh button on page.
-	if ($_POST['sync_action'] =='Refresh'){ 
+	if (isset($_POST['sync_action_refresh'])){
 		$ld_sync_data = $ldap->ldap_get_groups($ldap->config['ld_group_basedn']);
 		$ldap->config['ld_sync_data']=serialize($ld_sync_data);
 		$ldap->save_config();

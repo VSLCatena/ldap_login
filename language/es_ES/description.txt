@@ -1,1 +1,1 @@
-Permite a los usuarios iniciar sesión con sus credenciales LDAP (inicio sesión, email u otro atributo especificado por los administradores de Piwigo + la contraseña LDAP).
+Permite a los usuarios iniciar sesión con sus credenciales LDAP (inicio de sesión, email u otro atributo especificado por los administradores de Piwigo + la contraseña LDAP).

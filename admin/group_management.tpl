@@ -69,8 +69,8 @@ td.content {
 		
 		<p style="text-align: left !important;" >
 		<i>{'Press Submit for the above actions. Only press "Refresh" to get new data via LDAP. Use with care.'|@translate}</i><br /><br />
-			<input style="margin-left:10px; margin-right:10px;" type="submit" value="{'Submit'|@translate}" name="sync_action" />
-			<input style="margin-left:10px; margin-right:10px;" type="submit" value="{'Refresh'|@translate}" name="sync_action" />
+			<input style="margin-left:10px; margin-right:10px;" type="submit" value="{'Submit'|@translate}" name="sync_action_submit" />
+			<input style="margin-left:10px; margin-right:10px;" type="submit" value="{'Refresh'|@translate}" name="sync_action_refresh" />
 		</p>
 		<br />
 		<fieldset class="mainConf">

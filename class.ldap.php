@@ -484,8 +484,10 @@ class Ldap {
 
 	public function ldap_get_groups($ld_prim_group){
 		$master = array();
+		if(!$this->make_ldap_bind_as($this->cnx,$this->config['ld_binddn'],$this->config['ld_bindpw'])){
+			return false;
+		}
 		function ldap_get_group_data($group,$con,$depth,$path,$parent) {
-			
 			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", array('cn','dn','member','objectclass'))){
 				$entry = ldap_get_entries($con, $parentData); #get all info from query
 				if($entry['count']>0){ //only if object person / group, will alway return 1 array!

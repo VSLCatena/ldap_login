@@ -1,0 +1,1 @@
+Permet que els usuaris de Piwigo iniciïn sessió amb els seus credencials de LDAP (nom d'usuari, correu o un altre atribut especificat pels administradors de Piwigo + la contrasenya LDAP).

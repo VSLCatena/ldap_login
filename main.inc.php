@@ -229,7 +229,14 @@ function login($success, $username, $password, $remember_me){
 				// retrieve LDAP e-mail address and create a new user
 				$mail = $obj->ldap_get_email($user_dn);
 			}
-			$new_id = register_user($username,random_password(8),$mail);
+			$errors=[];
+			$new_id = register_user($username,random_password(8),$mail,true,$errors);
+			if(count($errors) > 0) {
+				foreach ($errors as &$e){
+					$obj->write_log("[login]> ".$e, 'ERROR');
+				}
+				return false;
+			}
 			// Login user
 			log_user($new_id, False);
 			trigger_notify('login_success', stripslashes($username));
