@@ -194,5 +194,5 @@ class Ldap_Login_maintain extends PluginMaintain
 		$ldap->write_log("[deactivate]> plugin uninstalled");
 		unset($ldap);
 	}
-
 }
+?>
