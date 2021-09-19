@@ -356,14 +356,14 @@ class Ldap {
                         return false;
                 }
 		
-		$search_filter = "(&(objectclass=$group_class)(cn=$group_cn)(member=$user_dn)($group_filter))"; 
+		$search_filter = "(&(objectclass=$group_class)(cn=$group_cn)($member_attr=$user_dn)($group_filter))"; 
 		$this->write_log("[check_ldap_group_membership]> @ldap_search(\$this->cnx,'$base_dn', '$search_filter','$member_attr') for $group_cn");
 		$search = ldap_search($this->cnx, $base_dn, $search_filter,array($member_attr),0,0,5); //search for group
 		if($search){
 			$entries = ldap_get_entries($this->cnx,$search); //get group
 			if($entries['count']>0){
 				if($this->config['ld_membership_user']==0){
-					$this->write_log("[check_ldap_group_membership]> Found user using (&(objectclass=$group_class)(cn=$group_cn)(member=$user_dn)($group_filter))");
+					$this->write_log("[check_ldap_group_membership]> Found user using (&(objectclass=$group_class)(cn=$group_cn)($member_attr=$user_dn)($group_filter))");
 					return true;
 				}
 				$this->write_log("[ldap_get_entries]>". serialize($entries));
