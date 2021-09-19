@@ -25,7 +25,7 @@ td.content {
 	{'Removal of the group and users must be done manually! '|@translate}</p>
 	</fieldset>
 
-	<form method="post" action="{$SYNC_SETTINGS}" class="general">
+	<form method="post" action="{if isset($SYNC_SETTINGS)}{$SYNC_SETTINGS}{/if}" class="general">
 		<fieldset class="mainConf">
 		<br />
 			<legend>{'Sync settings'|@translate}</legend>
@@ -62,7 +62,7 @@ td.content {
 		<legend>{'DN with the groups'|@translate}</legend>	
 		<p>
 			<label style="display:inline-block; width:15%;" for="ld_group_basedn">{'Group Base DN:'|@translate}</label>
-			<input size="70" type="text" id="ld_group_basedn" name="ld_group_basedn" value="{$LD_GROUP_BASEDN}" />
+			<input size="70" type="text" id="ld_group_basedn" name="ld_group_basedn" value="{if isset($LD_GROUP_BASEDN)}{$LD_GROUP_BASEDN}{/if}" />
 			<br><i style="margin:15%;">{'Base DN of groups where all albums reside.'|@translate}</i><br>
 		</p>
 		</fieldset>
@@ -94,7 +94,7 @@ td.content {
 						<th>Path</th>
 					</tr>	
 				</thead>
-				<tbody>	
+				{if isset($LD_SYNC_DATA.0)}<tbody>	
 					{foreach $LD_SYNC_DATA.0 as $key => $value}
 						<tr class="border_bottom">
 							<td>		
@@ -116,7 +116,7 @@ td.content {
 							</tr>		
 						{/foreach}
 					{/foreach}
-				</tbody>
+				</tbody>{/if}
 			</table>
 			<br />
 			<i>{'Depth is relative depth from highest group (0=top, 1=Group names, 2=Members, 3+ =submembers). Path is relative path from group to the members.'|@translate}</i><br />	
