@@ -10,6 +10,91 @@
 
 {* <!-- add inline JS --> *}
 {footer_script require="jquery"}
+
+    function updateExampleFilter() {
+        
+        var userclass = document.getElementById("ld_user_class").value;
+        var attr = document.getElementById("ld_user_attr").value;
+        var filter = document.getElementById("ld_user_filter").value;
+        var username = document.getElementById("username").value;
+        var string = '&(&(objectClass=' + userclass + ')(' + attr + '=' + username + '))(' + filter +')'
+        var exampleDiv = document.getElementById("exampleDiv")
+        exampleDiv.value = string
+    }
+    
+    
+    
+	function disableADFields(obj) {
+		switch (obj.value) {
+		  case 'RFC2307':
+			var rfc = {
+				'ld_user_attr': 'cn',
+				'ld_user_class': 'inetOrgPerson',
+				'ld_group_class': 'groupOfNames'
+			}
+			break;
+		  case 'RFC2307BIS':
+			var rfc = {
+			'ld_user_attr': 'sAMAccountname',
+			'ld_user_class': 'user',
+			'ld_group_class': 'group'
+			}
+			break;
+		  case 'OTHER':
+			var rfc = {
+			'ld_user_attr': '',
+			'ld_user_class': '',
+			'ld_group_class': ''
+			}
+			break;
+		}		
+		for (var key in rfc) {      
+			var input = document.getElementById(key);
+			input.value = rfc[key]
+			input.disabled = obj.value != "OTHER";
+		}
+        updateExampleFilter();
+	}
+    function toggleAuthFields(obj) {
+		switch (obj.value) {
+		  case 'ld_auth_azure':
+            var enabledfields = {
+			'ld_azure_clientid': '',
+			'ld_azure_tenant': '',
+			'ld_azure_clientsecret': '',
+			'ld_azure_redirecturi': ''
+			}
+            $( "#LdapSettingsBlock" ).addClass( "visually-hidden " );
+            $( "#AzureSettingsBlock" ).removeClass( "visually-hidden" );
+			break;
+		  case 'ld_auth_ldap':
+			var disabledfields = {
+			'ld_azure_clientid': '',
+			'ld_azure_tenant': '',
+			'ld_azure_clientsecret': '',
+			'ld_azure_redirecturi': ''
+			}
+            $( "#AzureSettingsBlock" ).addClass( "visually-hidden " );
+            $( "#LdapSettingsBlock" ).removeClass( "visually-hidden" );
+			break;
+		}		
+		for (var key in disabledfields) {      
+			var input = document.getElementById(key);
+			input.value = disabledfields[key]
+			input.disabled = true
+		}
+        for (var key in enabledfields) {      
+			var input = document.getElementById(key);
+			input.value = enabledfields[key]
+			input.disabled = false
+		}
+
+	}
+
+    $( document ).ready(function() {
+        updateExampleFilter();
+        console.log("ready")
+    });  
 {/footer_script}
 
 
