@@ -192,8 +192,63 @@
             </fieldset>
 		</div>
 	</div>
+	<div class="row">
+        <div class="col-12">
+            <fieldset class="form-group">
+                <legend>{'Auth settings'|@translate}</legend>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_azure" value="ld_auth_azure" onChange="toggleAuthFields(this)"  >
+                    <label class="form-check-label" for="ld_auth_azure">
+                        Azure
+                    </label>
+                </div>
 	</div>	
-	</fieldset>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_ldap" value="ld_auth_ldap" onChange="toggleAuthFields(this)" checked  >
+                    <label class="form-check-label" for="ld_auth_ldap">
+                        LDAP(S)
+                    </label>
+                </div>
+
+            <!-- <input type="radio" name="LD_AUTH_TYPE" value="ld_auth_azure"></input> -->
+            <!--  <input type="radio" name="LD_AUTH_TYPE" value="ld_auth_ldap"></input> -->
+            </fieldset>
+        </div>
+    </div>		
+    <div class="row visually-hidden" id="AzureSettingsBlock">
+        <div class="col-6">
+            <fieldset class="form-group">
+                <legend>{'Azure settings'|@translate}</legend>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="ld_azure_clientid-addon1">{'Azure Client ID'|@translate}</span>
+                    </div>                
+                    <input type="text" class="form-control" id="ld_azure_clientid" name="LD_AZURE_CLIENTID" placeholder="fake-11b1f4a2-a86b-44c5-a773-ead7dceed5e2" aria-label="{'Azure Client ID'|@translate}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="ld_azure_tenant-addon1">{'Azure Tenant'|@translate}</span>
+                    </div>                 
+                    <input type="text" class="form-control" id="ld_azure_tenant" name="LD_AZURE_TENANT" placeholder="fake-8cedf1be-5920-478e-85ff-b6909f288d10" aria-label="{'Azure Tenant'|@translate}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="ld_azure_clientsecret-addon1">{'Azure Client Secret'|@translate}</span>
+                    </div>                 
+                    <input type="password" class="form-control" id="ld_azure_clientsecret" name="LD_AZURE_CLIENTSECRET" placeholder="" aria-label="{'Azure Client Secret'|@translate}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="ld_azure_redirecturi-addon1">{'Azure Redirect URI'|@translate}</span>
+                    </div>                 
+                    <input type="text" class="form-control" id="ld_azure_redirecturi" name="LD_AZURE_REDIRECTURI" placeholder="https://piwigo.domain.tld/callback" aria-label="{'Azure Redirect URI'|@translate}" disabled>
+                </div>
+	</div>	
+                </div>
+            </fieldset>
+        </div>
+    </div>
     <div class="row"  id="LdapSettingsBlock">
 		<div class="col-6">
 			<fieldset class="form-group">
