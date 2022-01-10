@@ -1,4 +1,18 @@
-{combine_css path=$LDAP_LOGIN_PATH|cat:"style.css"}
+{combine_css path=$LDAP_LOGIN_PATH|cat:"style.css"} 
+{html_head }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> 
+{/html_head} 
+{*<!-- add inline JS -->*} 
+
+{combine_script id="popper" require="jquery" path="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"} 
+{combine_script id="bootstrap" require="jquery" path="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"}
+
+
+{* <!-- add inline JS --> *}
+{footer_script require="jquery"}
+{/footer_script}
+
+
 <h2>{'Ldap_Login Plugin'|@translate}</h2>
 
 <div id="configContent">
