@@ -11,14 +11,16 @@ function ld_table_exist() {
  *
  *    	 - Return an boolean for table existance 
  *
- * @since 2.10.1
+ * @since 12.0
  *
  * 
  * @return boolean 
  */
-	$query = ('select 1 from `piwigo_ldap_login_config` LIMIT 1');
-	$r = pwg_query($query);
-	if(is_object($r) !== TRUE)
+	global $prefixeTable, $conf;
+	$query = "SELECT count(*) as count FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . $conf['db_base'] . "') AND (TABLE_NAME = '" . $prefixeTable . "ldap_login_config')";
+	$r = query2array($query);
+	$c = reset($r)['count'];
+	if(($c) == 0)
 	{
 	   //table not found..
  
@@ -27,7 +29,7 @@ function ld_table_exist() {
 	else
 	{
 		return true;
-		//I can find it...
+		//I can find it...or more than one table found..
 	}
 }
 
@@ -42,7 +44,7 @@ function ld_sql($action='get',$type=null,$data=null){
  *    	 - Return an associative array of a table values (key='...', value='...')
  *
  *		ld_sql($action='create',$type='create_table')
- *    	 - Creates table piwigo_ldap_login_config
+ *    	 - Creates table  . $prefixeTable . ldap_login_config
  *
  *		ld_sql($action='create',$type='create_data','data')
  *    	 - Inserts data (array(array($k,$v),...)) in table
@@ -57,7 +59,7 @@ function ld_sql($action='get',$type=null,$data=null){
  *    	 - Updates data from array($k1=>$v1,$k2=>$v2,...) in table
  *
  *		ld_sql($action='delete')
- *    	 - Deletes piwigo_ldap_login_config
+ *    	 - Deletes $prefixeTable . ldap_login_config
  * 			 
  *
  * @since 2.10.1
@@ -68,7 +70,7 @@ function ld_sql($action='get',$type=null,$data=null){
  * @return array $result
  */
 
-
+global $prefixeTable;
 	
 	###
 	### GET 
@@ -76,7 +78,7 @@ function ld_sql($action='get',$type=null,$data=null){
 
 	if ($action === 'get') {
 		if(ld_table_exist()){
-			$query ='SELECT param,value FROM piwigo_ldap_login_config';
+			$query ='SELECT param,value FROM ' . $prefixeTable . 'ldap_login_config';
 			$result = query2array($query,'param','value');
 			return $result;
 		}
@@ -87,7 +89,7 @@ function ld_sql($action='get',$type=null,$data=null){
 	###	ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_general_ci;
 	if ($action == 'create'){
 		if ($type == 'create_table') {
-			$query="CREATE TABLE IF NOT EXISTS `piwigo_ldap_login_config` (`param` varchar(40) CHARACTER SET utf8 NOT NULL,`value` text CHARACTER SET utf8,`comment` varchar(255) CHARACTER SET utf8 DEFAULT NULL,UNIQUE KEY `param` (`param`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_general_ci;";
+			$query="CREATE TABLE IF NOT EXISTS `" . $prefixeTable . "ldap_login_config` (`param` varchar(40) CHARACTER SET utf8 NOT NULL,`value` text CHARACTER SET utf8,`comment` varchar(255) CHARACTER SET utf8 DEFAULT NULL,UNIQUE KEY `param` (`param`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_general_ci;";
 			pwg_query($query);
 		
 		}	
@@ -99,7 +101,7 @@ function ld_sql($action='get',$type=null,$data=null){
 						'value' => pwg_db_real_escape_string($v)
 						);
 				}
-				mass_inserts('piwigo_ldap_login_config', array('param','value'), $datas,array('ignore'=>true));
+				mass_inserts($prefixeTable . 'ldap_login_config', array('param','value'), $datas,array('ignore'=>true));
 			}
 			
 		}	
@@ -131,7 +133,7 @@ function ld_sql($action='get',$type=null,$data=null){
 						)
 					);
 				mass_updates(
-					'piwigo_ldap_login_config',
+					$prefixeTable . 'ldap_login_config',
 					array(
 					'primary' => array('param'),
 					'update' => array('value')
@@ -155,7 +157,7 @@ function ld_sql($action='get',$type=null,$data=null){
 						)
 					);
 				mass_updates(
-					'piwigo_ldap_login_config',
+					$prefixeTable . 'ldap_login_config',
 					array(
 					'primary' => array('param'),
 					'update' => array('value')
@@ -172,7 +174,7 @@ function ld_sql($action='get',$type=null,$data=null){
 							);
 					}
 					mass_updates(
-						'piwigo_ldap_login_config',
+						$prefixeTable . 'ldap_login_config',
 						array(
 						'primary' => array('param'),
 						'update' => array('value')
@@ -196,11 +198,11 @@ function ld_sql($action='get',$type=null,$data=null){
 		if(ld_table_exist()){
 			if ($type=='delete_table') {
 				$query="
-				DROP TABLE `piwigo_ldap_login_config`;
+				DROP TABLE `" . $prefixeTable . "ldap_login_config`;
 				";
 				pwg_query($query);
 			}
 		}
 	}	
 }
-
+?>

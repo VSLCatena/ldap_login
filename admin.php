@@ -15,6 +15,7 @@ $tabsheet->set_id('ldap_login');
 $tabsheet->add('configuration', l10n('Configuration'), LDAP_LOGIN_ADMIN . '-configuration');
 $tabsheet->add('newusers', l10n('New user management'), LDAP_LOGIN_ADMIN . '-newusers');
 $tabsheet->add('group_management', l10n('Group management'), LDAP_LOGIN_ADMIN . '-group_management'); 
+$tabsheet->add('support', l10n('Support'), LDAP_LOGIN_ADMIN . '-support'); 
 $tabsheet->select($page['tab']);
 $tabsheet->assign();
   

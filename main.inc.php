@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: Ldap_Login
-Version: 2.10.1
+Version: 12.0a
 Description: Allow piwigo authentication along an ldap
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
 Author: Kipjr (Member of Netcie)
 Author URI: https://github.com/Kipjr/
+Has Settings: true
 */
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 

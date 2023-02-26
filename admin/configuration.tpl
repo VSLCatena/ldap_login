@@ -4,7 +4,7 @@
 <div id="configContent">
 
 <p>{'All LDAP users can use their ldap password everywhere on piwigo if needed.'|@translate}</p>
-{if $WARN_GENERAL}<i style="color:red;">{$WARN_GENERAL}</i>{/if}<br>
+ {if isset($WARN_GENERAL)}<i style="color:red;">{$WARN_GENERAL|@translate}</i>{/if}<br>
 <form method="post" action="{$PLUGIN_ACTION}" class="general">
 
 	{if (!extension_loaded('ldap'))}
@@ -18,32 +18,32 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_forgot_url"><span>{'Url for password reset'|@translate}</span></label>
 	<input size="70" type="text" id="ld_forgot_url" name="LD_FORGOT_URL" value="{$LD_FORGOT_URL}" />
-	{if $WARN_LD_FORGOT_URL}<i style="color:red;">{$WARN_LD_FORGOT_URL}</i>{/if}<br>
+	{if isset($WARN_LD_FORGOT_URL)}<i style="color:red;">{$WARN_LD_FORGOT_URL}</i>{/if}<br>
 	<i style="margin:15%;">Company directory password reset URL (https://mycompany.com/passreset.php) Default: Piwigo "password.php"</i>
 	<br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" style="display:inline-block; width:120px; text-align:right;" for="ld_debug_location"><span>{'Log location'|@translate}</span></label>
 	<input size="70" type="text" id="ld_debug_location" name="LD_DEBUG_LOCATION" value="{$LD_DEBUG_LOCATION}"/>
-	{if $WARN_LD_DEBUG_LOCATION}<i style="color:red;">{$WARN_LD_DEBUG_LOCATION}</i>{/if}<br>
+	{if isset($WARN_LD_DEBUG_LOCATION)}<i style="color:red;">{$WARN_LD_DEBUG_LOCATION}</i>{/if}<br>
 	<i style="margin:15%;">Field to define the location of debug.log. Protect the location with .htaccess or store in /var/log/ (most secure)</i><br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug">
-	{if $LD_DEBUG }
+	{if isset($LD_DEBUG) }
 		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" checked />
 	{else}
 		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" />
-	{/if}{'Enable logs'|@translate}</label>{if $WARN_LD_DEBUG}<i style="color:red;">{$WARN_LD_DEBUG}</i>{/if}
+	{/if}{'Enable logs'|@translate}</label>{if isset($WARN_LD_DEBUG)}<i style="color:red;">{$WARN_LD_DEBUG}</i>{/if}
     </p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug_clearupdate">
-	{if $LD_DEBUG_CLEARUPDATE }
+	{if isset($LD_DEBUG_CLEARUPDATE) }
 		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" checked />
 	{else}
 		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" />
 	{/if}{'Clear logs after plugin update'|@translate}</label>
-	{if $WARN_LD_DEBUG_CLEARUPDATE}<i style="color:red;">{$WARN_LD_DEBUG_CLEARUPDATE}</i>{/if}
+	{if isset($WARN_LD_DEBUG_CLEARUPDATE)}<i style="color:red;">{$WARN_LD_DEBUG_CLEARUPDATE}</i>{/if}
     </p>
 	<div style="margin:1em;">
 	<label style="display:inline-block; width:15%;" style="display:inline-block; width:120px; text-align:right;" for="ld_debug_level"><span>{'Debug level'|@translate}</span></label>
@@ -63,7 +63,7 @@
 			</div></div>
 		</div>
 
-	{if $WARN_LD_DEBUG_LEVEL}<i style="color:red;">{$WARN_LD_DEBUG_LEVEL}</i>{/if} 
+	{if isset($WARN_LD_DEBUG_LEVEL)}<i style="color:red;">{$WARN_LD_DEBUG_LEVEL}</i>{/if} 
 	
 	</div>	
 	</fieldset>
@@ -74,29 +74,29 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_host">{'Server location'|@translate}</label>
 	<input size="70" type="text" id="ld_host" name="LD_HOST" value="{$LD_HOST}" />
-	{if $WARN_LD_HOST}<i style="color:red;">{$WARN_LD_HOST}</i>{/if}<br>
+	{if isset($WARN_LD_HOST)}<i style="color:red;">{$WARN_LD_HOST}</i>{/if}<br>
 	<i style="margin:15%;">{'IP or hostname of the directory server.'|@translate}</i><br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_port">{'Ldap port'|@translate}</label>
 	<input type="text" id="ld_port" name="LD_PORT" value="{$LD_PORT}" />
-	{if $WARN_LD_PORT}<i style="color:red;">{$WARN_LD_PORT}</i>{/if}<br>
+	{if isset($WARN_LD_PORT)}<i style="color:red;">{$WARN_LD_PORT}</i>{/if}<br>
 	<i style="margin:15%;">{'If empty, localhost and standard protocol ports (389/636) will be used in configuration.'|@translate}</i><br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_use_ssl">
-	{if $LD_USE_SSL }
+	{if isset($LD_USE_SSL) }
 		<input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" checked />
 	{else}
 		<input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" />
 	{/if}
 	{'Secure connexion'|@translate}</label>
-	{if $WARN_LD_USE_SSL}<i style="color:red;">{$WARN_LD_USE_SSL}</i>{/if}<br><br>
+	{if isset($WARN_LD_USE_SSL)}<i style="color:red;">{$WARN_LD_USE_SSL}</i>{/if}<br><br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_basedn">{'Base DN:'|@translate}</label>
 	<input size="70" type="text" id="ld_basedn" name="LD_BASEDN" value="{$LD_BASEDN}" />
-	{if $WARN_LD_BASEDN}<i style="color:red;">{$WARN_LD_BASEDN}</i>{/if}<br>
+	{if isset($WARN_LD_BASEDN)}<i style="color:red;">{$WARN_LD_BASEDN}</i>{/if}<br>
 	<i style="margin:15%;">{'The highest accessible OU or Base DN'|@translate}</i><br>
 	</p>
     </fieldset>
@@ -108,19 +108,19 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_user_class">{'User Object Class:'|@translate}</label>
 	<input size="70" type="text" id="ld_user_class" name="LD_USER_CLASS" value="{$LD_USER_CLASS}" />
-	{if $WARN_LD_USER_CLASS}<i style="color:red;">{$WARN_LD_USER_CLASS}</i>{/if}<br>
+	{if isset($WARN_LD_USER_CLASS)}<i style="color:red;">{$WARN_LD_USER_CLASS}</i>{/if}<br>
 	<i style="margin:15%;">{'The LDAP user object class type to use when loading users'|@translate}</i><br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_user_attr">{'Username Attribute'|@translate}</label>
 	<input size="70" type="text" id="ld_user_attr" name="LD_USER_ATTR" value="{$LD_USER_ATTR}" />
-	{if $WARN_LD_USER_ATTR}<i style="color:red;">{$WARN_LD_USER_ATTR}</i>{/if}<br>
+	{if isset($WARN_LD_USER_ATTR)}<i style="color:red;">{$WARN_LD_USER_ATTR}</i>{/if}<br>
 	<i style="margin:15%;">{'The attribute field to use on the user object. Examples: cn, sAMAccountName.'|@translate}</i>	
     </p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_user_filter">{'User Object Filter:'|@translate}</label>
 	<input size="70" type="text" id="ld_user_filter" name="LD_USER_FILTER" value="{$LD_USER_FILTER}" />
-	{if $WARN_LD_USER_FILTER}<i style="color:red;">{$WARN_LD_USER_FILTER}</i>{/if}<br>
+	{if isset($WARN_LD_USER_FILTER)}<i style="color:red;">{$WARN_LD_USER_FILTER}</i>{/if}<br>
 	<i style="margin:15%;">{'The filter to use when searching user objects'|@translate}</i><br>	
 	</p>
 	</fieldset>
@@ -132,25 +132,25 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_class">{'Group Object Class:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_class" name="LD_GROUP_CLASS" value="{$LD_GROUP_CLASS}" />
-	{if $WARN_LD_GROUP_CLASS}<i style="color:red;">{$WARN_LD_GROUP_CLASS}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_CLASS)}<i style="color:red;">{$WARN_LD_GROUP_CLASS}</i>{/if}<br>
 	<i style="margin:15%;">{'LDAP attribute objectClass value to search for when loading groups.'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_filter">{'Group Object Filter:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_filter" name="LD_GROUP_FILTER" value="{$LD_GROUP_FILTER}" />
-	{if $WARN_LD_GROUP_FILTER}<i style="color:red;">{$WARN_LD_GROUP_FILTER}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_FILTER)}<i style="color:red;">{$WARN_LD_GROUP_FILTER}</i>{/if}<br>
 	<i style="margin:15%;">{'The filter to use when searching group objects.'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_attr">{'Group Name Attribute:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_attr" name="LD_GROUP_ATTR" value="{$LD_GROUP_ATTR}" />
-	{if $WARN_LD_GROUP_ATTR}<i style="color:red;">{$WARN_LD_GROUP_ATTR}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_ATTR}</i>{/if}<br>
 	<i style="margin:15%;">{'The attribute field to use when loading the group name.'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_desc">{'Group Description:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_desc" name="LD_GROUP_DESC" value="{$LD_GROUP_DESC}" />
-	{if $WARN_LD_GROUP_DESC}<i style="color:red;">{$WARN_LD_GROUP_DESC}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_DESC)}<i style="color:red;">{$WARN_LD_GROUP_DESC}</i>{/if}<br>
 	<i style="margin:15%;">{'The attribute field to use when loading the group description.'|@translate}</i>	
     </p>
 	</fieldset>
@@ -162,23 +162,23 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_member_attr">{'Group Membership Attribute:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_member_attr" name="LD_GROUP_MEMBER_ATTR" value="{$LD_GROUP_MEMBER_ATTR}" />
-	{if $WARN_LD_GROUP_MEMBER_ATTR}<i style="color:red;">{$WARN_LD_GROUP_MEMBER_ATTR}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_MEMBER_ATTR}</i>{/if}<br>
 	<i style="margin:15%;">{'The attribute field to use when loading the group members from the group.'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_user_member_attr">{'User Membership Attribute:'|@translate}</label>
 	<input size="70" type="text" id="ld_user_member_attr" name="LD_USER_MEMBER_ATTR" value="{$LD_USER_MEMBER_ATTR}" />
-	{if $WARN_LD_USER_MEMBER_ATTR}<i style="color:red;">{$WARN_LD_USER_MEMBER_ATTR}</i>{/if}<br>
+	{if isset($WARN_LD_USER_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_USER_MEMBER_ATTR}</i>{/if}<br>
 	<i style="margin:15%;">{'The attribute field when loading groups from a user.'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_membership_user">
-	{if $LD_MEMBERSHIP_USER }
+	{if isset($LD_MEMBERSHIP_USER) }
 	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" checked />
 	{else}
 	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" />
 	{/if}{'Use user membership attribute'|@translate}</label>
-	{if $WARN_LD_MEMBERSHIP_USER}<i style="color:red;">{$WARN_LD_MEMBERSHIP_USER}</i>{/if}
+	{if isset($WARN_LD_MEMBERSHIP_USER)}<i style="color:red;">{$WARN_LD_MEMBERSHIP_USER}</i>{/if}
 	</p>
 
 
@@ -190,40 +190,40 @@
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_user">{'Group corresponding with users:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_user" name="LD_GROUP_USER" value="{$LD_GROUP_USER}" />
-	{if $WARN_LD_GROUP_USER}<i style="color:red;">{$WARN_LD_GROUP_USER}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_USER)}<i style="color:red;">{$WARN_LD_GROUP_USER}</i>{/if}<br>
 	<i style="margin:15%;">{'The group that will get user rights (DN).'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_admin">{'Group corresponding with administrators:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_admin" name="LD_GROUP_ADMIN" value="{$LD_GROUP_ADMIN}" />
-	{if $WARN_LD_GROUP_ADMIN}<i style="color:red;">{$WARN_LD_GROUP_ADMIN}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_ADMIN)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN}</i>{/if}<br>
 	<i style="margin:15%;">{'The group that will get admininistrator rights (DN).'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_WEBMASTER">{'Group corresponding with webmasters:'|@translate}</label>
 	<input size="70" type="text" id="ld_group_webmaster" name="LD_GROUP_WEBMASTER" value="{$LD_GROUP_WEBMASTER}" />
-	{if $WARN_LD_GROUP_WEBMASTER}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_WEBMASTER)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER}</i>{/if}<br>
 	<i style="margin:15%;">{'The group that will get webmaster rights (DN).'|@translate}</i>	
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_user_active">
-	{if $LD_GROUP_USER_ACTIVE }
+	{if isset($LD_GROUP_USER_ACTIVE) }
 	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" checked />
 	{else}
 	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" />
 	{/if}{'Use user groups'|@translate}</label>
 	<i>Note: Minimum membership to gain access. Disabled, no check for group membership.</i>
-	{if $WARN_LD_GROUP_USER_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_USER_ACTIVE}</i>{/if}<br>
+	{if isset($WARN_LD_GROUP_USER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_USER_ACTIVE}</i>{/if}<br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_admin_active">
-	{if $LD_GROUP_ADMIN_ACTIVE }
+	{if isset($LD_GROUP_ADMIN_ACTIVE) }
 	<input type="checkbox" id="ld_group_admin_active" name="ld_group_admin_active" value="{$LD_GROUP_ADMIN_ACTIVE}" checked />
 	{else}
 	<input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="{$LD_GROUP_ADMIN_ACTIVE}" />
 	{/if}{'Use administrator groups.'|@translate}</label>
 	<i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i>
-	{if $WARN_LD_GROUP_ADMIN_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_ADMIN_ACTIVE}</i>{/if}
+	{if isset($WARN_LD_GROUP_ADMIN_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN_ACTIVE}</i>{/if}
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_webmaster_active">
@@ -233,7 +233,7 @@
 	<input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="{$LD_GROUP_WEBMASTER_ACTIVE}" />
 	{/if}{'Use Webmaster groups.'|@translate}</label>
 	<i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i>
-	{if $WARN_LD_GROUP_WEBMASTER_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER_ACTIVE}</i>{/if}
+	{if isset($WARN_LD_GROUP_WEBMASTER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER_ACTIVE}</i>{/if}
 	</p>
     </fieldset>	
 	
@@ -307,14 +307,14 @@
 			<label for="ld_binddn">{'Bind (Service account) DN'|@translate}</label>
 			<br>
 			<input size="100" type="text" id="ld_binddn" name="LD_BINDDN" value="{$LD_BINDDN}" />
-			{if $WARN_LD_BINDDN}<i style="color:red;">{$WARN_LD_BINDDN}</i>{/if}
+			{if isset($WARN_LD_BINDDN)}<i style="color:red;">{$WARN_LD_BINDDN}</i>{/if}
 		</li>
 		
 		<li>
 			<label for="ld_bindpw">{'Bind (Service account) password'|@translate}</label>
 			<br>
 			<input type="password" id="ld_bindpw" name="LD_BINDPW" />
-			{if $WARN_LD_BINDPW}<i style="color:red;">{$WARN_LD_BINDPW}</i>{/if}
+			{if isset($WARN_LD_BINDPW)}<i style="color:red;">{$WARN_LD_BINDPW}</i>{/if}
 		</li>
 	</ul>
 	<i>{'Keep BOTH fields blank if the ldap accept anonymous connections. '|@translate}</i>
@@ -344,7 +344,7 @@
 		<li>
 			<label for="ld_attr">{'Your password'|@translate}</label>
 			<br>
-			<input type="password" id="password" name="PASSWORD" value="{$PASSWORD}" />
+			<input type="password" id="password" name="PASSWORD" value="{if isset($WARN_LD_BINDPW)}{$PASSWORD}{/if}" />
 		</li>
 	</ul>
 	

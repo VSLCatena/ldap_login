@@ -74,6 +74,7 @@ class Ldap {
 
 		// root account test if completed
 		if (!empty($this->config['ld_binddn']) && !empty($this->config['ld_bindpw'])){ // if empty ld_binddn, anonymous search
+		
 			// authentication with rootdn and rootpw for search
 			if (!$this->ldap_bind_as($this->config['ld_binddn'],$this->config['ld_bindpw'])){
 				return $this->getErrorString();
@@ -337,7 +338,6 @@ class Ldap {
 		$group_filter = strlen($this->config['ld_group_filter'])<1?"cn=*":$this->config['ld_group_filter'];
 		$group_dn = is_null($group_dn)?$this->config['ld_group_user']:$group_dn;
 		$group_cn = ldap_explode_dn($group_dn,1)[0];
-		$user_cn = ldap_explode_dn($user_dn,1)[0];
 		$member_attr = $this->config['ld_group_member_attr'];
 		
 
@@ -355,27 +355,27 @@ class Ldap {
                         return false;
                 }
 		
-		$search_filter = "(&(objectclass=$group_class)(cn=$group_cn)(member=$user_dn)($group_filter))"; 
+		$search_filter = "(&(objectclass=$group_class)(cn=$group_cn)($member_attr=$user_dn)($group_filter))"; 
 		$this->write_log("[check_ldap_group_membership]> @ldap_search(\$this->cnx,'$base_dn', '$search_filter','$member_attr') for $group_cn");
 		$search = ldap_search($this->cnx, $base_dn, $search_filter,array($member_attr),0,0,5); //search for group
 		if($search){
 			$entries = ldap_get_entries($this->cnx,$search); //get group
 			if($entries['count']>0){
 				if($this->config['ld_membership_user']==0){
-					$this->write_log("[check_ldap_group_membership]> Found user using (&(objectclass=$group_class)(cn=$group_cn)(member=$user_dn)($group_filter))");
+					$this->write_log("[check_ldap_group_membership]> Found user using (&(objectclass=$group_class)(cn=$group_cn)($member_attr=$user_dn)($group_filter))");
 					return true;
 				}
 				$this->write_log("[ldap_get_entries]>". serialize($entries));
 				$memberEntries=$entries[0][strtolower($member_attr)];
 				for($i=0;$i<$memberEntries['count'];$i++){
-					$memberEntry_cn = ldap_explode_dn($memberEntries[$i],1)[0];
-					$this->write_log("[check_ldap_group_membership]> Test ".$user_cn." == ".$memberEntry_cn." ?");
-					$this->write_log("[check_ldap_group_membership]> type/len of data: [" . gettype($memberEntry_cn) . ", " . strlen($memberEntry_cn) . "], [" . gettype($user_cn) . ", " .strlen($user_cn) . "]");
-					if($memberEntry_cn === $user_login){ // Match the attribute provided from the user.
-						$this->write_log("[check_ldap_group_membership]> $member_attr $memberEntry_cn matches $user_login");
+					$memberEntry_dn = $memberEntries[$i];
+					$this->write_log("[check_ldap_group_membership]> Test ".$user_dn." == ".$memberEntry_dn." ?");
+					$this->write_log("[check_ldap_group_membership]> type/len of data: [" . gettype($memberEntry_dn) . ", " . strlen($memberEntry_dn) . "], [" . gettype($user_dn) . ", " .strlen($user_dn) . "]");
+					if($memberEntry_dn === $user_dn){ // Match the user.
+						$this->write_log("[check_ldap_group_membership]> $member_attr $memberEntry_dn matches $user_login");
 						return true;
 					}
-					unset($memberEntry_cn);
+					unset($memberEntry_dn);
 				}
 				$this->write_log("[check_ldap_group_membership]> No matches found for $user_login in ". $group_cn);
 			}
@@ -471,7 +471,8 @@ class Ldap {
 
 	public function ldap_check_basedn(){
 		$this->write_log("[function]> ldap_check_basedn ");
-		if ($read = @ldap_read($this->cnx,$this->config['ld_basedn'],'(objectClass=*)',array('dn'))){
+		if ($read = @ldap_read($this->cnx,$this->config['ld_basedn'],"objectClass=*",array('cn'))){
+
 			$entry = @ldap_get_entries($this->cnx, $read);
 			if (!empty($entry[0]['dn'])) {
 				return true;
@@ -485,13 +486,17 @@ class Ldap {
 		if(!$this->make_ldap_bind_as($this->cnx,$this->config['ld_binddn'],$this->config['ld_bindpw'])){
 			return false;
 		}
-		function ldap_get_group_data($group,$con,$depth,$path,$parent) {
-			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", array('cn','dn','member','objectclass'))){
+		function ldap_get_group_data($group,$con,$depth,$path,$parent,$attrs) {
+			if ($parentData=ldap_read($con,$group, "(|(objectclass=person)(objectclass=groupOfNames))", $attrs)){
 				$entry = ldap_get_entries($con, $parentData); #get all info from query
 				if($entry['count']>0){ //only if object person / group, will alway return 1 array!
-					$obj_group['objectclass']=$entry[0]['objectclass'][0];
-					$obj_group['cn']=$entry[0]['cn'][0];
-					$obj_group['dn']=$entry[0]['dn'];
+					foreach($attrs as $attr){
+						if (in_array($attr, array('dn', 'member', 'objectclass'))){
+							$obj_group[$attr]=$entry[0][$attr] ?? null;
+						} else { //cn (and ld_user_attr): unique value
+							$obj_group[$attr]=$entry[0][$attr][0] ?? null;
+						}
+					}
 					$obj_group['memberCount']=$entry['0']['member']['count'] ?? 0;
 					unset($entry['0']['member']['count']);	//remove awefull count key
 					$obj_group['member']=$entry[0]['member'] ?? null; //if entry has members than copy to object.
@@ -519,11 +524,13 @@ class Ldap {
 					}
 				
 
-					if($obj_group['objectclass']=='groupOfNames'){
+					if(in_array('groupOfNames', $obj_group['objectclass'])){
 						#modify for next round	
 						$depth+=1;
 						foreach($obj_group['member'] as $key=>$value){
-							ldap_get_group_data($value,$con,$depth,$path,$obj_group);
+							if ($value !== $group) {
+								ldap_get_group_data($value,$con,$depth,$path,$obj_group,$attrs);
+							}
 						}
 						
 					}	
@@ -537,11 +544,15 @@ class Ldap {
 		}
 		
 		$this->write_log("[function]> ldap_get_groups");
+		$attrs = array('cn','dn','member','objectclass');
+		if (! in_array($this->config['ld_user_attr'], $attrs)){
+			$attrs[] = $this->config['ld_user_attr'];
+		}
 		$sr=ldap_search($this->cnx, $ld_prim_group, "(!(objectclass=organizationalUnit))", array('dn'));
 		$info = ldap_get_entries($this->cnx, $sr);
 		unset($info['count']);	
 		foreach($info as $k=>$v){
-		if (ldap_get_group_data($v['dn'],$this->cnx,$depth=0,$path="",$parent=null)){
+		if (ldap_get_group_data($v['dn'],$this->cnx,$depth=0,$path="",$parent=null,$attrs)){
 				
 			}
 		}
@@ -550,4 +561,3 @@ class Ldap {
 	} 	
 }
 ?>
-
