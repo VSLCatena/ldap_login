@@ -1,7 +1,5 @@
 #!/bin/bash
 
-git clone https://github.com/Kipjr/docker-piwigo docker-piwigo
-
 function GetRandom(){
     cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 24 | head -n 1
 }
