@@ -14,16 +14,21 @@ jobs:
       - uses: actions/checkout@v3
       - name: Prepare environment
         run: |
-          ./.test/invoke-test.sh
+          ./.tests/Prepare-Environment.sh
       - name: Run environment
-        run: |
-          ./.test/invoke-test.sh
       - name: Start containers
         run: docker-compose -f "./.tests/docker-compose.yml" up -d
 
       - name: Run tests
-        run: | 
-          echo 1
+        env:
+          #DATABASE_URL: mysql://ldap_login:password@localhost/ldap_login
+          LDAP_HOST: ldap://ldap
+          LDAP_PORT: 389
+          LDAP_VERSION: 3
+          LDAP_USERNAME: admin
+          LDAP_PASSWORD: testpass
+        run: |
+          vendor/bin/phpunit --bootstrap vendor/autoload.php tests/LdapLogin.php
 
       - name: Stop containers
         if: always()
