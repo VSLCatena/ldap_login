@@ -14,8 +14,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: Prepare environment
         run: |
-          ./.tests/Prepare-Environment.sh
-      - name: Run environment
+          ./.tests/Prepare-TestEnvironment.sh
+      - name: Install phpunit
+        run: |
+          composer require --dev phpunit/phpunit
+
       - name: Start containers
         run: docker-compose -f "./.tests/docker-compose.yml" up -d
 
@@ -26,7 +29,6 @@ jobs:
           LDAP_PORT: 389
           LDAP_VERSION: 3
           LDAP_USERNAME: admin
-          LDAP_PASSWORD: testpass
         run: |
           vendor/bin/phpunit --bootstrap vendor/autoload.php tests/LdapLogin.php
 
