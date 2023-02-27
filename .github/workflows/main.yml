@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        run: |
+          git clone https://github.com/Kipjr/docker-piwigo docker-piwigo
       - name: Prepare environment
         run: |
           ./.tests/Prepare-TestEnvironment.sh
