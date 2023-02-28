@@ -24,7 +24,7 @@ jobs:
           composer require --dev phpunit/phpunit
 
       - name: Start containers
-        run: docker-compose -f "./.tests/docker-compose.yml" up -d
+        run: docker-compose up -d
 
       - name: Run tests
         env:
