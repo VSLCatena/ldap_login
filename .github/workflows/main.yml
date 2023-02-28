@@ -17,6 +17,13 @@ jobs:
         run: |
           git clone https://github.com/Kipjr/docker-piwigo docker-piwigo
       - name: Prepare environment
+        env:
+          __TEMPLATE__DB_ROOT_PASSWORD: ${{ vars.__TEMPLATE__DB_ROOT_PASSWORD }}
+          __TEMPLATE__PWG_ADMIN_PASSWORD: ${{ vars.__TEMPLATE__PWG_ADMIN_PASSWORD }}
+          __TEMPLATE_LDAP_ADMIN_PASSWORD: ${{ vars.__TEMPLATE_LDAP_ADMIN_PASSWORD }}
+          __TEMPLATE__LDAP_CONFIG_PASSWORD: ${{ vars.__TEMPLATE__LDAP_CONFIG_PASSWORD }}
+          __TEMPLATE__VERSION: ${{ vars.__TEMPLATE__PWGVERSION }}
+          __TEMPLATE__PWGVERSION:  ${{ vars.__TEMPLATE__VERSION }}
         run: |
           envsubst < docker-piwigo/docker-compose.template > docker-compose.yml
           grep 'image: ghcr.io/kipjr/docker-piwigo:php-apache.*$' docker-compose.yml
