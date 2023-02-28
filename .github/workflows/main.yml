@@ -19,6 +19,7 @@ jobs:
       - name: Prepare environment
         run: |
           envsubst < docker-piwigo/docker-compose.template > docker-compose.yml
+          grep 'image: ghcr.io/kipjr/docker-piwigo:php-apache.*$' docker-compose.yml
       - name: Install phpunit
         run: |
           composer require --dev phpunit/phpunit
