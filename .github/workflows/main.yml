@@ -25,14 +25,14 @@ jobs:
           __TEMPLATE__VERSION: ${{ vars.__TEMPLATE__VERSION }}
           __TEMPLATE__PWGVERSION:  ${{ vars.__TEMPLATE__PWGVERSION }}
         run: |
-          envsubst < docker-piwigo/docker-compose.template > docker-compose.yml
-          grep 'image: ghcr.io/kipjr/docker-piwigo:php-apache.*$' docker-compose.yml
+          envsubst < docker-piwigo/docker-compose.template > docker-piwigo/docker-compose.yml
+          grep 'image: ghcr.io/kipjr/docker-piwigo:php-apache.*$' docker-piwigo/docker-compose.yml
       - name: Install phpunit
         run: |
           composer require --dev phpunit/phpunit
 
       - name: Start containers
-        run: docker-compose up -d
+        run: cd docker-piwigo && docker-compose up -d && cd ..
 
       - name: Run tests
         env:
@@ -46,4 +46,4 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: docker-compose down
+        run: cd docker-piwigo && docker-compose down
