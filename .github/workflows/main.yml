@@ -29,7 +29,8 @@ jobs:
       PASSWORD_LDAP_CONFIG: ${{ secrets.PASSWORD_LDAP_CONFIG }}
     steps:
       - name: Set environment variables (workflow)
-        if: github.event_name == 'workflow_dispatch'        env:
+        if: github.event_name == 'workflow_dispatch'
+        env:
           VERSION_PHP: ${{ input.version_php }} 
           VERSION_PIWIGO: ${{ input.version_piwigo }}
       - name: Set environment variables (environment)
