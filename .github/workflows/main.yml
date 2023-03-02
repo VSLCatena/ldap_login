@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: actions-ci
     env:
-      PASSWORD_DB_ROOT: ${{ secrets.password_db_root }}
-      PASSWORD_PIWIGO_ADMIN: ${{ secrets.password_piwigo_admin }}
-      PASSWORD_LDAP_ADMIN: ${{ secrets.password_ldap_admin }}
-      PASSWORD_LDAP_CONFIG: ${{ secrets.password_ldap_config }}
+      PASSWORD_DB_ROOT: ${{ secrets.PASSWORD_DB_ROOT }}
+      PASSWORD_PIWIGO_ADMIN: ${{ secrets.PASSWORD_PIWIGO_ADMIN }}
+      PASSWORD_LDAP_ADMIN: ${{ secrets.PASSWORD_LDAP_ADMIN }}
+      PASSWORD_LDAP_CONFIG: ${{ secrets.PASSWORD_LDAP_CONFIG }}
     steps:
       - name: Set environment variables (workflow)
         if: github.event_name == 'workflow_dispatch'        env:
