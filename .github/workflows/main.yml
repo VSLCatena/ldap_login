@@ -5,25 +5,43 @@ on:
   #    - dev
   # schedule:
   #   - cron: '0 6 * * 6' # every 30 minutes
-  workflow_dispatch: # on button click
+  workflow_dispatch:
+    inputs:
+      version_php:
+        description: 'PHP Version'
+        required: true
+        default: '8.1'
+        type: string
+      version_piwigo:
+        description: 'Piwigo Version'
+        required: true
+        default: '13.6'
+        type: string
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     environment: actions-ci
+    env:
+      PASSWORD_DB_ROOT: ${{ secrets.password_db_root }}
+      PASSWORD_PIWIGO_ADMIN: ${{ secrets.password_piwigo_admin }}
+      PASSWORD_LDAP_ADMIN: ${{ secrets.password_ldap_admin }}
+      PASSWORD_LDAP_CONFIG: ${{ secrets.password_ldap_config }}
     steps:
+      - name: Set environment variables (workflow)
+        if: github.event_name == 'workflow_dispatch'        env:
+          VERSION_PHP: ${{ input.version_php }} 
+          VERSION_PIWIGO: ${{ input.version_piwigo }}
+      - name: Set environment variables (environment)
+        if: github.event_name != 'workflow_dispatch' || ( github.event.inputs.version_php == '' &&  github.event.inputs.version_piwigo == '' )
+        env:
+          VERSION_PHP: ${{ vars.version_php }} 
+          VERSION_PIWIGO: ${{ vars.version_piwigo }}
       - uses: actions/checkout@v3
       - name: Clone docker-piwigo
         run: |
           git clone https://github.com/Kipjr/docker-piwigo docker-piwigo
-      - name: Prepare environment
-        env:
-          __TEMPLATE__DB_ROOT_PASSWORD: ${{ vars.__TEMPLATE__DB_ROOT_PASSWORD }}
-          __TEMPLATE__PWG_ADMIN_PASSWORD: ${{ vars.__TEMPLATE__PWG_ADMIN_PASSWORD }}
-          __TEMPLATE_LDAP_ADMIN_PASSWORD: ${{ vars.__TEMPLATE_LDAP_ADMIN_PASSWORD }}
-          __TEMPLATE__LDAP_CONFIG_PASSWORD: ${{ vars.__TEMPLATE__LDAP_CONFIG_PASSWORD }}
-          __TEMPLATE__VERSION: ${{ vars.__TEMPLATE__VERSION }}
-          __TEMPLATE__PWGVERSION:  ${{ vars.__TEMPLATE__PWGVERSION }}
+      - name: Prepare docker-compose.yml
         run: |
           envsubst < docker-piwigo/docker-compose.template > docker-piwigo/docker-compose.yml
           grep 'image: ghcr.io/kipjr/docker-piwigo:php-apache.*$' docker-piwigo/docker-compose.yml
