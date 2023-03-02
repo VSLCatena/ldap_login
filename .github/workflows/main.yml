@@ -35,8 +35,8 @@ jobs:
       - name: Set environment variables (environment)
         if: github.event_name != 'workflow_dispatch' || ( github.event.inputs.version_php == '' &&  github.event.inputs.version_piwigo == '' )
         env:
-          VERSION_PHP: ${{ vars.version_php }} 
-          VERSION_PIWIGO: ${{ vars.version_piwigo }}
+          VERSION_PHP: ${{ vars.VERSION_PHP }} 
+          VERSION_PIWIGO: ${{ vars.VERSION_PIWIGO }}
       - uses: actions/checkout@v3
       - name: Clone docker-piwigo
         run: |
