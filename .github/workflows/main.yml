@@ -31,8 +31,8 @@ jobs:
       - name: Set environment variables (workflow)
         if: github.event_name == 'workflow_dispatch'
         run: |
-          VERSION_PHP=${{ input.version_php }} >> $GITHUB_ENV
-          VERSION_PIWIGO=${{ input.version_piwigo }} >> $GITHUB_ENV
+          VERSION_PHP=${{ inputs.version_php }} >> $GITHUB_ENV
+          VERSION_PIWIGO=${{ inputs.version_piwigo }} >> $GITHUB_ENV
       - name: Set environment variables (environment)
         if: github.event_name != 'workflow_dispatch' || ( github.event.inputs.version_php == '' &&  github.event.inputs.version_piwigo == '' )
         run: |
