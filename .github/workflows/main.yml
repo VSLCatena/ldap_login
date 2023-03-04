@@ -61,7 +61,7 @@ jobs:
           LDAP_VERSION: 3
           LDAP_USERNAME: admin
         run: |
-          vendor/bin/phpunit --bootstrap vendor/autoload.php tests/LdapLogin.php
+          vendor/bin/phpunit --bootstrap vendor/autoload.php ./.tests/LdapLogin.php
 
       - name: Stop containers
         if: always()
