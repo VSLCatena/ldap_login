@@ -39,6 +39,7 @@ jobs:
           echo "VERSION_PHP=${{ vars.VERSION_PHP }}" >> $GITHUB_ENV
           echo "VERSION_PIWIGO=${{ vars.VERSION_PIWIGO }}" >> $GITHUB_ENV
       - uses: actions/checkout@v3
+        path: 'ldap_login'
       - name: Clone docker-piwigo
         run: |
           git clone https://github.com/Kipjr/docker-piwigo docker-piwigo
