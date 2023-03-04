@@ -52,7 +52,7 @@ jobs:
       - name: Start containers
         run: cd docker-piwigo && docker-compose up -d && cd ..
       - name: Copy ldap_logon to container:/app/piwigo/plugins
-        run |
+        run: |
           docker cp ./ldap_login/ piwigo.php:/app/piwigo/plugins/
       - name: Run tests
         env:
