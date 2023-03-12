@@ -1,0 +1,100 @@
+x-variables:
+  - &LDAP_HOST "ldap"
+  - &LDAP_DOMAIN "domain.tld"
+  - &LDAP_ADMIN_PASSWORD "$PASSWORD_LDAP_ADMIN"
+  - &LDAP_CONFIG_PASSWORD "$PASSWORD_LDAP_CONFIG"
+  - &LDAP_BASE_DN "dc=domain, dc=tld"
+
+volumes:
+  ldapdata_config:
+    driver: local
+  ldapdata_db:
+    driver: local
+  phpdata:
+    driver: local
+    
+networks:
+  net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.8.128/26 #192.168.8.57 - 192.168.8.62(bc:63)
+
+services:
+  piwigo.ldap:
+    container_name: piwigo.ldap
+    hostname: ldap
+    image: "osixia/openldap:latest"
+    restart: "unless-stopped"
+    volumes:
+      - ldapdata_db:/var/lib/ldap # Error: the config directory (/etc/ldap/slapd.d) is empty but not  the database directory (/var/lib/ldap) 
+      - ldapdata_config:/etc/ldap/slapd.d
+      - ${PIWIGO_PATH}/ldap_bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/50-bootstrap.ldif
+    environment:
+      TZ: "Europe/Amsterdam"
+      LDAP_TLS: "False"
+      LDAP_LOG_LEVEL: 256
+      KEEP_EXISTING_CONFIG: "False"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "False"
+      LDAP_ORGANISATION: *LDAP_DOMAIN
+      LDAP_DOMAIN: *LDAP_DOMAIN
+      LDAP_ADMIN_PASSWORD: *LDAP_ADMIN_PASSWORD
+      LDAP_CONFIG_PASSWORD: *LDAP_ADMIN_PASSWORD
+      LDAP_BASE_DN: *LDAP_BASE_DN
+      LDAP_RFC2307BIS_SCHEMA: "True"
+    command: --loglevel debug --copy-service
+    networks:
+      - net
+    
+
+  piwigo.pla:
+    container_name: piwigo.pla
+    hostname: piwigo.pla
+    image: "osixia/phpldapadmin:latest"
+    environment:
+      TZ: "Europe/Amsterdam"
+#      PHPLDAPADMIN_LDAP_HOSTS: *LDAP_HOST
+#      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap':[{'server':[{'tls':False}]},{'login':[{'attr':'cn'}]}]}]"
+      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap':[{'server':[{'tls':False}]}]}]"
+      PHPLDAPADMIN_HTTPS: "false"
+    command: --loglevel debug
+    profiles:
+      - debug
+    ports:
+      - 7082:80
+    restart: "unless-stopped"      
+    networks:
+      - net
+
+      
+#composer
+  piwigo.composer:
+    container_name: piwigo.composer
+    hostname: piwigo.composer
+    image: composer:latest
+    environment:
+      - COMPOSER_CACHE_DIR=/app/.cache/composer
+    volumes:
+      - phpdata:/app
+    restart: never
+    profiles:
+      - testing
+    networks:
+      - net
+      
+  #phpunit
+  piwigo.phpunit:
+    container_name: piwigo.phpunit
+    hostname: piwigo.phpunit
+    image: php:$VERSION_PHP-cli
+    restart: never
+    volumes:
+      - phpdata:/app
+      - pwgdata:/piwigo
+    working_dir: /app
+    entrypoint: vendor/bin/phpunit
+    profiles:
+      - testing
+    networks:
+      - net      
