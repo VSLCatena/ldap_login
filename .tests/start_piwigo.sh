@@ -100,6 +100,8 @@ else
     fi
 fi
 
+# docker exec -i <container_name> mysql -u root -ppassword <mydb> < /path/to/script.sql
+
 echo -e "\nCheck if phpunit is installed"
 if [ "$( docker-compose run --rm --entrypoint "bash -c" piwigo.phpunit 'ls /app/vendor/bin/phpunit 2>/dev/null' | wc -l)" == 0 ];then
     cd "$PIWIGO_PATH" || return
