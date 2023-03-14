@@ -5,8 +5,8 @@ global $template;
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/configuration.tpl') );
 $template->assign(
   array(
-    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
-    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
+    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-ldap_login-configuration',
+    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-ldap_login-configuration',
     ));
 
 $me = new Ldap();
@@ -115,7 +115,7 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 
 if (isset($_POST['check_ldap']) or isset($_POST['savetest'])){
 	$me->ldap_conn();
-	$me->write_log("[function]> Ldap_Login Test");
+	$me->write_log("[function]> ldap_login Test");
 	if($me->config['ld_anonbind'] == 0){
 		$p_username=isset($_POST['savetest'])? ldap_explode_dn($_POST['LD_BINDDN'],1)[0] : $_POST['USERNAME'];
 		$p_password=isset($_POST['savetest'])? $_POST['LD_BINDPW'] : $_POST['PASSWORD'];

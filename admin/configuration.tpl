@@ -30,7 +30,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug">
-	{if isset($LD_DEBUG) }
+	{if isset($LD_DEBUG) and $LD_DEBUG  }
 		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" checked />
 	{else}
 		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" />
@@ -38,7 +38,7 @@
     </p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug_clearupdate">
-	{if isset($LD_DEBUG_CLEARUPDATE) }
+	{if isset($LD_DEBUG_CLEARUPDATE) and $LD_DEBUG_CLEARUPDATE }
 		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" checked />
 	{else}
 		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" />
@@ -84,7 +84,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_use_ssl">
-	{if isset($LD_USE_SSL) }
+	{if isset($LD_USE_SSL) and $LD_USE_SSL}
 		<input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" checked />
 	{else}
 		<input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" />
@@ -172,7 +172,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_membership_user">
-	{if isset($LD_MEMBERSHIP_USER) }
+	{if isset($LD_MEMBERSHIP_USER) and $LD_MEMBERSHIP_USER }
 	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" checked />
 	{else}
 	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" />
@@ -206,7 +206,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_user_active">
-	{if isset($LD_GROUP_USER_ACTIVE) }
+	{if isset($LD_GROUP_USER_ACTIVE) and $LD_GROUP_USER_ACTIVE}
 	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" checked />
 	{else}
 	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" />
@@ -216,7 +216,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_admin_active">
-	{if isset($LD_GROUP_ADMIN_ACTIVE) }
+	{if isset($LD_GROUP_ADMIN_ACTIVE) and $LD_GROUP_ADMIN_ACTIVE }
 	<input type="checkbox" id="ld_group_admin_active" name="ld_group_admin_active" value="{$LD_GROUP_ADMIN_ACTIVE}" checked />
 	{else}
 	<input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="{$LD_GROUP_ADMIN_ACTIVE}" />
@@ -226,7 +226,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_webmaster_active">
-	{if $LD_GROUP_WEBMASTER_ACTIVE }
+	{if isset($LD_GROUP_WEBMASTER_ACTIVE) and $LD_GROUP_WEBMASTER_ACTIVE }
 	<input type="checkbox" id="ld_group_webmaster_active" name="ld_group_WEBMASTER_active" value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked />
 	{else}
 	<input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="{$LD_GROUP_WEBMASTER_ACTIVE}" />
