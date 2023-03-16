@@ -5,8 +5,8 @@ global $template;
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/configuration.tpl') );
 $template->assign(
   array(
-    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
-    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-Ldap_Login-configuration',
+    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-ldap_login-configuration',
+    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-ldap_login-configuration',
     ));
 
 $me = new Ldap();
