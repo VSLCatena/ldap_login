@@ -16,7 +16,8 @@
         var userclass = document.getElementById("ld_user_class").value;
         var attr = document.getElementById("ld_user_attr").value;
         var filter = document.getElementById("ld_user_filter").value;
-        var username = document.getElementById("username").value;
+        {* var username = document.getElementById("username").value; *}
+        var username = "Login_Form_username"
         var string = '&(&(objectClass=' + userclass + ')(' + attr + '=' + username + '))(' + filter +')'
         var exampleDiv = document.getElementById("exampleDiv")
         exampleDiv.value = string
@@ -113,83 +114,86 @@
                             <p style="color:red;">{'Warning: LDAP Extension missing.'|@translate}</p>
                         <br /> {/if}
                         <legend>{'General settings'|@translate}</legend>
-                        
-                        <div class="form-inline">
-                            <div class="form-group row">
-                                <label for="ld_forgot_url" class="col-sm-2 col-form-label">{'Password Reset URL'|@translate}</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="ld_forgot_url" name="LD_FORGOT_URL" class="form-control"
-                                        value="{$LD_FORGOT_URL}" placeholder="https://piwigo.company.tld/password.php"
-                                        aria-describedby="ld_forgot_url_help">
-                                        <small id="ld_forgot_url_help" class="text-muted">
-                                            {'Company directory password reset URL (https://mycompany.com/passreset.php) Default: Piwigo "password.php"'|@translate}
-                                        </small>
+                        <div class="card">
+                            <div class="card-body">                        
+                                <div class="form-inline">
+                                    <div class="form-group row">
+                                        <label for="ld_forgot_url" class="col-sm-2 col-form-label">{'Password Reset URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="ld_forgot_url" name="LD_FORGOT_URL" class="form-control"
+                                                value="{$LD_FORGOT_URL}" placeholder="https://piwigo.company.tld/password.php"
+                                                aria-describedby="ld_forgot_url_help">
+                                                <small id="ld_forgot_url_help" class="text-muted">
+                                                    {'Company directory password reset URL (https://mycompany.com/passreset.php) Default: Piwigo "password.php"'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="form-inline">
-                            <div class="form-group row">
-                                <label for="ld_debug_location" class="col-sm-2 col-form-label">{'Log location'|@translate}</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="ld_debug_location" name="LD_DEBUG_LOCATION"
-                                        class="form-control" value="{$LD_DEBUG_LOCATION}" placeholder="/var/log/"
-                                        aria-describedby="ld_debug_location_label">
-                                    <small id="ld_debug_location_help" class="text-muted">
-                                        {'Log location help: Field to define the location of debug.log. Protect the location with .htaccess or store in /var/log/ (most secure)'|@translate}
-                                    </small>
+                                <br>
+                                <div class="form-inline">
+                                    <div class="form-group row">
+                                        <label for="ld_debug_location" class="col-sm-2 col-form-label">{'Log location'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="ld_debug_location" name="LD_DEBUG_LOCATION"
+                                                class="form-control" value="{$LD_DEBUG_LOCATION}" placeholder="/var/log/"
+                                                aria-describedby="ld_debug_location_label">
+                                            <small id="ld_debug_location_help" class="text-muted">
+                                                {'Log location help: Field to define the location of debug.log. Protect the location with .htaccess or store in /var/log/ (most secure)'|@translate}
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        
+                                
 
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
-                                value="{$LD_DEBUG}" id="flexCheckDefault" checked>
-                            <label class="form-check-label" for="flexCheckDefault">
-                                {'Enable logs'|@translate}
-                            </label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
-                                type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}" id="flexCheckChecked" checked>
-                            <label class="form-check-label" for="flexCheckChecked">
-                                {'Clear logs after plugin update'|@translate}
-                            </label>
-                        </div>
-                        <br>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
+                                        value="{$LD_DEBUG}" id="flexCheckDefault" checked>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        {'Enable logs'|@translate}
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
+                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}" id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        {'Clear logs after plugin update'|@translate}
+                                    </label>
+                                </div>
+                                <br>
 
-                        <div class="form-inline">
-                    
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"
-                                    for="ld_debug_level">{'Debug level'|@translate}</label>
-                                <div class="col-sm-4">
-                                    <select class="form-select" aria-label="{'Debug level'|@translate}"
-                                        id="ld_debug_level" name="LD_DEBUG_LEVEL">
-                                        <option id="ld_debug_level_fatal" name="LD_DEBUG_LEVEL_fatal" value="fatal"
-                                            disabled {if 'fatal'==$LD_DEBUG_LEVEL}selected{/if}>Fatal</option>
-                                        <option id="ld_debug_level_error" name="LD_DEBUG_LEVEL_error" value="error"
-                                            disabled {if 'error'==$LD_DEBUG_LEVEL}selected{/if}> Error</option>
-                                        <option id="ld_debug_level_warning" name="LD_DEBUG_LEVEL_warning"
-                                            value="warning" disabled {if 'warning'==$LD_DEBUG_LEVEL}selected{/if}>
-                                            Warning</option>
-                                        <option id="ld_debug_level_info" name="LD_DEBUG_LEVEL_info" value="info"
-                                            disabled {if 'info'==$LD_DEBUG_LEVEL}selected{/if}>Info</option>
-                                        <option id="ld_debug_level_debug" name="LD_DEBUG_LEVEL_debug" value="debug"
-                                            {if 'debug'== $LD_DEBUG_LEVEL}selected{/if}>Debug</option>
-                                    </select>
+                                <div class="form-inline">
+                            
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label"
+                                            for="ld_debug_level">{'Debug level'|@translate}</label>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" aria-label="{'Debug level'|@translate}"
+                                                id="ld_debug_level" name="LD_DEBUG_LEVEL">
+                                                <option id="ld_debug_level_fatal" name="LD_DEBUG_LEVEL_fatal" value="fatal"
+                                                    disabled {if 'fatal'==$LD_DEBUG_LEVEL}selected{/if}>Fatal</option>
+                                                <option id="ld_debug_level_error" name="LD_DEBUG_LEVEL_error" value="error"
+                                                    disabled {if 'error'==$LD_DEBUG_LEVEL}selected{/if}> Error</option>
+                                                <option id="ld_debug_level_warning" name="LD_DEBUG_LEVEL_warning"
+                                                    value="warning" disabled {if 'warning'==$LD_DEBUG_LEVEL}selected{/if}>
+                                                    Warning</option>
+                                                <option id="ld_debug_level_info" name="LD_DEBUG_LEVEL_info" value="info"
+                                                    disabled {if 'info'==$LD_DEBUG_LEVEL}selected{/if}>Info</option>
+                                                <option id="ld_debug_level_debug" name="LD_DEBUG_LEVEL_debug" value="debug"
+                                                    {if 'debug'== $LD_DEBUG_LEVEL}selected{/if}>Debug</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <span class="icon-help-circled tiptip" style="cursor:help" title="
+                                        <b>FATAL</b>: The service/app is going to stop or becomes unusable. 
+                                        <br><b>ERROR</b>: Fatal for a particular request, but the service/app continues servicing.
+                                        <br><b>WARN</b>: A note on something that should probably be looked at
+                                        <br><b>INFO</b>: Detail on regular operation.
+                                        <br><b>DEBUG</b>: Anything else, i.e. too verbose to be included in INFO level.
+                                        </div>
+                                    ">More info..</span> 
+                                    {if isset($WARN_LD_DEBUG_LEVEL)}<i style="color:red;">{$WARN_LD_DEBUG_LEVEL}</i>{/if}
                                 </div>
                             </div>
-                            <span class="icon-help-circled tiptip" style="cursor:help" title="
-                                <b>FATAL</b>: The service/app is going to stop or becomes unusable. 
-                                <br><b>ERROR</b>: Fatal for a particular request, but the service/app continues servicing.
-                                <br><b>WARN</b>: A note on something that should probably be looked at
-                                <br><b>INFO</b>: Detail on regular operation.
-                                <br><b>DEBUG</b>: Anything else, i.e. too verbose to be included in INFO level.
-                                </div>
-                            ">More info..</span> 
-                            {if isset($WARN_LD_DEBUG_LEVEL)}<i style="color:red;">{$WARN_LD_DEBUG_LEVEL}</i>{/if}
                         </div>
                     </div>
                 </div>
@@ -198,17 +202,18 @@
                 <div class="row">
                     <div class="col-12">
                         <legend>{'Auth settings'|@translate}</legend>
+  
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_azure"
+                            <input class="btn-check form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_azure"
                                 value="ld_auth_azure" onChange="toggleAuthFields(this)">
-                            <label class="form-check-label" for="ld_auth_azure">
+                            <label class="btn btn-lg" for="ld_auth_azure">
                                 Azure
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_ldap" value="ld_auth_ldap"
+                            <input class="btn-check form-check-input" type="radio" name="LD_AUTH_TYPE" id="ld_auth_ldap" value="ld_auth_ldap"
                                 onChange="toggleAuthFields(this)" checked>
-                            <label class="form-check-label" for="ld_auth_ldap">
+                            <label class="btn btn-lg" for="ld_auth_ldap">
                                 LDAP(S)
                             </label>
                         </div>
@@ -216,185 +221,177 @@
                 </div>
             </fieldset>
             <fieldset class="form-group">
+                <div class="card">
+                    <div class="card-body">                 
+                    <div class="row visually-hidden" id="AzureSettingsBlock">
+                        <h2 class="card-title">{'Azure settings'|@translate}</h2>
+                            <div class="col-6">
+
+                            
+                            
+                            
+            
+                                    
+                            <div class="form-inline mb-3">
+                                <div class="form-group row">
+                                    <label for="ld_azure_tenant" class="col-sm-2 col-form-label" >{'Tenant ID'|@translate}</label>
+                                    <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="ld_azure_tenant" name="LD_AZURE_TENANT"
+                                    placeholder="fake-8cedf1be-5920-478e-85ff-b6909f288d10" aria-label="{'Azure Tenant'|@translate}"
+                                    disabled>
+                                            <small id="ld_azure_tenant_help" class="text-muted">
+                                                {'Azure Tenant ID.'|@translate}
+                                            </small>
+                                    </div>
+                                </div>
+                            </div>   
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_clientid" class="col-sm-2 col-form-label" >{'Client ID'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_clientid" name="LD_AZURE_CLIENTID"
+                                        placeholder="fake-11b1f4a2-a86b-44c5-a773-ead7dceed5e2" aria-label="{'Azure Client ID'|@translate}"
+                                        disabled>
+                                                <small id="ld_azure_clientid_help" class="text-muted">
+                                                    {'Azure Application Client ID.'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>     
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_clientsecret" class="col-sm-2 col-form-label" >{'Client Secret'|@translate}</label>
+                                        <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="ld_azure_clientsecret" name="LD_AZURE_CLIENTSECRET"
+                                        placeholder="" aria-label="{'Azure Client Secret'|@translate}" disabled>
+                                                <small id="ld_azure_clientsecret_help" class="text-muted">
+                                                    {'Azure Application Client Secret.'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_redirecturi" class="col-sm-2 col-form-label" >{'Redirect URI'|@translate}</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="ld_azure_redirecturi" name="LD_AZURE_REDIRECTURI"
+                                        placeholder="https://piwigo.domain.tld/callback" aria-label="{'Azure Redirect URI'|@translate}"
+                                        disabled>
+                                                <small id="ld_azure_clientsecret_help" class="text-muted">
+                                                    {'Azure Application Redirect URI.'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>                         
+                            </div>
+                        </div>
+
+                        <div class="row" id="LdapSettingsBlock">
+                            <div class="col-xl-6">
+                            
+                                <h2 class="card-title">{'Connection'|@translate}</h2>
+                                <hr>
+                                <div class="input-group mb-3">
+                                    <label class="input-group-text" for="ld_server_type">{'LDAP Server Type'|@translate}</label>
+                                    <select class="form-select" aria-label="{'LDAP Server Type'|@translate}" id="ld_server_type"
+                                        name="LD_SERVER_TYPE" onChange="disableADFields(this)">
+                                        <option id="ld_server_rfc2307" name="LD_SERVER_RFC2307" value="RFC2307">OpenLDAP (RFC2307)</option>
+                                        <option id="ld_server_rfc2307bis" name="LD_SERVER_RFC2307BIS" value="RFC2307BIS">Active Directory
+                                            (RFC2307bis)</option>
+                                        <option id="ld_server_other" name="LD_SERVER_OTHER" value="OTHER">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_forgot_url" class="col-sm-2 col-form-label">{'Host'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="ld_host" name="LD_HOST" class="form-control"
+                                                placeholder="ldap.domain.tld"
+                                                aria-describedby="ld_host_help" aria-label="{'IP, FQDN or hostname of the directory server.'|@translate}" size="70" type="text"
+                                                value="{$LD_HOST}" />
+                                                <small id="ld_host_help" class="text-muted">
+                                                    {'IP or hostname of the directory server.'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label"
+                                        for="ld_port">{'Ldap port'|@translate}</label>
+                                        <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input type="number" id="ld_port" name="LD_PORT" class="form-control"
+                                                placeholder="{'389 or 636'|@translate}" aria-describedby="ld_port_help"
+                                                aria-label="{'389 or 636'|@translate}" type="text" value="{$LD_PORT}" />
+                                            <div class="input-group-text">
+                                                <input class="form-check-input mt-0" type="checkbox"
+                                                    aria-label="Checkbox for following text input" id="ld_use_ssl"
+                                                    name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}" checked>
+                                            </div>
+                                            <span class="input-group-text"
+                                                id="ld_use_ssl-addon1">{'Secure connection'|@translate}</span>
+                                                </div>
+                                                <small id="ld_port_help" class="text-muted">
+                                                    {'389 or 636'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>
                 
-                <div class="row visually-hidden" id="AzureSettingsBlock">
-                    <div class="col-6">
-
-                    
-                    
-                    <legend>{'Azure settings'|@translate}</legend>
-                    
-                    <div class="form-inline">
-                        <div class="form-group row">
-                            <label for="ld_forgot_url"
-                                class="col-sm-2 col-form-label">{'Password Reset URL'|@translate}</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="ld_forgot_url" name="LD_FORGOT_URL" class="form-control"
-                                    value="{$LD_FORGOT_URL}" placeholder="https://piwigo.company.tld/password.php"
-                                    aria-describedby="ld_forgot_url_help">
-                                <small id="ld_forgot_url_help" class="text-muted">
-                                    {'Company directory password reset URL (https://mycompany.com/passreset.php) Default: Piwigo "password.php"'|@translate}
-                                </small>
-                            </div>
-                        </div>
-                    </div>         
-                    
-                    
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_azure_clientid-addon1">{'Azure Client ID'|@translate}</span>
-                            </div>
-                            <input type="text" class="form-control" id="ld_azure_clientid" name="LD_AZURE_CLIENTID"
-                                placeholder="fake-11b1f4a2-a86b-44c5-a773-ead7dceed5e2" aria-label="{'Azure Client ID'|@translate}"
-                                disabled>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_azure_tenant-addon1">{'Azure Tenant'|@translate}</span>
-                            </div>
-                            <input type="text" class="form-control" id="ld_azure_tenant" name="LD_AZURE_TENANT"
-                                placeholder="fake-8cedf1be-5920-478e-85ff-b6909f288d10" aria-label="{'Azure Tenant'|@translate}"
-                                disabled>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"
-                                    id="ld_azure_clientsecret-addon1">{'Azure Client Secret'|@translate}</span>
-                            </div>
-                            <input type="password" class="form-control" id="ld_azure_clientsecret" name="LD_AZURE_CLIENTSECRET"
-                                placeholder="" aria-label="{'Azure Client Secret'|@translate}" disabled>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"
-                                    id="ld_azure_redirecturi-addon1">{'Azure Redirect URI'|@translate}</span>
-                            </div>
-                            <input type="text" class="form-control" id="ld_azure_redirecturi" name="LD_AZURE_REDIRECTURI"
-                                placeholder="https://piwigo.domain.tld/callback" aria-label="{'Azure Redirect URI'|@translate}"
-                                disabled>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="row" id="LdapSettingsBlock">
-                    <div class="col-6">
-                    
-                        <legend>{'Ldap server host connection'|@translate}</legend>
-                        <div class="input-group mb-3">
-                            <label class="input-group-text" for="ld_server_type">{'LDAP Server Type'|@translate}</label>
-                            <select class="form-select" aria-label="{'LDAP Server Type'|@translate}" id="ld_server_type"
-                                name="LD_SERVER_TYPE" onChange="disableADFields(this)">
-                                <option id="ld_server_rfc2307" name="LD_SERVER_RFC2307" value="RFC2307">OpenLDAP (RFC2307)</option>
-                                <option id="ld_server_rfc2307bis" name="LD_SERVER_RFC2307BIS" value="RFC2307BIS">Active Directory
-                                    (RFC2307bis)</option>
-                                <option id="ld_server_other" name="LD_SERVER_OTHER" value="OTHER">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_host-addon1">{'Server FQDN/IP'|@translate}</span>
-                            </div>
-                            <input class="form-control" placeholder="ldap.domain.tld"
-                                aria-label="{'IP or hostname of the directory server.'|@translate}" size="70" type="text"
-                                id="ld_host" name="LD_HOST" value="{$LD_HOST}" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_port-addon1">{'Ldap port'|@translate}</span>
-                            </div>
-                            <input class="form-control" type="text" id="ld_port" name="LD_PORT" value="{$LD_PORT}"
-                                placeholder="{'389 or 636'|@translate}" aria-label="{'389 or 636'|@translate}" />
-                            <div class="input-group-text">
-                                <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input"
-                                    id="ld_use_ssl" name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}" checked>
-                            </div>
-                            <span class="input-group-text" id="ld_use_ssl-addon1">{'Secure connection'|@translate}</span>
-                        </div>
-                        <!-- <label for="ld_host">{'Server location'|@translate}</label> -->
-                        <!-- <input size="70" type="text" id="ld_host" name="LD_HOST" value="{$LD_HOST}" /> {if isset($WARN_LD_HOST)}<i style="color:red;">{$WARN_LD_HOST}</i>{/if} -->
-                        <!-- <br> <i style="margin:15%;">{'IP or hostname of the directory server.'|@translate}</i> -->
-                        <!-- <br> -->
-                        <!-- <label for="ld_port">{'Ldap port'|@translate}</label> -->
-                        <!-- <input type="text" id="ld_port" name="LD_PORT" value="{$LD_PORT}" /> {if isset($WARN_LD_PORT)}<i style="color:red;">{$WARN_LD_PORT}</i>{/if} -->
-                        <!-- <br> <i style="margin:15%;">{'If empty, localhost and standard protocol ports (389/636) will be used in configuration.'|@translate}</i> -->
-                        <!-- <br> </p> -->
-                        <!-- <div class="form-check form-switch"> -->
-                        <!-- <input class="form-check-input" id="ld_use_ssl" name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}"  id="ld_use_ssl" checked> -->
-                        <!-- <label class="form-check-label" for="ld_use_ssl"> -->
-                        <!-- {'Secure connection'|@translate} -->
-                        <!-- </label> -->
-                        <!-- </div>	 -->
-                        <!-- <label for="ld_use_ssl"> {if isset($LD_USE_SSL) } -->
-                        <!-- <input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" checked /> {else} -->
-                            <!-- <input type="checkbox" id="ld_use_ssl" name="LD_USE_SSL" value="{$LD_USE_SSL}" /> {/if} {'Secure connexion'|@translate}</label> {if isset($WARN_LD_USE_SSL)}<i style="color:red;">{$WARN_LD_USE_SSL}</i>{/if} -->
-                            <!-- <br> -->
-                            <!-- <br> -->
-                            <!-- <label for="ld_basedn">{'Base DN:'|@translate}</label> -->
-                            <!-- <input size="70" type="text" id="ld_basedn" name="LD_BASEDN" value="{$LD_BASEDN}" /> {if isset($WARN_LD_BASEDN)}<i style="color:red;">{$WARN_LD_BASEDN}</i>{/if} -->
-                            <!-- <br> <i style="margin:15%;">{'The highest accessible OU or Base DN'|@translate}</i> -->
-                            <!-- <br> -->
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_basedn-addon1">{'Base DN:'|@translate}</span>
-                            </div>
-                            <input class="form-control" placeholder="dc=domain,dc=tld" aria-label="dc=domain,dc=tld" size="70"
-                                type="text" id="ld_basedn" name="LD_BASEDN" value="{$LD_BASEDN}" />
-                        </div>
-                        <span id="ld_basedn_help"
-                            class="form-text text-muted">{'The highest accessible OU or Base DN'|@translate}
-                        </span>
-                        <br>
-           
-                    </div>
-                    <div class="col-6">
-                        
-                        <legend>{'LDAP Credentials'|@translate}</legend>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="ld_binddn-addon1">{'Bind (Service account) DN'|@translate}</span>
-                            </div>
-                            <input class="form-control" type="text" id="ld_binddn" name="LD_BINDDN" value="{$LD_BINDDN}"
-                                placeholder="cn=admin,dc=domain,dc=tld" aria-label="cn=admin,dc=domain,dc=tld" />
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"
-                                    id="ld_bindpw-addon1">{'Bind (Service account) password'|@translate}</span>
-                            </div>
-                            <input class="form-control" type="password" id="ld_bindpw" name="LD_BINDPW" value="{$LD_BINDPW}" />
-                        </div>
-                        <span id="ld_binddn_help"
-                            class="form-text text-muted">{'Keep BOTH fields blank if the ldap accept anonymous connections. '|@translate}</span>
-                        <!-- <ul> -->
-                        <!-- <li> -->
-                        <!-- <label for="ld_binddn">{'Bind (Service account) DN'|@translate}</label> -->
-                        <!-- <br> -->
-                        <!-- <input size="100" type="text" id="ld_binddn" name="LD_BINDDN" value="{$LD_BINDDN}" /> {if isset($WARN_LD_BINDDN)}<i style="color:red;">{$WARN_LD_BINDDN}</i>{/if} </li> -->
-                        <!-- <li> -->
-                        <!-- <label for="ld_bindpw">{'Bind (Service account) password'|@translate}</label> -->
-                        <!-- <br> -->
-                        <!-- <input type="password" id="ld_bindpw" name="LD_BINDPW" /> {if isset($WARN_LD_BINDPW)}<i style="color:red;">{$WARN_LD_BINDPW}</i>{/if} </li> -->
-                        <!-- </ul> <i>{'Keep BOTH fields blank if the ldap accept anonymous connections. '|@translate}</i>  -->
+                                
+                                <div class="form-inline">
+                                    <div class="form-group row">
+                                        <label for="ld_basedn" class="col-sm-2 col-form-label">{'Base DN:'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="ld_basedn" name="LD_BASEDN" class="form-control"
+                                                placeholder="dc=domain,dc=tld"
+                                                aria-describedby="ld_basedn_help" aria-label=" {'The highest accessible OU or Base DN'|@translate}" size="70" type="text"
+                                                value="{$LD_BASEDN}" />
+                                                <small id="ld_basedn_help" class="text-muted">
+                                                {'The highest accessible OU or Base DN'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>
                 
+                            </div>
+                            <div class="col-xl-6">
+                                
+                                <h2 class="card-title">{'Credentials'|@translate}</h2>
+                                <hr>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_binddn" class="col-sm-2 col-form-label">{'Bind DN'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" id="ld_binddn" name="LD_BINDDN" class="form-control"
+                                                placeholder="cn=admin,dc=domain,dc=tld"
+                                                aria-describedby="ld_binddn_help" aria-label="cn=admin,dc=domain,dc=tld"
+                                                value="{$LD_BINDDN}" />
+                                                <small id="ld_binddn_help" class="text-muted">
+                                                    {'User (Service account) described by DN performing the bind'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>
 
-
-
-                        <!-- <input type="submit" value="{'Reset to AD-values'|@translate}" name="RESET_AD" /> -->
-                        <!-- <br> -->
-                        <!-- <br> -->
-                        <!-- <input type="submit" value="{'Reset to OpenLDAP-values'|@translate}" name="RESET_OL" /> </div> -->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <!-- <input type="submit" value="{'Save'|@translate}" name="save" /> -->
-                        <!-- <input type="submit" value="{'Save & test'|@translate}" name="savetest" />  -->
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" value="{'Save'|@translate}"
-                            name="save">{'Save'|@translate}</button>
-                        <!-- <button type="submit" class="btn btn-secondary btn-lg btn-block btn-warning" value="{'Save & test'|@translate}" name="savetest">{'Save & test'|@translate}</button>         -->
+                                <div class="form-inline mb-3">
+                                <div class="form-group row">
+                                    <label for="ld_bindpw" class="col-sm-2 col-form-label">{'Bind password'|@translate}</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" id="ld_bindpw" name="LD_BINDPW" class="form-control"
+                                            aria-describedby="ld_host_help" aria-label="{'Password of bind account'|@translate}" size="70" type="text"
+                                            value="{$LD_BINDPW}" />
+                                            <small id="ld_bindpw_help" class="text-muted">
+                                                {'Keep BOTH fields blank if the ldap accept anonymous connections. '|@translate}
+                                            </small>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -425,119 +422,124 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tabUserSchema">
-                                <div class="card card-body">
-                                
-                                    <legend>{'User Schema Settings'|@translate}</legend>
-                                    <legend>{'User Schema Settings'|@translate}</legend>
-                                    <legend>{'User Schema Settings'|@translate}</legend>
+                                <div class="card card-body"> 
+                                <h2 class="card-title">{'User Schema Settings'|@translate}</h2>
+                                    
+                                  
+                                    
                                     <i>Required for user filter:
                                         (&(&(objectClass=<b>User_Object_Class</b>)(<b>Username_Attribute</b>=Login_Form_username))(<b>User_Object_Filter</b>)</i>
                                     <input class="form-control" id="exampleDiv" readonly>
                                     <br><br>
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The LDAP user object class type to use when loading users'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_user_class-addon1">{'User Object Class:'|@translate}</span>
+                                    
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_user_class" class="col-sm-2 col-form-label">{'User Object Class:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_class"
+                                                name="LD_USER_CLASS" value="{$LD_USER_CLASS}" placeholder=""
+                                                aria-label="{'User Object Class:'|@translate}">
+                                                    <small id="ld_user_class_help" class="text-muted">
+                                                        {'The LDAP user object class type to use when loading users'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_class"
-                                            name="LD_USER_CLASS" value="{$LD_USER_CLASS}" placeholder=""
-                                            aria-label="{'User Object Class:'|@translate}">
-                                    </div>
+                                    </div>                                      
+                                    
 
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The attribute field to use on the user object. Examples: cn, sAMAccountName.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_user_attr-addon1">{'Username Attribute'|@translate}</span>
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_user_attr" class="col-sm-2 col-form-label">{'Username Attribute'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_attr"
+                                                name="LD_USER_ATTR" value="{$LD_USER_ATTR}" placeholder=""
+                                                aria-label="{'Username Attribute'|@translate}">
+                                                    <small id="ld_user_attr_help" class="text-muted">
+                                                        {'The attribute field to use on the user object. Examples: cn, sAMAccountName.'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_attr"
-                                            name="LD_USER_ATTR" value="{$LD_USER_ATTR}" placeholder=""
-                                            aria-label="{'Username Attribute'|@translate}">
-                                    </div>
+                                    </div>                                       
+                                    
 
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The filter to use when searching user objects'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_user_filter-addon1">{'User Object Filter:'|@translate}</span>
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_user_filter" class="col-sm-2 col-form-label">{'User Object Filter:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_filter"
+                                                name="LD_USER_FILTER" value="{$LD_USER_FILTER}" placeholder=""
+                                                aria-label="{'User Object Filter:'|@translate}">
+                                                    <small id="ld_user_filter_help" class="text-muted">
+                                                    {'The filter to use when searching user objects'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" onchange="updateExampleFilter()" id="ld_user_filter"
-                                            name="LD_USER_FILTER" value="{$LD_USER_FILTER}" placeholder=""
-                                            aria-label="{'User Object Filter:'|@translate}">
-                                    </div>
-
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_user_class">{'User Object Class:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_user_class" name="LD_USER_CLASS" value="{$LD_USER_CLASS}" /> {if isset($WARN_LD_USER_CLASS)}<i style="color:red;">{$WARN_LD_USER_CLASS}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The LDAP user object class type to use when loading users'|@translate}</i> -->
-                                    <!-- <br> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_user_attr">{'Username Attribute'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_user_attr" name="LD_USER_ATTR" value="{$LD_USER_ATTR}" /> {if isset($WARN_LD_USER_ATTR)}<i style="color:red;">{$WARN_LD_USER_ATTR}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The attribute field to use on the user object. Examples: cn, sAMAccountName.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_user_filter">{'User Object Filter:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_user_filter" name="LD_USER_FILTER" value="{$LD_USER_FILTER}" /> {if isset($WARN_LD_USER_FILTER)}<i style="color:red;">{$WARN_LD_USER_FILTER}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The filter to use when searching user objects'|@translate}</i> -->
-                                    <!-- <br> </p> -->
+                                    </div>                                     
+                                    
                                 
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tabGroupSchema">
                                 <div class="card card-body">
-                                
-                                    <legend>{'Group Schema Settings'|@translate}</legend>
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'LDAP attribute objectClass value to search for when loading groups.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_group_class-addon1">{'Group Object Class:'|@translate}</span>
+                                <h2 class="card-title">{'Group Schema Settings'|@translate}</h2>
+                                    
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_group_class" class="col-sm-2 col-form-label">{'Group Object Class:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="ld_group_class" name="LD_GROUP_CLASS"
+                                                value="{$LD_GROUP_CLASS}" placeholder=""
+                                                aria-label="{'Group Object Class:'|@translate}">
+                                                    <small id="ld_group_class_help" class="text-muted">
+                                                        {'LDAP attribute objectClass value to search for when loading groups.'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" id="ld_group_class" name="LD_GROUP_CLASS"
-                                            value="{$LD_GROUP_CLASS}" placeholder=""
-                                            aria-label="{'Group Object Class:'|@translate}">
-                                    </div>
+                                    </div>  
+                                    
 
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The filter to use when searching group objects.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_group_filter-addon1">{'Group Object Filter:'|@translate}</span>
-                                        </div>
-                                        <input type="text" class="form-control" id="ld_group_filter" name="LD_GROUP_FILTER"
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_group_filter" class="col-sm-2 col-form-label">{'Group Object Filter:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_group_filter" name="LD_GROUP_FILTER"
                                             value="{$LD_GROUP_FILTER}" placeholder=""
                                             aria-label="{'Group Object Filter:'|@translate}">
-                                    </div>
-
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The attribute field to use when loading the group name.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_group_attr-addon1">{'Group Name Attribute:'|@translate}</span>
+                                                    <small id="ld_group_filter_help" class="text-muted">
+                                                    {'The filter to use when searching group objects.'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" id="ld_group_attr" name="LD_GROUP_ATTR"
+                                    </div>                                     
+                                    
+
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_group_attr" class="col-sm-2 col-form-label">{'Group Name Attribute:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_group_attr" name="LD_GROUP_ATTR"
                                             value="{$LD_GROUP_ATTR}" placeholder=""
                                             aria-label="{'Group Name Attribute:'|@translate}">
-                                    </div>
-
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The attribute field to use when loading the group description.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_group_desc-addon1">{'Group Description:'|@translate}</span>
+                                                    <small id="ld_group_attr_help" class="text-muted">
+                                                    {'The attribute field to use when loading the group name.'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" id="ld_group_desc" name="LD_GROUP_DESC"
-                                            value="{$LD_GROUP_DESC}" placeholder="" aria-label="{'Group Description:'|@translate}">
-                                    </div>
+                                    </div>                                        
+                                    
 
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_group_desc" class="col-sm-2 col-form-label">{'Group Description:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_group_desc" name="LD_GROUP_DESC"
+                                            value="{$LD_GROUP_DESC}" placeholder="" aria-label="{'Group Description:'|@translate}">
+                                                    <small id="ld_group_desc_help" class="text-muted">
+                                                    {'The attribute field to use when loading the group description.'|@translate}
+                                                    </small>
+                                            </div>
+                                        </div>
+                                    </div>   
                                     <!-- <p> -->
                                     <!-- <label style="display:inline-block; width:15%;" for="ld_group_class">{'Group Object Class:'|@translate}</label> -->
                                     <!-- <input size="70" type="text" id="ld_group_class" name="LD_GROUP_CLASS" value="{$LD_GROUP_CLASS}" /> {if isset($WARN_LD_GROUP_CLASS)}<i style="color:red;">{$WARN_LD_GROUP_CLASS}</i>{/if} -->
@@ -559,33 +561,37 @@
                             </div>
                             <div class="tab-pane fade " id="tabMembershipSchema">
                                 <div class="card card-body">
-                                
-                                    <legend>{'Membership Schema Settings'|@translate}</legend>
+                                <h2 class="card-title">{'Membership Schema Settings'|@translate}</h2>
 
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The attribute field to use when loading the group members from the group.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_group_member_attr-addon1">{'Group Membership Attribute:'|@translate}</span>
-                                        </div>
-                                        <input type="text" class="form-control" id="ld_group_member_attr"
+                                    
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_group_member_attr" class="col-sm-2 col-form-label">{'Group Membership Attribute:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_group_member_attr"
                                             name="LD_GROUP_MEMBER_ATTR" value="{$LD_GROUP_MEMBER_ATTR}" placeholder=""
                                             aria-label="{'Group Membership Attribute:'|@translate}">
-                                    </div>
-
-                                    <span id="ld_user_class_help"
-                                        class="form-text text-muted">{'The attribute field when loading groups from a user.'|@translate}</span>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"
-                                                id="ld_user_member_attr-addon1">{'User Membership Attribute:'|@translate}</span>
+                                                    <small id="ld_group_member_attr_help" class="text-muted">
+                                                    {'The attribute field to use when loading the group members from the group.'|@translate}
+                                                    </small>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" id="ld_user_member_attr" name="LD_USER_MEMBER_ATTR"
+                                    </div>                                   
+                                    
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_user_member_attr" class="col-sm-2 col-form-label">{'User Membership Attribute:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_user_member_attr" name="LD_USER_MEMBER_ATTR"
                                             value="{$LD_USER_MEMBER_ATTR}" placeholder=""
                                             aria-label="{'User Membership Attribute:'|@translate}">
-                                    </div>
-
+                                                    <small id="ld_user_member_attr_help" class="text-muted">
+                                                    {'The attribute field when loading groups from a user.'|@translate}
+                                                    </small>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                                                    
                                     <div class="btn-group">
                                         <input type="radio" class="btn-check" name="LD_MEMBERSHIP_USER" id="ld_membership_user1"
                                             autocomplete="off" checked />
@@ -616,8 +622,7 @@
                                 </div>
                                 <div class="tab-pane fade " id="tabMembershipSettings">
                                     <div class="card card-body">
-                                    
-                                        <legend>{'Membership Settings'|@translate}</legend>
+                                    <h2 class="card-title">{'Membership Settings'|@translate}</h2>
                                         <a href="https://piwigo.org/doc/doku.php?id=user_documentation:use:features:user_status"
                                             target="_blank	"
                                             style="position: relative;display: inline-block;border-bottom: 1px dotted black;">More info
@@ -633,7 +638,7 @@
                                                     aria-label="Checkbox for following text input" id="ld_group_user_active"
                                                     name="LD_GROUP_USER_ACTIVE" type="checkbox" value="{$LD_GROUP_USER_ACTIVE}" checked>
                                             </div>
-                                            <div class="input-group-prepend">
+                                            <div class="input-group-prepend col-xl-4">
                                                 <span class="input-group-text"
                                                     id="ld_group_user-addon1">{'Group corresponding with users:'|@translate}</span>
                                             </div>
@@ -651,7 +656,7 @@
                                                     name="LD_GROUP_ADMIN_ACTIVE" type="checkbox" value="{$LD_GROUP_ADMIN_ACTIVE}"
                                                     checked>
                                             </div>
-                                            <div class="input-group-prepend">
+                                            <div class="input-group-prepend col-xl-4">
                                                 <span class="input-group-text"
                                                     id="ld_group_admin-addon1">{'Group corresponding with administrators:'|@translate}</span>
                                             </div>
@@ -669,7 +674,7 @@
                                                     name="LD_GROUP_WEBMASTER_ACTIVE" type="checkbox"
                                                     value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked>
                                             </div>
-                                            <div class="input-group-prepend">
+                                            <div class="input-group-prepend  col-xl-4">
                                                 <span class="input-group-text"
                                                     id="ld_group_webmaster-addon1">{'Group corresponding with webmasters:'|@translate}</span>
                                             </div>
@@ -799,31 +804,18 @@
                                                 <!-- </fieldset> -->
                                                 <!-- </div> -->
                                                 <!-- </div> -->
-                                                </form>
-                                                <form method="post" action="{$PLUGIN_CHECK}" class="general">
-                                                    <fieldset class="form-group">
-                                                        <legend>{'Ldap_Login Test'|@translate}</legend>
-                                                        <i>{'You must save the settings with the Save button just up there before testing here.'|@translate}</i>
-
-                                                        <div class="input-group mb-3">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text" id="username-addon1">{'Username'|@translate}</span>
-                                                            </div>
-                                                            <input type="text" class="form-control" id="username" name="USERNAME" value="{$USERNAME}" placeholder=""
-                                                                aria-label="{'Username'|@translate}">
-                                                        </div>
-
-                                                        <div class="input-group mb-3">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text" id="password-addon1">{'Your password'|@translate}</span>
-                                                            </div>
-                                                            <input type="password" class="form-control" id="password" name="PASSWORD" placeholder=""
-                                                                aria-label="{'Your password'|@translate}">
-                                                        </div>
-                                                        <input type="submit" class="btn btn-primary btn-lg btn-block" value="{'Test Settings'|@translate}"
-                                                            name="check_ldap" />
-
-
+                                                <br>
+                                                <div class="row">
+                                                <div class="col-12">
+                                                    <!-- <input type="submit" value="{'Save'|@translate}" name="save" /> -->
+                                                    <!-- <input type="submit" value="{'Save & test'|@translate}" name="savetest" />  -->
+                                                    <button type="submit" class="btn btn-primary btn-lg btn-block" value="{'Save'|@translate}"
+                                                        name="save">{'Save'|@translate}</button>
+                                                    <!-- <button type="submit" class="btn btn-secondary btn-lg btn-block btn-warning" value="{'Save & test'|@translate}" name="savetest">{'Save & test'|@translate}</button>         -->
+                                                </div>
+                                            </div>                                                
+                                        </form>
+                                               
                                                         <!-- <ul> -->
                                                         <!-- <li> -->
                                                         <!-- <label for="username">{'Username'|@translate}</label> -->

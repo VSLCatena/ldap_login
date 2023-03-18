@@ -1,3 +1,10 @@
-INPUT[type="text"], INPUT[type="file"] {
-  background-color: #dddddd3f !important;
+INPUT[type="text"] {
+  background-color: #fff !important;
+}
+
+.tab-content h2 {
+  display:unset !important;
+}
+.card-body h2 {
+  display:unset !important;
 }
