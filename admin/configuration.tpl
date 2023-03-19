@@ -147,15 +147,24 @@
 
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
-                                        value="{$LD_DEBUG}" id="flexCheckDefault" checked>
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                        value="{$LD_DEBUG}"  checked>
+                                    <label class="form-check-label" for="ld_debug">
                                         {'Enable logs'|@translate}
                                     </label>
                                 </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="ld_debug_php" name="LD_DEBUG_PHP" type="checkbox"
+                                        value="{$LD_DEBUG_PHP}"  checked>
+                                    <label class="form-check-label" for="ld_debug_php">
+                                        {'Write to PHP error log'|@translate}
+                                    </label>
+                                </div>
+
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
-                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
+                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}"  checked>
+                                    <label class="form-check-label" for="ld_debug_clearupdate">
                                         {'Clear logs after plugin update'|@translate}
                                     </label>
                                 </div>
