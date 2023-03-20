@@ -13,6 +13,7 @@ class Ldap {
 		'ld_debug' => 1,
 		'ld_debug_clearupdate' => 1,
 		'ld_debug_level' => 'debug',
+		'ld_debug_php' => 1,
 		'ld_host' => 'localhost',
 		'ld_port' => '389', 
 		'ld_basedn' => 'ou=base,dc=example,dc=com',
