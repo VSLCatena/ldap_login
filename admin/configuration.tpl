@@ -16,9 +16,12 @@
         var userclass = document.getElementById("ld_user_class").value;
         var attr = document.getElementById("ld_user_attr").value;
         var filter = document.getElementById("ld_user_filter").value;
-        {* var username = document.getElementById("username").value; *}
         var username = "Login_Form_username"
-        var string = '&(&(objectClass=' + userclass + ')(' + attr + '=' + username + '))(' + filter +')'
+        if(filter.length <= 0) {
+            var string = '(&(objectClass=' + userclass + ')(' + attr + '=' + username + '))'
+        } else {
+            var string = '(&(&(objectClass=' + userclass + ')(' + attr + '=' + username + '))(' + filter +'))'
+        }
         var exampleDiv = document.getElementById("exampleDiv")
         exampleDiv.value = string
     }
@@ -433,14 +436,19 @@
                             <div class="tab-pane fade show active" id="tabUserSchema">
                                 <div class="card card-body"> 
                                 <h2 class="card-title">{'User Schema Settings'|@translate}</h2>
-                                    
-                                  
-                                    
-                                    <i>Required for user filter:
-                                        (&(&(objectClass=<b>User_Object_Class</b>)(<b>Username_Attribute</b>=Login_Form_username))(<b>User_Object_Filter</b>)</i>
-                                    <input class="form-control" id="exampleDiv" readonly>
-                                    <br><br>
-                                    
+                                    <br>
+                                    <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="exampleDiv" class="col-sm-2 col-form-label">{'User Filter Generator:'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input readonly type="text" class="form-control" id="exampleDiv" >
+                                                    <small id="ld_user_class_help" class="text-muted">
+                                                    <i>{'(&(&(objectClass=<b>User_Object_Class</b>)(<b>Username_Attribute</b>=Login_Form_username))(<b>User_Object_Filter</b>))'|@translate}</i>
+                                                    </small>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                                                        
                                     <div class="form-inline mb-3">
                                         <div class="form-group row">
                                             <label for="ld_user_class" class="col-sm-2 col-form-label">{'User Object Class:'|@translate}</label>
