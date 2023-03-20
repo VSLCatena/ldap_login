@@ -35,6 +35,13 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	$me->config['ld_forgot_url'] 	 = $_POST['LD_FORGOT_URL'];
 	$me->config['ld_debug_location'] 	 = $_POST['LD_DEBUG_LOCATION'];
 	$me->config['ld_debug_level'] 	 = $_POST['LD_DEBUG_LEVEL'];
+	$me->config['ld_debug_php'] 	 = $_POST['LD_DEBUG_PHP'];
+	
+	$me->config['ld_auth_type']	= $_POST['ld_auth_type'];
+	$me->config['ld_azure_client_id'] = $_POST['ld_azure_client_id'];
+	$me->config['ld_azure_client_secret'] = $_POST['ld_azure_client_secret'];
+	$me->config['ld_azure_tenant_id']  = $_POST['ld_azure_tenant_id'];
+	$me->config['ld_azure_callback_uri']  = $_POST['ld_azure_callback_uri'];
 	
 	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
 	$me->config['ld_port']      = $_POST['LD_PORT'];
@@ -67,6 +74,12 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 		$me->config['ld_debug'] = 0;
 	}
 
+	if (isset($_POST['LD_DEBUG_PHP'])){
+		$me->config['ld_debug_php'] = 1;
+	} else {
+		$me->config['ld_debug_php'] = 0;
+	}	
+	
 	if (isset($_POST['LD_DEBUG_CLEARUPDATE'])){
 		$me->config['ld_debug_clearupdate'] = 1;
 	} else {
@@ -167,8 +180,15 @@ $template->assign('LDAP_LOGIN_PATH',LDAP_LOGIN_PATH);
 $template->assign('LD_FORGOT_URL',$me->check_config('ld_forgot_url'));
 $template->assign('LD_DEBUG_LOCATION',$me->check_config('ld_debug_location'));
 $template->assign('LD_DEBUG',$me->check_config('ld_debug'));
+$template->assign('LD_DEBUG_PHP',$me->check_config('ld_debug_php'));
 $template->assign('LD_DEBUG_CLEARUPDATE',$me->check_config('ld_debug_clearupdate'));
 $template->assign('LD_DEBUG_LEVEL',$me->check_config('ld_debug_level'));
+
+$template->assign('LD_AUTH_TYPE',$me->check_config('ld_auth_type'));
+$template->assign('LD_AZURE_CLIENT_ID',$me->check_config('ld_azure_client_id'));
+$template->assign('LD_AZURE_CLIENT_SECRET',$me->check_config('ld_azure_client_secret'));
+$template->assign('LD_AZURE_TENANT_ID',$me->check_config('ld_azure_tenant_id'));
+$template->assign('LD_AZURE_CALLBACK_URI',$me->check_config('ld_azure_callback_uri'));
 
 $template->assign('LD_HOST',$me->check_config('ld_host'));
 $template->assign('LD_PORT',$me->check_config('ld_port'));
