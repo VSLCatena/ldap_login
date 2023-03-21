@@ -59,7 +59,10 @@ class Ldap {
 		if(isset($this->config['ld_debug'])&&$this->config['ld_debug']){
 			file_put_contents($this->check_config('ld_debug_location') . 'ldap_login.log',$full."\n",FILE_APPEND);
 		}
-		error_log( $full );
+		if(isset($this->config['ld_debug_php'])&&$this->config['ld_debug_php']){
+			error_log( $full );
+		}
+		
 		
 	}
 
@@ -303,7 +306,12 @@ class Ldap {
 	// return userdn (and username) for authentication
 	public function ldap_search_dn($value_to_search){
 		$this->write_log("[function]> ldap_search_dn ");
-		$user_filter = strlen($this->config['ld_user_filter'])<1?"cn=*":$this->config['ld_user_filter'];
+		if (empty($this->config['ld_user_filter']) || strlen($this->config['ld_user_filter']) < 1) {
+			$user_filter="cn=*"; 
+		} else { 
+			$user_filter = $this->config['ld_user_filter']; 
+		}
+		
 		$this->write_log("[function]> ldap_search_dn(".$value_to_search.")");
 		$filter = '(&(&(objectClass='.$this->config['ld_user_class'].')('.$this->config['ld_user_attr'].'='.$value_to_search.'))('.$user_filter.'))';
 
@@ -341,8 +349,12 @@ class Ldap {
 	public function check_ldap_group_membership($user_dn, $user_login,$group_dn=null){
 		$this->write_log("[function]> check_ldap_group_membership");
 		$base_dn = $this->config['ld_basedn'];		
-		$group_class = $this->config['ld_group_class'];		
-		$group_filter = strlen($this->config['ld_group_filter'])<1?"cn=*":$this->config['ld_group_filter'];
+		$group_class = $this->config['ld_group_class'];	
+		if (empty($this->config['ld_group_filter']) || strlen($this->config['ld_group_filter']) < 1) {	
+			$group_filter = "cn=*";
+		} else { 
+			$group_filter = $this->config['ld_group_filter'];
+		}
 		$group_dn = is_null($group_dn)?$this->config['ld_group_user']:$group_dn;
 		$group_cn = ldap_explode_dn($group_dn,1)[0];
 		$member_attr = $this->config['ld_group_member_attr'];
