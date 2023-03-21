@@ -152,7 +152,7 @@
                                     <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
                                         value="{$LD_DEBUG}"  checked>
                                     <label class="form-check-label" for="ld_debug">
-                                        {'Enable logs'|@translate}
+                                        {'Write to ldap_login.log file'|@translate}
                                     </label>
                                 </div>
 
