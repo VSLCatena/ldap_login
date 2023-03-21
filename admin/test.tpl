@@ -32,4 +32,7 @@
         <input type="submit" class="btn btn-primary btn-lg btn-block" value="{'Test Settings'|@translate}"
             name="check_ldap" />
 
+        {if (!empty($LD_CHECK_LDAP))}
+            {$LD_CHECK_LDAP}
+        {/if}
 </form>
