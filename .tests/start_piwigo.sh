@@ -49,9 +49,11 @@ echo PIWIGO_PATH: $PIWIGO_PATH
 if [ ! -f "$PIWIGO_PATH/docker-compose.override.yml" ]; then
     PASSWORD_LDAP_ADMIN=$(GetRandom)
     PASSWORD_LDAP_CONFIG=$(GetRandom)
+    PASSWORD_LDAP_READONLY=$(GetRandom)
 
     declare -x PASSWORD_LDAP_ADMIN
     declare -x PASSWORD_LDAP_CONFIG
+    declare -x PASSWORD_LDAP_READONLY
     declare -x PIWIGO_PATH
     
     envsubst < $LDAP_PATH/.tests/docker-compose.override.template > $PIWIGO_PATH/docker-compose.override.yml
