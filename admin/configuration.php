@@ -37,11 +37,11 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	$me->config['ld_debug_level'] 	 = $_POST['LD_DEBUG_LEVEL'];
 	$me->config['ld_debug_php'] 	 = $_POST['LD_DEBUG_PHP'];
 	
-	$me->config['ld_auth_type']	= $_POST['ld_auth_type'];
-	$me->config['ld_azure_client_id'] = $_POST['ld_azure_client_id'];
-	$me->config['ld_azure_client_secret'] = $_POST['ld_azure_client_secret'];
-	$me->config['ld_azure_tenant_id']  = $_POST['ld_azure_tenant_id'];
-	$me->config['ld_azure_callback_uri']  = $_POST['ld_azure_callback_uri'];
+	$me->config['ld_auth_type']	= $_POST['LD_AUTH_TYPE'];
+	$me->config['ld_azure_client_id'] = $_POST['LD_AZURE_CLIENT_ID'];
+	$me->config['ld_azure_client_secret'] = $_POST['LD_AZURE_CLIENT_SECRET'];
+	$me->config['ld_azure_tenant_id']  = $_POST['LD_AZURE_TENANT_ID'];
+	$me->config['ld_azure_callback_uri']  = $_POST['LD_AZURE_CALLBACK_URI'];
 	
 	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
 	$me->config['ld_port']      = $_POST['LD_PORT'];
