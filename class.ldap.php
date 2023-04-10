@@ -9,7 +9,7 @@ class Ldap {
 	var $warn_msg = array();
 	var	$default_val = array(
 		'ld_forgot_url' => 'password.php',
-		'ld_debug_location' =>'./plugins/ldap_login/logs/',
+		'ld_debug_location' =>'./logs/',
 		'ld_debug' => 1,
 		'ld_debug_clearupdate' => 1,
 		'ld_debug_level' => 'debug',
@@ -57,7 +57,22 @@ class Ldap {
 		$message = substr( $message , $start_index , $end_index ) ;
 		$full = "[" . $ts . "] " . $loglevel . ": " . ($message);
 		if(isset($this->config['ld_debug'])&&$this->config['ld_debug']){
-			file_put_contents($this->check_config('ld_debug_location') . 'ldap_login.log',$full."\n",FILE_APPEND);
+			if(str_starts_with($this->check_config('ld_debug_location') , "/")) {
+				# absolute
+				if(is_writable($this->check_config('ld_debug_location') . 'ldap_login.log')){
+					file_put_contents($this->check_config('ld_debug_location') . 'ldap_login.log',$full."\n",FILE_APPEND);
+				} else {
+					error_log("Unable to write to " . $this->check_config('ld_debug_location') . 'ldap_login.log');
+				}
+			} else {
+				# relative (nothing or ./logs/)
+				if(is_writable(LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log')){
+					file_put_contents( LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log',$full."\n",FILE_APPEND);
+				} else {
+					error_log("Unable to write to " . LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log');
+				}
+
+			}
 		}
 		if(isset($this->config['ld_debug_php'])&&$this->config['ld_debug_php']){
 			error_log( $full );
