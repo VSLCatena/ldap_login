@@ -141,7 +141,7 @@
                                                 class="form-control" value="{$LD_DEBUG_LOCATION}" placeholder="/var/log/"
                                                 aria-describedby="ld_debug_location_label">
                                             <small id="ld_debug_location_help" class="text-muted">
-                                                {'Log location help: Field to define the location of debug.log. Protect the location with .htaccess or store in /var/log/ (most secure)'|@translate}
+                                                {'Log location help: Field to define the location of ldap_login.log. Protect the location with .htaccess or store in /var/log/ (most secure)'|@translate}
                                             </small>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@
                                                     value="warning" disabled {if 'warning'==$LD_DEBUG_LEVEL}selected{/if}>
                                                     Warning</option>
                                                 <option id="ld_debug_level_info" name="LD_DEBUG_LEVEL_info" value="info"
-                                                    disabled {if 'info'==$LD_DEBUG_LEVEL}selected{/if}>Info</option>
+                                                    {if 'info'==$LD_DEBUG_LEVEL}selected{/if}>Info</option>
                                                 <option id="ld_debug_level_debug" name="LD_DEBUG_LEVEL_debug" value="debug"
                                                     {if 'debug'== $LD_DEBUG_LEVEL}selected{/if}>Debug</option>
                                             </select>

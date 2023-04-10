@@ -219,7 +219,10 @@ $template->assign('LD_BINDPW',$me->config['ld_bindpw']);
 $template->assign('LD_BINDDN',$me->config['ld_binddn']);
 
 if (is_array($me->warn_msg) && sizeof($me->warn_msg)>0){
-	$me->warn_msg['general']='Warning: (some) default values are loaded. Please edit and save your configuration';
+	if($me->config['ld_debug_level'] == "debug"){
+		$keys=":<br>- " . implode("<br>- ", array_keys($me->warn_msg));
+	}	
+	$me->warn_msg['general']='Warning: (some) default values are loaded. Please edit and save your configuration' . $keys;
 	foreach ($me->warn_msg as $key=>$value) {
 		$template->assign('WARN_' . strtoupper($key),$value);
 	}
