@@ -125,8 +125,25 @@ class Ldap_Login_maintain extends PluginMaintain
 		$ldap->write_log("[function]> activate");
 		if (!isset($ldap->config['ld_debug_clearupdate']) OR ($ldap->config['ld_debug_clearupdate'] == True))
 		{   
-			$loc = $ldap->check_config('ld_debug_location');
-			file_put_contents($loc . 'ldap_login.log','');
+			$full="\n";
+			
+			if(str_starts_with( $ldap->check_config('ld_debug_location') , "/")) {
+				# absolute
+				if(is_writable( $ldap->check_config('ld_debug_location') . 'ldap_login.log')){
+					file_put_contents( $ldap->check_config('ld_debug_location') . 'ldap_login.log',$full."\n");
+				} else {
+					error_log("Unable to write to " .  $ldap->check_config('ld_debug_location') . 'ldap_login.log');
+				}
+			} else {
+				# relative (nothing or ./logs/)
+				if(is_writable(LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log')){
+					file_put_contents( LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log',$full."\n");
+				} else {
+					error_log("Unable to write to " . LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log');
+				}
+			}			
+			
+			
 			$ldap->write_log("[Maintain.inc.php/Activate]> Ldap_login.log cleared");
 		}
 		
