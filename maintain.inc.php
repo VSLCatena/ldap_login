@@ -97,6 +97,8 @@ class Ldap_Login_maintain extends PluginMaintain
 			$ldap->write_log("[Maintain.inc.php/Install]> Default config loaded ");
 			$ldap->load_config($merge=True);
 			$ldap->write_log("[Maintain.inc.php/Install]> Merged old config");
+			ld_sql('create','create_data',$ldap->config);
+			$ldap->write_log("[Maintain.inc.php/Install]> Expanded database");
 		}
 		$ldap->write_log("[Maintain.inc.php/Install]> Saving config");
 		$ldap->save_config();
