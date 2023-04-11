@@ -43,7 +43,7 @@ class Ldap {
 		'ld_azure_client_id' => null,
 		'ld_azure_client_secret' => null,
 		'ld_azure_tenant_id' => null,
-		'ld_azure_callback_uri' => null,
+		'ld_azure_redirect_uri' => null,
 		'ld_allow_newusers' => 1,
 		'ld_use_mail'=> 1,
 		'ld_allow_profile' => 1,
