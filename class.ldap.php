@@ -16,7 +16,7 @@ class Ldap {
 		'ld_debug_php' => 1,
 		'ld_host' => 'localhost',
 		'ld_port' => '389', 
-		'ld_basedn' => 'ou=domain,dc=domain,dc=com',
+		'ld_basedn' => 'ou=domain,dc=domain,dc=tld',
 		'ld_user_class' => 'person',
 		'ld_user_attr' => 'samaccountName',
 		'ld_user_filter' => null, 
