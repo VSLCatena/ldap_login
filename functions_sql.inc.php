@@ -95,6 +95,8 @@ global $prefixeTable;
 		if ($type == 'create_table') {
 			$query="CREATE TABLE IF NOT EXISTS `" . $prefixeTable . "ldap_login_config` (`param` varchar(40) CHARACTER SET utf8 NOT NULL,`value` text CHARACTER SET utf8,`comment` varchar(255) CHARACTER SET utf8 DEFAULT NULL,UNIQUE KEY `param` (`param`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_general_ci;";
 			pwg_query($query);
+			$query="ALTER TABLE `" . $prefixeTable . "ldap_login_config` ADD `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `value`;";
+			pwg_query($query);
 		
 		}	
 		if ($type == 'create_data') {
@@ -191,6 +193,11 @@ global $prefixeTable;
 				$query="update piwigo_users SET mail_address = null WHERE id > 2";
 				pwg_query($query);				
 			}
+			if ($type == 'update_sql_structure') {
+				$query1="SHOW COLUMNS FROM  `" . $prefixeTable . "ldap_login_config` LIKE 'modified'; ";
+				$query2="ALTER TABLE `" . $prefixeTable . "ldap_login_config` ADD `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `value`;";
+				if(!pwg_query($query1)){pwg_query($query2);}		
+			}			
 		}
 	}
 

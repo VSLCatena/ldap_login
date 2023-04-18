@@ -99,6 +99,8 @@ class Ldap_Login_maintain extends PluginMaintain
 			$ldap->write_log("[Maintain.inc.php/Install]> Merged old config");
 			ld_sql('create','create_data',$ldap->config);
 			$ldap->write_log("[Maintain.inc.php/Install]> Expanded database");
+			ld_sql('update','update_sql_structure');
+			$ldap->write_log("[Maintain.inc.php/Install]> Added Column with timestamps");
 		}
 		$ldap->write_log("[Maintain.inc.php/Install]> Saving config");
 		$ldap->save_config();
