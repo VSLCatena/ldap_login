@@ -84,12 +84,10 @@
 		}		
 		for (var key in disabledfields) {      
 			var input = document.getElementById(key);
-			input.value = disabledfields[key]
 			input.disabled = true
 		}
         for (var key in enabledfields) {      
 			var input = document.getElementById(key);
-			input.value = enabledfields[key]
 			input.disabled = false
 		}
 
@@ -235,7 +233,7 @@
             <fieldset class="form-group">
                 <div class="card">
                     <div class="card-body">                 
-                    <div class="row visually-hidden" id="AzureSettingsBlock">
+                    <div class="row {if 'ld_auth_azure'!=$LD_AUTH_TYPE}visually-hidden{/if}" id="AzureSettingsBlock">
                         <h2 class="card-title">{'Azure settings'|@translate}</h2>
                             <div class="col-6">
 
@@ -298,7 +296,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="LdapSettingsBlock">
+                        <div class="row {if 'ld_auth_ldap'!=$LD_AUTH_TYPE}visually-hidden{/if}" id="LdapSettingsBlock">
                             <div class="col-xl-6">
                             
                                 <h2 class="card-title">{'Connection'|@translate}</h2>
