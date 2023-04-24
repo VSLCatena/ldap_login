@@ -1,0 +1,5 @@
+{
+    "require": {
+        "microsoft/microsoft-graph": "^1.94"
+    }
+}
