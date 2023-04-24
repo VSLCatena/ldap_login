@@ -62,34 +62,15 @@
     function toggleAuthFields(obj) {
 		switch (obj.value) {
 		  case 'ld_auth_azure':
-            var enabledfields = {
-			'ld_azure_client_id': '',
-			'ld_azure_tenant_id': '',
-			'ld_azure_client_secret': '',
-			'ld_azure_redirect_uri': ''
-			}
             $( "#LdapSettingsBlock" ).addClass( "visually-hidden " );
             $( "#AzureSettingsBlock" ).removeClass( "visually-hidden" );
 			break;
 		  case 'ld_auth_ldap':
-			var disabledfields = {
-			'ld_azure_client_id': '',
-			'ld_azure_tenant_id': '',
-			'ld_azure_client_secret': '',
-			'ld_azure_redirect_uri': ''
-			}
             $( "#AzureSettingsBlock" ).addClass( "visually-hidden " );
             $( "#LdapSettingsBlock" ).removeClass( "visually-hidden" );
 			break;
 		}		
-		for (var key in disabledfields) {      
-			var input = document.getElementById(key);
-			input.disabled = true
-		}
-        for (var key in enabledfields) {      
-			var input = document.getElementById(key);
-			input.disabled = false
-		}
+
 
 	}
 
@@ -246,9 +227,9 @@
                                 <div class="form-group row">
                                     <label for="ld_azure_tenant" class="col-sm-2 col-form-label" >{'Tenant ID'|@translate}</label>
                                     <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="ld_azure_tenant_id" name="LD_AZURE_TENANT_ID"
+                                    <input type="text" class="form-control" id="ld_azure_tenant_id" name="LD_AZURE_TENANT_ID" value="{$LD_AZURE_TENANT_ID}"
                                     placeholder="fake-8cedf1be-5920-478e-85ff-b6909f288d10" aria-label="{'Azure Tenant'|@translate}"
-                                    disabled>
+                                    >
                                             <small id="ld_azure_tenant_help" class="text-muted">
                                                 {'Azure Tenant ID.'|@translate}
                                             </small>
@@ -259,9 +240,9 @@
                                     <div class="form-group row">
                                         <label for="ld_azure_clientid" class="col-sm-2 col-form-label" >{'Client ID'|@translate}</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="ld_azure_client_id" name="LD_AZURE_CLIENT_ID"
-                                        placeholder="fake-11b1f4a2-a86b-44c5-a773-ead7dceed5e2" aria-label="{'Azure Client ID'|@translate}"
-                                        disabled>
+                                            <input type="text" class="form-control" id="ld_azure_client_id" name="LD_AZURE_CLIENT_ID" value="{$LD_AZURE_CLIENT_ID}"
+                                        placeholder="fake-11b1f4a2-a86b-44c5-a773-ead7dceed5e2" aria-label="{'Azure Client ID'|@translate}" 
+                                        >
                                                 <small id="ld_azure_clientid_help" class="text-muted">
                                                     {'Azure Application Client ID.'|@translate}
                                                 </small>
@@ -272,8 +253,8 @@
                                     <div class="form-group row">
                                         <label for="ld_azure_clientsecret" class="col-sm-2 col-form-label" >{'Client Secret'|@translate}</label>
                                         <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="ld_azure_client_secret" name="LD_AZURE_CLIENT_SECRET"
-                                        placeholder="" aria-label="{'Azure Client Secret'|@translate}" disabled>
+                                        <input type="password" class="form-control" id="ld_azure_client_secret" name="LD_AZURE_CLIENT_SECRET" value="{$LD_AZURE_CLIENT_SECRET}"
+                                        placeholder="" aria-label="{'Azure Client Secret'|@translate}">
                                                 <small id="ld_azure_clientsecret_help" class="text-muted">
                                                     {'Azure Application Client Secret.'|@translate}
                                                 </small>
@@ -284,9 +265,9 @@
                                     <div class="form-group row">
                                         <label for="ld_azure_redirecturi" class="col-sm-2 col-form-label" >{'Redirect URI'|@translate}</label>
                                         <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="ld_azure_redirect_uri" name="LD_AZURE_REDIRECT_URI"
+                                        <input type="text" class="form-control" id="ld_azure_redirect_uri" name="LD_AZURE_REDIRECT_URI" value="{$LD_AZURE_REDIRECT_URI}"
                                         placeholder="https://piwigo.domain.tld/callback" aria-label="{'Azure Redirect URI'|@translate}"
-                                        disabled>
+                                        >
                                                 <small id="ld_azure_clientsecret_help" class="text-muted">
                                                     {'Azure Application Redirect URI.'|@translate}
                                                 </small>
