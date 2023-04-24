@@ -36,11 +36,23 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	$me->config['ld_debug_level'] 	 = $_POST['LD_DEBUG_LEVEL'];
 	$me->config['ld_debug_php'] 	 = $_POST['LD_DEBUG_PHP'];
 	
-	$me->config['ld_auth_type']	= $_POST['LD_AUTH_TYPE'] ?? null;
-	$me->config['ld_azure_client_id'] = $_POST['LD_AZURE_CLIENT_ID'] ?? null;
-	$me->config['ld_azure_client_secret'] = $_POST['LD_AZURE_CLIENT_SECRET'] ?? null;
-	$me->config['ld_azure_tenant_id']  = $_POST['LD_AZURE_TENANT_ID'] ?? null;
-	$me->config['ld_azure_redirect_uri']  = $_POST['LD_AZURE_REDIRECT_URI'] ?? null;
+	$me->config['ld_auth_type']	= $_POST['LD_AUTH_TYPE'];
+	if(isset($_POST['LD_AZURE_CLIENT_ID'])){
+		$me->config['ld_azure_client_id'] = $_POST['LD_AZURE_CLIENT_ID'];
+	}
+	if(isset($_POST['LD_AZURE_CLIENT_SECRET'])){
+		if($_POST['LD_AZURE_CLIENT_SECRET'] != '************************'){
+			$me->config['ld_azure_client_secret'] =  $_POST['LD_AZURE_CLIENT_SECRET'];
+		} else {
+			// do nothing.
+		}	
+	}
+	if(isset($_POST['LD_AZURE_TENANT_ID'])){
+		$me->config['ld_azure_tenant_id']  = $_POST['LD_AZURE_TENANT_ID'];
+	}
+	if(isset($_POST['LD_AZURE_REDIRECT_URI'])){
+		$me->config['ld_azure_redirect_uri']  = $_POST['LD_AZURE_REDIRECT_URI'];
+	}
 	
 	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
 	$me->config['ld_port']      = $_POST['LD_PORT'];
@@ -189,17 +201,17 @@ $template->assign('LD_DEBUG_CLEARUPDATE',$me->check_config('ld_debug_clearupdate
 $template->assign('LD_DEBUG_LEVEL',$me->check_config('ld_debug_level'));
 
 $template->assign('LD_AUTH_TYPE',$me->check_config('ld_auth_type'));
-if($me->config['ld_auth_type'] != "ld_auth_ldap"){
-	$template->assign('LD_AZURE_CLIENT_ID',$me->check_config('ld_azure_client_id'));
-	$template->assign('LD_AZURE_CLIENT_SECRET',$me->check_config('ld_azure_client_secret'));
-	$template->assign('LD_AZURE_TENANT_ID',$me->check_config('ld_azure_tenant_id'));
-	$template->assign('LD_AZURE_REDIRECT_URI',$me->check_config('ld_azure_redirect_uri'));
-} else {
-	$template->assign('LD_AZURE_CLIENT_ID',$me->config['ld_azure_client_id']);
+$template->assign('LD_AZURE_CLIENT_ID',$me->config['ld_azure_client_id']);
+#$template->assign('LD_AZURE_CLIENT_SECRET',$me->config['ld_azure_client_secret']);
+if($me->config['ld_azure_client_secret'] == ''){
+	//only if empty then give back empty
 	$template->assign('LD_AZURE_CLIENT_SECRET',$me->config['ld_azure_client_secret']);
-	$template->assign('LD_AZURE_TENANT_ID',$me->config['ld_azure_tenant_id']);
-	$template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
-}
+} else {
+	$template->assign('LD_AZURE_CLIENT_SECRET','************************');
+}	
+$template->assign('LD_AZURE_TENANT_ID',$me->config['ld_azure_tenant_id']);
+$template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
+
 
 $template->assign('LD_HOST',$me->check_config('ld_host'));
 $template->assign('LD_PORT',$me->check_config('ld_port'));
