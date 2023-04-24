@@ -64,7 +64,12 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	
 	$me->config['ld_binddn'] = $_POST['LD_BINDDN']; //reverted, did not work
 	//$me->config['ld_binddn'] = ldap_escape($_POST['LD_BINDDN'], '', LDAP_ESCAPE_DN);
-	$me->config['ld_bindpw'] =  $_POST['LD_BINDPW']; //reverted, did not work
+	#$me->config['ld_bindpw'] =  $_POST['LD_BINDPW']; //reverted, did not work
+	if($_POST['LD_BINDPW'] != '************************'){
+		$me->config['ld_bindpw'] =  $_POST['LD_BINDPW'];
+	} else {
+		// do nothing.
+	}
 	//$me->config['ld_bindpw'] =  ldap_escape($_POST['LD_BINDPW'], '', LDAP_ESCAPE_DN);
 
 	if (isset($_POST['LD_DEBUG'])){
@@ -221,7 +226,14 @@ $template->assign('LD_GROUP_USER_ACTIVE',$me->check_config('ld_group_user_active
 $template->assign('LD_GROUP_ADMIN_ACTIVE',$me->check_config('ld_group_admin_active'));
 $template->assign('LD_GROUP_WEBMASTER_ACTIVE',$me->check_config('ld_group_webmaster_active'));
 
-$template->assign('LD_BINDPW',$me->config['ld_bindpw']);
+//$template->assign('LD_BINDPW',$me->config['ld_bindpw']);
+if($me->config['ld_bindpw'] == ''){
+	//only if empty then give back empty
+	$template->assign('LD_BINDPW',$me->config['ld_bindpw']);
+} else {
+	$template->assign('LD_BINDPW','************************');
+}
+
 $template->assign('LD_BINDDN',$me->config['ld_binddn']);
 
 if (is_array($me->warn_msg) && sizeof($me->warn_msg)>0){
