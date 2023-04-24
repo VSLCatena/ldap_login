@@ -148,7 +148,7 @@
 
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
-                                        value="{$LD_DEBUG}"  checked>
+                                        value="{$LD_DEBUG}"  {if $LD_DEBUG== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug">
                                         {'Write to ldap_login.log file'|@translate}
                                     </label>
@@ -156,7 +156,7 @@
 
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="ld_debug_php" name="LD_DEBUG_PHP" type="checkbox"
-                                        value="{$LD_DEBUG_PHP}"  checked>
+                                        value="{$LD_DEBUG_PHP}"  {if $LD_DEBUG_PHP== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug_php">
                                         {'Write to PHP error log'|@translate}
                                     </label>
@@ -164,7 +164,7 @@
 
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
-                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}"  checked>
+                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}"  {if $LD_DEBUG_CLEARUPDATE== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug_clearupdate">
                                         {'Clear logs after plugin update'|@translate}
                                     </label>
@@ -339,7 +339,7 @@
                                             <div class="input-group-text">
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_use_ssl"
-                                                    name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}" checked>
+                                                    name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}" {if $LD_USE_SSL== 1}checked{/if}>
                                             </div>
                                             <span class="input-group-text"
                                                 id="ld_use_ssl-addon1">{'Secure connection'|@translate}</span>
@@ -609,12 +609,12 @@
                                                                     
                                     <div class="btn-group">
                                         <input type="radio" class="btn-check" name="LD_MEMBERSHIP_USER" id="ld_membership_user1"
-                                            autocomplete="off" checked />
+                                            autocomplete="off" {if $LD_MEMBERSHIP_USER== 1}checked{/if} />
                                         <label class="btn btn-outline-secondary"
                                             for="ld_membership_user1">{'Use USER membership attribute'|@translate}</label>
 
                                         <input type="radio" class="btn-check" name="LD_MEMBERSHIP_USER" id="ld_membership_user2"
-                                            autocomplete="off" />
+                                            autocomplete="off" {if $LD_MEMBERSHIP_USER== 0}checked{/if} />
                                         <label class="btn btn-outline-secondary"
                                             for="ld_membership_user2">{'Use GROUP membership attribute'|@translate}</label>
                                     </div>
@@ -651,7 +651,7 @@
                                             <div class="input-group-text">
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_user_active"
-                                                    name="LD_GROUP_USER_ACTIVE" type="checkbox" value="{$LD_GROUP_USER_ACTIVE}" checked>
+                                                    name="LD_GROUP_USER_ACTIVE" type="checkbox" value="{$LD_GROUP_USER_ACTIVE}" {if $LD_GROUP_USER_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend col-xl-4">
                                                 <span class="input-group-text"
@@ -669,7 +669,7 @@
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_admin_active"
                                                     name="LD_GROUP_ADMIN_ACTIVE" type="checkbox" value="{$LD_GROUP_ADMIN_ACTIVE}"
-                                                    checked>
+                                                    {if $LD_GROUP_ADMIN_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend col-xl-4">
                                                 <span class="input-group-text"
@@ -687,7 +687,7 @@
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_webmaster_active"
                                                     name="LD_GROUP_WEBMASTER_ACTIVE" type="checkbox"
-                                                    value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked>
+                                                    value="{$LD_GROUP_WEBMASTER_ACTIVE}"  {if $LD_GROUP_WEBMASTER_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend  col-xl-4">
                                                 <span class="input-group-text"
