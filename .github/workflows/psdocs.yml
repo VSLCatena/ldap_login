@@ -1,0 +1,27 @@
+name: PSDocs
+on:
+  # push:
+  #  branches:
+  #    - dev
+  # schedule:
+  #   - cron: '0 6 * * 6' # every 30 minutes
+  workflow_dispatch:
+    
+jobs:
+  NewPSDocs:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - uses: actions/checkout@v3
+      - name: Run Script
+
+        run: |
+          
+      - name: Commit
+
+        run: |
+          
+
+
+
+     
