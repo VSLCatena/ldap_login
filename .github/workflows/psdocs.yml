@@ -13,15 +13,41 @@ jobs:
     steps:
       
       - uses: actions/checkout@v3
-      - name: Run Script
+      - uses: PowerShell@2
+        name: CreatePSDocs
 
-        run: |
-          
-      - name: Commit
+        with:
+          filePath: $(System.DefaultWorkingDirectory)\.scripts/Update-ReadmeWikiPage.ps1
+          arguments: >-
+            -RootFolder -WorkingDir $(System.DefaultWorkingDirectory) -PipelineName
+            "Repositories" -PipelineID $(System.DefinitionId)
+            -DocTemplatePath .scripts\Update-ReadmeWikiPage.doc.ps1
+          errorActionPreference: Stop
+      - uses: PowerShell@2
+        name: CommitReadme
+        with:
+          targetType: 'inline'
+          script: |
+            ECHO "git config"
+            git config --global user.email "$(git_sa_email)"
+            git config --global user.name "$(git_sa_username)"
 
-        run: |
-          
+            ECHO "git status"
+            git status
 
+            ECHO "checkout $(Build.SourceBranchName)"
+            git checkout -b $(Build.SourceBranchName)
+            ### git add $(System.DefaultWorkingDirectory)\$(Build.DefinitionName)\Readme.md ### when no -RootFolder present
 
+            ECHO "git add .\Repositories.md"
+            git add $(System.DefaultWorkingDirectory)\Readme.md ### when -RootFolder present
 
+            ECHO "git commit"
+            git commit -m "Readme.md Update from Build $(Build.DefinitionName)" -m "[ci skip]"
+
+            ECHO "git push"
+            git push -u origin $(Build.SourceBranchName)
+
+            ECHO "git status"
+            git status
      
