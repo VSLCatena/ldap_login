@@ -1,27 +1,21 @@
 name: PSDocs
 on:
-  # push:
-  #  branches:
-  #    - dev
-  # schedule:
-  #   - cron: '0 6 * * 6' # every 30 minutes
   workflow_dispatch:
     
 jobs:
   NewPSDocs:
     runs-on: ubuntu-latest
+    environment: actions-ci
     steps:
       
       - uses: actions/checkout@v3
-      - uses: PowerShell@2
-        name: CreatePSDocs
-
+      - name: CreatePSDocs
+        uses: PowerShell@2
         with:
-          filePath: $(System.DefaultWorkingDirectory)\.scripts/Update-ReadmeWikiPage.ps1
+          filePath: $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.ps1
           arguments: >-
-            -RootFolder -WorkingDir $(System.DefaultWorkingDirectory) -PipelineName
-            "Repositories" -PipelineID $(System.DefinitionId)
-            -DocTemplatePath .scripts\Update-ReadmeWikiPage.doc.ps1
+            -WorkingDir $(System.DefaultWorkingDirectory)
+            -DocTemplatePath $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.doc.ps1
           errorActionPreference: Stop
       - uses: PowerShell@2
         name: CommitReadme
@@ -37,17 +31,15 @@ jobs:
 
             ECHO "checkout $(Build.SourceBranchName)"
             git checkout -b $(Build.SourceBranchName)
-            ### git add $(System.DefaultWorkingDirectory)\$(Build.DefinitionName)\Readme.md ### when no -RootFolder present
 
-            ECHO "git add .\Repositories.md"
-            git add $(System.DefaultWorkingDirectory)\Readme.md ### when -RootFolder present
+            ECHO "git add ./Readme.md"
+            git add $(System.DefaultWorkingDirectory)/Readme.md
 
             ECHO "git commit"
-            git commit -m "Readme.md Update from Build $(Build.DefinitionName)" -m "[ci skip]"
+            git commit -m "Readme.md Update from pipeline" -m "[ci skip]"
 
             ECHO "git push"
             git push -u origin $(Build.SourceBranchName)
 
             ECHO "git status"
             git status
-     
