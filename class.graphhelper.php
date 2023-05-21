@@ -106,51 +106,6 @@ class GraphHelper {
     }
     // </GetUserSnippet>
 
-    // <GetInboxSnippet>
-    public static function getInbox(): Http\GraphCollectionRequest {
-        $token = GraphHelper::getUserToken();
-        GraphHelper::$userClient->setAccessToken($token);
-
-        // Only request specific properties
-        $select = '$select=from,isRead,receivedDateTime,subject';
-        // Sort by received time, newest first
-        $orderBy = '$orderBy=receivedDateTime DESC';
-
-        $requestUrl = '/me/mailFolders/inbox/messages?'.$select.'&'.$orderBy;
-        return GraphHelper::$userClient->createCollectionRequest('GET', $requestUrl)
-                                       ->setReturnType(Model\Message::class)
-                                       ->setPageSize(25);
-    }
-    // </GetInboxSnippet>
-
-    // <SendMailSnippet>
-    public static function sendMail(string $subject, string $body, string $recipient): void {
-        $token = GraphHelper::getUserToken();
-        GraphHelper::$userClient->setAccessToken($token);
-
-        $sendMailBody = array(
-            'message' => array (
-                'subject' => $subject,
-                'body' => array (
-                    'content' => $body,
-                    'contentType' => 'text'
-                ),
-                'toRecipients' => array (
-                    array (
-                        'emailAddress' => array (
-                            'address' => $recipient
-                        )
-                    )
-                )
-            )
-        );
-
-        GraphHelper::$userClient->createRequest('POST', '/me/sendMail')
-                                ->attachBody($sendMailBody)
-                                ->execute();
-    }
-    // </SendMailSnippet>
-
     // <MakeGraphCallSnippet>
     public static function makeGraphCall(): void {
         $token = GraphHelper::getUserToken();

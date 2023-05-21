@@ -53,7 +53,9 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	if(isset($_POST['LD_AZURE_REDIRECT_URI'])){
 		$me->config['ld_azure_redirect_uri']  = $_POST['LD_AZURE_REDIRECT_URI'];
 	}
-	
+	if(isset($_POST['LD_AZURE_SCOPES'])){
+		$me->config['ld_azure_scopes']  = $_POST['LD_AZURE_SCOPES'];
+	}	
 	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
 	$me->config['ld_port']      = $_POST['LD_PORT'];
 	$me->config['ld_basedn']    = $_POST['LD_BASEDN'];
@@ -211,7 +213,7 @@ if($me->config['ld_azure_client_secret'] == ''){
 }	
 $template->assign('LD_AZURE_TENANT_ID',$me->config['ld_azure_tenant_id']);
 $template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
-
+$template->assign('LD_AZURE_SCOPES',$me->config['ld_azure_scopes']);
 
 $template->assign('LD_HOST',$me->check_config('ld_host'));
 $template->assign('LD_PORT',$me->check_config('ld_port'));

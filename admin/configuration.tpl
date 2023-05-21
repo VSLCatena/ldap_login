@@ -273,7 +273,20 @@
                                                 </small>
                                         </div>
                                     </div>
-                                </div>                         
+                                </div>  
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_scopes" class="col-sm-2 col-form-label" >{'Scopes'|@translate}</label>
+                                        <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="ld_azure_scopes" name="LD_AZURE_SCOPES" value="{$LD_AZURE_SCOPES}"
+                                        placeholder="user.read" aria-label="{'Azure Application User Scopes'|@translate}"
+                                        >
+                                                <small id="ld_azure_scopes_help" class="text-muted">
+                                                    {'Azure Application User Scopes'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>                                                         
                             </div>
                         </div>
 
