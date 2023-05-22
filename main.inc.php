@@ -117,7 +117,7 @@ function ld_azure(){
 		$base = new Ldap();
 		$base->load_config();
 		if($base->config['ld_auth_type']=="ld_auth_azure"){
-			$oAuthURL = 'https://login.microsoftonline.com/' . $base->config['ld_azure_tenant_id'] . '/oauth2/v2.0/' . 'authorize?response_type=code&client_id=' . $base->config['ld_azure_client_id'] . '&redirect_uri=' . urlencode($base->config['ld_azure_redirect_uri']) . '&scope=' . urlencode($base->config['ld_azure_scopes']);
+			$oAuthURL = 'https://login.microsoftonline.com/' . $base->config['ld_azure_tenant_id'] . '/oauth2/v2.0/' . 'authorize?response_type=code&client_id=' . $base->config['ld_azure_client_id'] . '&redirect_uri=' . urlencode($base->config['ld_azure_redirect_uri']) . '&scope=' . urlencode($base->config['ld_azure_scopes']) . '&prompt=select_account';
 			$template->assign('U_LOGIN',$oAuthURL);
 		}
 		unset($base);
