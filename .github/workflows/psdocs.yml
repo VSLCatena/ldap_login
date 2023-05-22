@@ -10,18 +10,12 @@ jobs:
       
       - uses: actions/checkout@v3
       - name: CreatePSDocs
-        uses: PowerShell@2
-        with:
-          filePath: $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.ps1
-          arguments: >-
-            -WorkingDir $(System.DefaultWorkingDirectory)
-            -DocTemplatePath $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.doc.ps1
-          errorActionPreference: Stop
-      - uses: PowerShell@2
-        name: CommitReadme
-        with:
-          targetType: 'inline'
-          script: |
+        shell: pwsh
+        run: |
+          $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.ps1 -WorkingDir $(System.DefaultWorkingDirectory) -DocTemplatePath $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.doc.ps1
+      - name: CommitReadme
+        shell: pwsh
+        run: |
             ECHO "git config"
             git config --global user.email "$(git_sa_email)"
             git config --global user.name "$(git_sa_username)"
