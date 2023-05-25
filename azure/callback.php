@@ -20,12 +20,12 @@ define('TENANT_ID', $ldap->config['ld_azure_tenant_id']);
 define('CLIENT_ID', $ldap->config['ld_azure_client_id']);
 define('CLIENT_SECRET', $ldap->config['ld_azure_client_secret']);
 define('REDIRECT_URI', $ldap->config['ld_azure_redirect_uri']);
-define('KEY_URL', "https://login.microsoftonline.com/" . TENANT_ID .  "/discovery/v2.0/keys");
+$jwks_url = str_replace("{TENANT_ID}",$ldap->config['ld_azure_tenant_id'],$ldap->config['ld_azure_jwks_url']);
 
 if (isset($_GET['code'])) {
     $client = new Client();
-
-    $tokenResponse = $client->post('https://login.microsoftonline.com/' . TENANT_ID . '/oauth2/v2.0/token', [
+    $token_url = str_replace("{TENANT_ID}",$ldap->config['ld_azure_tenant_id'],$ldap->config['ld_azure_token_url']);
+    $tokenResponse = $client->post($token_url, [
         'form_params' => [
             'code' => $_GET['code'],
             'grant_type' => 'authorization_code',
@@ -49,19 +49,20 @@ if (isset($_GET['code'])) {
         $user = new stdClass();;
 
         try {
-            $azureKeys = json_decode(file_get_contents(KEY_URL),true);
+            $azureKeys = json_decode(file_get_contents($jwks_url),true);
             $decodedIdToken = JWT::decode($idToken, JWK::parseKeySet($azureKeys,'RS256')); //works
-            $user->roles=$decodedIdToken->roles ?? array();
-            $user->groups=$decodedIdToken->groups ?? array();
+            $user->claim=$decodedIdToken->groups ?? array();
+            //$user->claim=$decodedIdToken[$ldap->config['ldap_azure_claim_name']] ?? array();
         } catch (\Exception $e) {
             echo 'Exception catched: ',  $e->getMessage(), "\n";
         }
 
+        //should be replaced...
         $graph = new Graph;
         $graph->setAccessToken($accessToken);
-        $graphUser = $graph->createRequest("GET", '/me?$select=userPrincipalname,displayName')
-                      ->setReturnType(Model\User::class)
-                      ->execute();
+        $graphUser = $graph->createRequest("GET", '/me?$select=' . $ldap->config['ld_azure_user_identifier'] . ',displayName')
+            ->setReturnType(Model\User::class)
+            ->execute();
         $user->userPrincipalname=$graphUser->getUserPrincipalName();
         $user->displayName=$graphUser->getDisplayName();
      //  echo("<pre>");print_r($user);echo("</pre>");
@@ -79,19 +80,25 @@ if (isset($_GET['code'])) {
 		// if query is not empty, it means everything is ok and we can continue, auth is done !
 		if (!empty($row['id'])) {
 		//user exist
-            $status='normal';
-            if (in_array("piwigo.group.webmaster",  $user->roles)) {
+            if($ldap->config['ld_group_user_active'] == 1) {
+                $status=false;
+            } else {
+                $status='normal';
+            }
+            if (in_array($ldap->config['ld_group_user'],  $user->claim)) {
+                $status='normal';
+            }
+            if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $user->claim))) {
+                $status='administrator';
+            }
+            if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $user->claim))) {
                 $status='webmaster';
             }
-            if (in_array("piwigo.group.administrator",  $user->roles)) {
-                $status='admin';
-            }
-            if (in_array("piwigo.group.webmaster",  $user->groups)) {
-                $status='webmaster';
-            }
-            if (in_array("piwigo.group.administrator",  $user->groups)) {
-                $status='admin';
-            }                                 
+            if($status == false){
+                trigger_notify('login_failure', stripslashes($user->userPrincipalname));
+                $ldap->write_log("[azure_login]> User does not have role / claim as user to login");
+                return false;
+            }                                
             $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $row['id'] . ';';
             pwg_query($query);        
 			log_user($row['id'], False);
@@ -116,19 +123,25 @@ if (isset($_GET['code'])) {
 					}
 					return false;
 				}
-                $status='normal';
-                if (in_array("pwg.group.webmaster",  $user->roles)) {
-                    $status='webmaster';
+                if($ldap->config['ld_group_user_active'] == 1) {
+                    $status=false;
+                } else {
+                    $status='normal';
                 }
-                if (in_array("pwg.group.administrator",  $user->roles)) {
+                if (in_array($ldap->config['ld_group_user'],  $user->claim)) {
+                    $status='normal';
+                }
+                if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $user->claim))) {
                     $status='administrator';
                 }
-                if (in_array("pwg.group.webmaster",  $user->groups)) {
+                if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $user->claim))) {
                     $status='webmaster';
                 }
-                if (in_array("pwg.group.administrator",  $user->groups)) {
-                    $status='administrator';
-                }                                 
+                if($status == false){
+                    trigger_notify('login_failure', stripslashes($user->userPrincipalname));
+                    $ldap->write_log("[azure_login]> User does not have role / claim as user to login");
+                    return false;
+                }                              
                 $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $new_id . ';';
 				pwg_query($query);
                 
