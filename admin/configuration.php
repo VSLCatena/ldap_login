@@ -53,9 +53,30 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	if(isset($_POST['LD_AZURE_REDIRECT_URI'])){
 		$me->config['ld_azure_redirect_uri']  = $_POST['LD_AZURE_REDIRECT_URI'];
 	}
+	if(isset($_POST['LD_AZURE_AUTH_URL'])){
+		$me->config['ld_azure_auth_url']  = $_POST['LD_AZURE_AUTH_URL'];
+	}
+	if(isset($_POST['LD_AZURE_TOKEN_URL'])){
+		$me->config['ld_azure_token_url']  = $_POST['LD_AZURE_TOKEN_URL'];
+	}	
+	if(isset($_POST['LD_AZURE_RESOURCE_URL'])){
+		$me->config['ld_azure_resource_url']  = $_POST['LD_AZURE_RESOURCE_URL'];
+	}	
+	if(isset($_POST['LD_AZURE_LOGOUT_URL'])){
+		$me->config['ld_azure_logout_url']  = $_POST['LD_AZURE_LOGOUT_URL'];
+	}		
+	if(isset($_POST['LD_AZURE_JWKS_URL'])){
+		$me->config['ld_azure_jwks_url']  = $_POST['LD_AZURE_JWKS_URL'];
+	}		
+	if(isset($_POST['LD_AZURE_CLAIM_NAME'])){
+		$me->config['ld_azure_claim_name']  = $_POST['LD_AZURE_CLAIM_NAME'];
+	}			
+	if(isset($_POST['LD_AZURE_USER_IDENTIFIER'])){
+		$me->config['ld_azure_user_identifier']  = $_POST['LD_AZURE_USER_IDENTIFIER'];
+	}	
 	if(isset($_POST['LD_AZURE_SCOPES'])){
 		$me->config['ld_azure_scopes']  = $_POST['LD_AZURE_SCOPES'];
-	}	
+	}		
 	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
 	$me->config['ld_port']      = $_POST['LD_PORT'];
 	$me->config['ld_basedn']    = $_POST['LD_BASEDN'];
@@ -216,8 +237,10 @@ $template->assign('LD_AZURE_AUTH_URL',$me->config['ld_azure_auth_url']);
 $template->assign('LD_AZURE_TOKEN_URL',$me->config['ld_azure_token_url']);
 $template->assign('LD_AZURE_LOGOUT_URL',$me->config['ld_azure_logout_url']);
 $template->assign('LD_AZURE_RESOURCE_URL',$me->config['ld_azure_resource_url']);
-$template->assign('LD_AZURE_USER_IDENTIFIER',$me->config['ld_azure_user_identifier']);
 $template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
+$template->assign('LD_AZURE_JWKS_URL',$me->config['ld_azure_jwks_url']);
+$template->assign('LD_AZURE_CLAIM_NAME',$me->config['ld_azure_claim_name']);
+$template->assign('LD_AZURE_USER_IDENTIFIER',$me->config['ld_azure_user_identifier']);
 $template->assign('LD_AZURE_SCOPES',$me->config['ld_azure_scopes']);
 
 $template->assign('LD_HOST',$me->check_config('ld_host'));

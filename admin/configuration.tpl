@@ -64,10 +64,22 @@
 		  case 'ld_auth_azure':
             $( "#LdapSettingsBlock" ).addClass( "visually-hidden " );
             $( "#AzureSettingsBlock" ).removeClass( "visually-hidden" );
+            
+            $( "#nav-link-tabUserSchema" ).addClass( "disabled" );
+            $( "#nav-link-tabMembershipSchema" ).addClass( "disabled" );
+            $( "#nav-link-tabGroupSchema" ).addClass( "disabled" );
+            
+            $('a[href="#tabMembershipSettings"]').tab('show');
 			break;
 		  case 'ld_auth_ldap':
             $( "#AzureSettingsBlock" ).addClass( "visually-hidden " );
             $( "#LdapSettingsBlock" ).removeClass( "visually-hidden" );
+            
+            $( "#nav-link-tabUserSchema" ).removeClass( "disabled" );
+            $( "#nav-link-tabMembershipSchema" ).removeClass( "disabled" );
+            $( "#nav-link-tabGroupSchema" ).removeClass( "disabled" );
+            
+            $('a[href="#tabUserSchema"]').tab('show');
 			break;
 		}		
 
@@ -231,7 +243,7 @@
                                     placeholder="fake-8cedf1be-5920-478e-85ff-b6909f288d10" aria-label="{'Azure Tenant'|@translate}"
                                     >
                                             <small id="ld_azure_tenant_help" class="text-muted">
-                                                {'Azure Tenant ID.'|@translate}
+                                                {'Azure Tenant ID. Use {TENANT_ID} as placeholder for URLs below'|@translate}
                                             </small>
                                     </div>
                                 </div>
@@ -324,22 +336,43 @@
                                                     {'Logout URL'|@translate}
                                                 </small>
                                         </div>
+                                    </div>          
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_jwks_url" class="col-sm-2 col-form-label">{'JWKS URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_logout_url" name="LD_AZURE_JWKS_URL" value="{$LD_AZURE_JWKS_URL}" placeholder="https://example.com/logout" aria-label="{'JSON Web Key Sets Public URL'|@translate}">
+                                            <small id="ld_azure_jwks_url_help" class="text-muted">
+                                                {'JSON Web Key Sets Public URL'|@translate}
+                                            </small>
                                         </div>
-                                        <div class="form-inline mb-3">
-                                        <div class="form-group row">
-                                            <label for="ld_azure_user_identifier" class="col-sm-2 col-form-label" >{'User identifier'|@translate}</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="ld_azure_user_identifier" name="LD_AZURE_USER_IDENTIFIER" value="{$LD_AZURE_USER_IDENTIFIER}"
-                                            placeholder="id" aria-label="{'User identifier'|@translate}" 
-                                            >
-                                                    <small id="ld_azure_user_identifier_help" class="text-muted">
-                                                        {'User identifier'|@translate}
-                                                    </small>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_claim_name" class="col-sm-2 col-form-label" >{'Claim name'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_claim_name" name="LD_AZURE_CLAIM_NAME" value="{$LD_AZURE_CLAIM_NAME}" placeholder="roles" aria-label="{'Claim name'|@translate}">
+                                                <small id="ld_azure_claim_name_help" class="text-muted">
+                                                    {'Claim name'|@translate}
+                                                </small>
                                         </div>
-                                    </div>            
-                                </div>     
-                                                                 
+                                    </div>
+                                </div>          
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_user_identifier" class="col-sm-2 col-form-label" >{'User identifier'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_user_identifier" name="LD_AZURE_USER_IDENTIFIER" value="{$LD_AZURE_USER_IDENTIFIER}"
+                                        placeholder="id" aria-label="{'User identifier'|@translate}" 
+                                        >
+                                                <small id="ld_azure_user_identifier_help" class="text-muted">
+                                                    {'User identifier'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>                                                                                      
                                 <div class="form-inline mb-3">
                                     <div class="form-group row">
                                         <label for="ld_azure_scopes" class="col-sm-2 col-form-label" >{'Scopes'|@translate}</label>
@@ -470,19 +503,19 @@
                     <div class="col-12">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#tabUserSchema" role="tab" aria-expanded="false"
+                                <a id="nav-link-tabUserSchema" class="nav-link {if 'ld_auth_azure'!=$LD_AUTH_TYPE}active{/if} {if 'ld_auth_azure'==$LD_AUTH_TYPE}disabled{/if}" data-bs-toggle="tab" href="#tabUserSchema" role="tab" aria-expanded="false"
                                     aria-controls="tabUserSchema">{'User Schema'|@translate}</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-bs-toggle="tab" href="#tabGroupSchema" role="tab" aria-expanded="false"
+                                <a id="nav-link-tabGroupSchema" class="nav-link {if 'ld_auth_azure'==$LD_AUTH_TYPE}disabled{/if}" data-bs-toggle="tab" href="#tabGroupSchema" role="tab" aria-expanded="false"
                                     aria-controls="tabGroupSchema">{'Group Schema'|@translate}</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-bs-toggle="tab" href="#tabMembershipSchema" role="tab" aria-expanded="false"
+                                <a id="nav-link-tabMembershipSchema" class="nav-link {if 'ld_auth_azure'==$LD_AUTH_TYPE}disabled{/if}" data-bs-toggle="tab" href="#tabMembershipSchema" role="tab" aria-expanded="false"
                                     aria-controls="tabMembershipSchema">{'Membership Schema'|@translate}</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-bs-toggle="tab" href="#tabMembershipSettings" role="tab" aria-expanded="false"
+                                <a id="nav-link-tabMembershipSettings" class="nav-link {if 'ld_auth_azure'==$LD_AUTH_TYPE}active{/if}" data-bs-toggle="tab" href="#tabMembershipSettings" role="tab" aria-expanded="false"
                                     aria-controls="tabMembershipSettings">{'Membership Settings'|@translate}</a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -491,7 +524,7 @@
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="tabUserSchema">
+                            <div class="tab-pane fade {if 'ld_auth_azure'!=$LD_AUTH_TYPE}show active{/if}" id="tabUserSchema">
                                 <div class="card card-body"> 
                                 <h2 class="card-title">{'User Schema Settings'|@translate}</h2>
                                     <br>
@@ -695,7 +728,7 @@
                                 
                                     </div>
                                 </div>
-                                <div class="tab-pane fade " id="tabMembershipSettings">
+                                <div class="tab-pane fade  {if 'ld_auth_azure'==$LD_AUTH_TYPE}show active{/if}" id="tabMembershipSettings">
                                     <div class="card card-body">
                                     <h2 class="card-title">{'Membership Settings'|@translate}</h2>
                                         <a href="https://piwigo.org/doc/doku.php?id=user_documentation:use:features:user_status"
