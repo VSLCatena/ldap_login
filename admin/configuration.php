@@ -212,6 +212,11 @@ if($me->config['ld_azure_client_secret'] == ''){
 	$template->assign('LD_AZURE_CLIENT_SECRET','************************');
 }	
 $template->assign('LD_AZURE_TENANT_ID',$me->config['ld_azure_tenant_id']);
+$template->assign('LD_AZURE_AUTH_URL',$me->config['ld_azure_auth_url']);
+$template->assign('LD_AZURE_TOKEN_URL',$me->config['ld_azure_token_url']);
+$template->assign('LD_AZURE_LOGOUT_URL',$me->config['ld_azure_logout_url']);
+$template->assign('LD_AZURE_RESOURCE_URL',$me->config['ld_azure_resource_url']);
+$template->assign('LD_AZURE_USER_IDENTIFIER',$me->config['ld_azure_user_identifier']);
 $template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
 $template->assign('LD_AZURE_SCOPES',$me->config['ld_azure_scopes']);
 

@@ -216,7 +216,7 @@
                     <div class="card-body">                 
                     <div class="row {if 'ld_auth_azure'!=$LD_AUTH_TYPE}visually-hidden{/if}" id="AzureSettingsBlock">
                         <h2 class="card-title">{'Azure settings'|@translate}</h2>
-                            <div class="col-6">
+                            <div class="col">
 
                             
                             
@@ -260,7 +260,46 @@
                                                 </small>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_auth_url" class="col-sm-2 col-form-label" >{'Authorization URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_auth_url" name="LD_AZURE_AUTH_URL" value="{$LD_AZURE_AUTH_URL}"
+                                        placeholder="https://example.com/oauth/authorize" aria-label="{'Authorization URL'|@translate}" 
+                                        >
+                                                <small id="ld_azure_auth_url_help" class="text-muted">
+                                                    {'Authorization URL'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>   
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_token_url" class="col-sm-2 col-form-label" >{'Access token URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_token_url" name="LD_AZURE_TOKEN_URL" value="{$LD_AZURE_TOKEN_URL}"
+                                        placeholder="https://example.com/oauth/token" aria-label="{'Access token URL'|@translate}" 
+                                        >
+                                                <small id="ld_azure_token_url_help" class="text-muted">
+                                                    {'Access token URL'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_resource_url" class="col-sm-2 col-form-label" >{'Resource URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_token_url" name="LD_AZURE_RESOURCE_URL" value="{$LD_AZURE_RESOURCE_URL}"
+                                        placeholder="https://example.com/user" aria-label="{'Resource URL'|@translate}" 
+                                        >
+                                                <small id="ld_azure_resource_url_help" class="text-muted">
+                                                    {'Resource URL'|@translate}
+                                                </small>
+                                        </div>
+                                    </div>
+                                </div>                                                                                                   
                                 <div class="form-inline mb-3">
                                     <div class="form-group row">
                                         <label for="ld_azure_redirecturi" class="col-sm-2 col-form-label" >{'Redirect URI'|@translate}</label>
@@ -273,7 +312,34 @@
                                                 </small>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
+                                <div class="form-inline mb-3">
+                                    <div class="form-group row">
+                                        <label for="ld_azure_logout_url" class="col-sm-2 col-form-label" >{'Logout URL'|@translate}</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ld_azure_logout_url" name="LD_AZURE_LOGOUT_URL" value="{$LD_AZURE_LOGOUT_URL}"
+                                        placeholder="https://example.com/logout" aria-label="{'Logout URL'|@translate}" 
+                                        >
+                                                <small id="ld_azure_logout_url_help" class="text-muted">
+                                                    {'Logout URL'|@translate}
+                                                </small>
+                                        </div>
+                                        </div>
+                                        <div class="form-inline mb-3">
+                                        <div class="form-group row">
+                                            <label for="ld_azure_user_identifier" class="col-sm-2 col-form-label" >{'User identifier'|@translate}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="ld_azure_user_identifier" name="LD_AZURE_USER_IDENTIFIER" value="{$LD_AZURE_USER_IDENTIFIER}"
+                                            placeholder="id" aria-label="{'User identifier'|@translate}" 
+                                            >
+                                                    <small id="ld_azure_user_identifier_help" class="text-muted">
+                                                        {'User identifier'|@translate}
+                                                    </small>
+                                            </div>
+                                        </div>
+                                    </div>            
+                                </div>     
+                                                                 
                                 <div class="form-inline mb-3">
                                     <div class="form-group row">
                                         <label for="ld_azure_scopes" class="col-sm-2 col-form-label" >{'Scopes'|@translate}</label>
