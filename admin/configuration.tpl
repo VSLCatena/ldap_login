@@ -140,24 +140,27 @@
                                 
 
                                 <div class="form-check form-switch">
+                                    <input type='hidden' value='0' name='LD_DEBUG'>
                                     <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
-                                        value="{$LD_DEBUG}"  {if $LD_DEBUG== 1}checked{/if}>
+                                        value="1"  {if $LD_DEBUG== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug">
                                         {'Write to ldap_login.log file'|@translate}
                                     </label>
                                 </div>
 
                                 <div class="form-check form-switch">
+                                    <input type='hidden' value='0' name='LD_DEBUG_PHP'>
                                     <input class="form-check-input" id="ld_debug_php" name="LD_DEBUG_PHP" type="checkbox"
-                                        value="{$LD_DEBUG_PHP}"  {if $LD_DEBUG_PHP== 1}checked{/if}>
+                                        value="1"  {if $LD_DEBUG_PHP== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug_php">
                                         {'Write to PHP error log'|@translate}
                                     </label>
                                 </div>
 
                                 <div class="form-check form-switch">
+                                    <input type='hidden' value='0' name='LD_DEBUG_CLEARUPDATE'>
                                     <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
-                                        type="checkbox" value="{$LD_DEBUG_CLEARUPDATE}"  {if $LD_DEBUG_CLEARUPDATE== 1}checked{/if}>
+                                        type="checkbox" value="1"  {if $LD_DEBUG_CLEARUPDATE== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug_clearupdate">
                                         {'Clear logs after plugin update'|@translate}
                                     </label>
@@ -430,9 +433,10 @@
                                                 placeholder="{'389 or 636'|@translate}" aria-describedby="ld_port_help"
                                                 aria-label="{'389 or 636'|@translate}" type="text" value="{$LD_PORT}" />
                                             <div class="input-group-text">
+                                                <input type='hidden' value='0' name='LD_USE_SSL'>                                                          
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_use_ssl"
-                                                    name="LD_USE_SSL" type="checkbox" value="{$LD_USE_SSL}" {if $LD_USE_SSL== 1}checked{/if}>
+                                                    name="LD_USE_SSL" type="checkbox" value="1" {if $LD_USE_SSL== 1}checked{/if}>
                                             </div>
                                             <span class="input-group-text"
                                                 id="ld_use_ssl-addon1">{'Secure connection'|@translate}</span>
@@ -648,23 +652,7 @@
                                             </div>
                                         </div>
                                     </div>   
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_class">{'Group Object Class:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_class" name="LD_GROUP_CLASS" value="{$LD_GROUP_CLASS}" /> {if isset($WARN_LD_GROUP_CLASS)}<i style="color:red;">{$WARN_LD_GROUP_CLASS}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'LDAP attribute objectClass value to search for when loading groups.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_filter">{'Group Object Filter:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_filter" name="LD_GROUP_FILTER" value="{$LD_GROUP_FILTER}" /> {if isset($WARN_LD_GROUP_FILTER)}<i style="color:red;">{$WARN_LD_GROUP_FILTER}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The filter to use when searching group objects.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_attr">{'Group Name Attribute:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_attr" name="LD_GROUP_ATTR" value="{$LD_GROUP_ATTR}" /> {if isset($WARN_LD_GROUP_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_ATTR}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group name.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_desc">{'Group Description:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_desc" name="LD_GROUP_DESC" value="{$LD_GROUP_DESC}" /> {if isset($WARN_LD_GROUP_DESC)}<i style="color:red;">{$WARN_LD_GROUP_DESC}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group description.'|@translate}</i> </p> -->
-                                
+
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="tabMembershipSchema">
@@ -712,20 +700,6 @@
                                             for="ld_membership_user2">{'Use GROUP membership attribute'|@translate}</label>
                                     </div>
 
-
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_member_attr">{'Group Membership Attribute:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_member_attr" name="LD_GROUP_MEMBER_ATTR" value="{$LD_GROUP_MEMBER_ATTR}" /> {if isset($WARN_LD_GROUP_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_MEMBER_ATTR}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group members from the group.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_user_member_attr">{'User Membership Attribute:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_user_member_attr" name="LD_USER_MEMBER_ATTR" value="{$LD_USER_MEMBER_ATTR}" /> {if isset($WARN_LD_USER_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_USER_MEMBER_ATTR}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The attribute field when loading groups from a user.'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_membership_user"> {if isset($LD_MEMBERSHIP_USER) } -->
-                                    <!-- <input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" checked /> {else} -->
-                                        <!-- <input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" /> {/if}{'Use user membership attribute'|@translate}</label> {if isset($WARN_LD_MEMBERSHIP_USER)}<i style="color:red;">{$WARN_LD_MEMBERSHIP_USER}</i>{/if} </p> -->
-                                
                                     </div>
                                 </div>
                                 <div class="tab-pane fade  {if 'ld_auth_azure'==$LD_AUTH_TYPE}show active{/if}" id="tabMembershipSettings">
@@ -739,12 +713,13 @@
                                         <br>
 
                                         <span id="ld_user_class_help"
-                                            class="form-text text-muted">{'The group that will get user rights (DN).'|@translate}</span>
+                                            class="form-text text-muted">{'The group that will get user rights (DN for LDAP).'|@translate}</span>
                                         <div class="input-group mb-3">
                                             <div class="input-group-text">
+                                                <input type='hidden' value='0' name='LD_GROUP_USER_ACTIVE'>
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_user_active"
-                                                    name="LD_GROUP_USER_ACTIVE" type="checkbox" value="{$LD_GROUP_USER_ACTIVE}" {if $LD_GROUP_USER_ACTIVE== 1}checked{/if}>
+                                                    name="LD_GROUP_USER_ACTIVE" type="checkbox" value="1" {if $LD_GROUP_USER_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend col-xl-4">
                                                 <span class="input-group-text"
@@ -756,12 +731,13 @@
                                         </div>
 
                                         <span id="ld_user_class_help"
-                                            class="form-text text-muted">{'The group that will get admininistrator rights (DN).'|@translate}</span>
+                                            class="form-text text-muted">{'The group that will get admininistrator rights (DN for LDAP).'|@translate}</span>
                                         <div class="input-group mb-3">
                                             <div class="input-group-text">
+                                                <input type='hidden' value='0' name='LD_GROUP_ADMIN_ACTIVE'>
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_admin_active"
-                                                    name="LD_GROUP_ADMIN_ACTIVE" type="checkbox" value="{$LD_GROUP_ADMIN_ACTIVE}"
+                                                    name="LD_GROUP_ADMIN_ACTIVE" type="checkbox" value="1"
                                                     {if $LD_GROUP_ADMIN_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend col-xl-4">
@@ -774,13 +750,14 @@
                                         </div>
 
                                         <span id="ld_user_class_help"
-                                            class="form-text text-muted">{'The group that will get webmaster rights (DN).'|@translate}</span>
+                                            class="form-text text-muted">{'The group that will get webmaster rights (DN for LDAP).'|@translate}</span>
                                         <div class="input-group mb-3">
                                             <div class="input-group-text">
+                                                <input type='hidden' value='0' name='LD_GROUP_WEBMASTER_ACTIVE'>
                                                 <input class="form-check-input mt-0" type="checkbox"
                                                     aria-label="Checkbox for following text input" id="ld_group_webmaster_active"
                                                     name="LD_GROUP_WEBMASTER_ACTIVE" type="checkbox"
-                                                    value="{$LD_GROUP_WEBMASTER_ACTIVE}"  {if $LD_GROUP_WEBMASTER_ACTIVE== 1}checked{/if}>
+                                                    value="1"  {if $LD_GROUP_WEBMASTER_ACTIVE== 1}checked{/if}>
                                             </div>
                                             <div class="input-group-prepend  col-xl-4">
                                                 <span class="input-group-text"
@@ -791,151 +768,20 @@
                                                 aria-label="{'Group corresponding with webmasters:'|@translate}">
                                         </div>
 
-                                        <!-- <br> -->
-                                        <!-- <p> -->
-                                        <!-- <label style="display:inline-block; width:15%;" for="ld_group_user">{'Group corresponding with users:'|@translate}</label> -->
-                                        <!-- <input size="70" type="text" id="ld_group_user" name="LD_GROUP_USER" value="{$LD_GROUP_USER}" /> {if isset($WARN_LD_GROUP_USER)}<i style="color:red;">{$WARN_LD_GROUP_USER}</i>{/if} -->
-                                        <!-- <br> <i style="margin:15%;">{'The group that will get user rights (DN).'|@translate}</i> </p> -->
-                                        <!-- <p> -->
-                                        <!-- <label style="display:inline-block; width:15%;" for="ld_group_admin">{'Group corresponding with administrators:'|@translate}</label> -->
-                                        <!-- <input size="70" type="text" id="ld_group_admin" name="LD_GROUP_ADMIN" value="{$LD_GROUP_ADMIN}" /> {if isset($WARN_LD_GROUP_ADMIN)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN}</i>{/if} -->
-                                        <!-- <br> <i style="margin:15%;">{'The group that will get admininistrator rights (DN).'|@translate}</i> </p> -->
-                                        <!-- <p> -->
-                                        <!-- <label style="display:inline-block; width:15%;" for="ld_group_WEBMASTER">{'Group corresponding with webmasters:'|@translate}</label> -->
-                                        <!-- <input size="70" type="text" id="ld_group_webmaster" name="LD_GROUP_WEBMASTER" value="{$LD_GROUP_WEBMASTER}" /> {if isset($WARN_LD_GROUP_WEBMASTER)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER}</i>{/if} -->
-                                        <!-- <br> <i style="margin:15%;">{'The group that will get webmaster rights (DN).'|@translate}</i> </p> -->
-                                        <!-- <p> -->
-                                        <!-- <label style="display:inline-block; width:15%;" for="ld_group_user_active"> {if isset($LD_GROUP_USER_ACTIVE) } -->
-                                        <!-- <input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" checked /> {else} -->
-                                            <!-- <input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" /> {/if}{'Use user groups'|@translate}</label> <i>Note: Minimum membership to gain access. Disabled, no check for group membership.</i> {if isset($WARN_LD_GROUP_USER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_USER_ACTIVE}</i>{/if} -->
-                                            <!-- <br> </p> -->
-                                            <!-- <p> -->
-                                            <!-- <label style="display:inline-block; width:15%;" for="ld_group_admin_active"> {if isset($LD_GROUP_ADMIN_ACTIVE) } -->
-                                            <!-- <input type="checkbox" id="ld_group_admin_active" name="ld_group_admin_active" value="{$LD_GROUP_ADMIN_ACTIVE}" checked /> {else} -->
-                                                <!-- <input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="{$LD_GROUP_ADMIN_ACTIVE}" /> {/if}{'Use administrator groups.'|@translate}</label> <i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i> {if isset($WARN_LD_GROUP_ADMIN_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN_ACTIVE}</i>{/if} </p> -->
-                                                <!-- <p> -->
-                                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_webmaster_active"> {if $LD_GROUP_WEBMASTER_ACTIVE } -->
-                                                <!-- <input type="checkbox" id="ld_group_webmaster_active" name="ld_group_WEBMASTER_active" value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked /> {else} -->
-                                                    <!-- <input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="{$LD_GROUP_WEBMASTER_ACTIVE}" /> {/if}{'Use Webmaster groups.'|@translate}</label> <i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i> {if isset($WARN_LD_GROUP_WEBMASTER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER_ACTIVE}</i>{/if} </p> -->
-                                            
                                     </div>
                                 </div>
                                 <div class="tab-pane fade " id="close"></div>
                             </div>
                         </div>
                             </div>
-                                <!-- <div class="row"> -->
-                                <!-- <div class="col"> -->
-                                <!-- <fieldset class="form-group"> -->
-                                <!-- <legend>{'User Schema Settings'|@translate}</legend> <i>Required for user filter: (&(&(objectClass=<b>User_Object_Class</b>)(<b>Username_Attribute</b>=Login_Form_username))(<b>User_Object_Filter</b>)</i> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_user_class">{'User Object Class:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_user_class" name="LD_USER_CLASS" value="{$LD_USER_CLASS}" /> {if isset($WARN_LD_USER_CLASS)}<i style="color:red;">{$WARN_LD_USER_CLASS}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The LDAP user object class type to use when loading users'|@translate}</i> -->
-                                <!-- <br> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_user_attr">{'Username Attribute'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_user_attr" name="LD_USER_ATTR" value="{$LD_USER_ATTR}" /> {if isset($WARN_LD_USER_ATTR)}<i style="color:red;">{$WARN_LD_USER_ATTR}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The attribute field to use on the user object. Examples: cn, sAMAccountName.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_user_filter">{'User Object Filter:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_user_filter" name="LD_USER_FILTER" value="{$LD_USER_FILTER}" /> {if isset($WARN_LD_USER_FILTER)}<i style="color:red;">{$WARN_LD_USER_FILTER}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The filter to use when searching user objects'|@translate}</i> -->
-                                <!-- <br> </p> -->
-                                <!-- </fieldset> -->
-                                <!-- </div> -->
-                                <!-- <div class="col"> -->
-                                <!-- <fieldset class="form-group"> -->
-                                <!-- <legend>{'Group Schema Settings'|@translate}</legend> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_class">{'Group Object Class:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_group_class" name="LD_GROUP_CLASS" value="{$LD_GROUP_CLASS}" /> {if isset($WARN_LD_GROUP_CLASS)}<i style="color:red;">{$WARN_LD_GROUP_CLASS}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'LDAP attribute objectClass value to search for when loading groups.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_filter">{'Group Object Filter:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_group_filter" name="LD_GROUP_FILTER" value="{$LD_GROUP_FILTER}" /> {if isset($WARN_LD_GROUP_FILTER)}<i style="color:red;">{$WARN_LD_GROUP_FILTER}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The filter to use when searching group objects.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_attr">{'Group Name Attribute:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_group_attr" name="LD_GROUP_ATTR" value="{$LD_GROUP_ATTR}" /> {if isset($WARN_LD_GROUP_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_ATTR}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group name.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_desc">{'Group Description:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_group_desc" name="LD_GROUP_DESC" value="{$LD_GROUP_DESC}" /> {if isset($WARN_LD_GROUP_DESC)}<i style="color:red;">{$WARN_LD_GROUP_DESC}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group description.'|@translate}</i> </p> -->
-                                <!-- </fieldset> -->
-                                <!-- </div> -->
-                                <!-- <div class="col"> -->
-                                <!-- <fieldset class="form-group"> -->
-                                <!-- <legend>{'Membership Schema Settings'|@translate}</legend> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_group_member_attr">{'Group Membership Attribute:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_group_member_attr" name="LD_GROUP_MEMBER_ATTR" value="{$LD_GROUP_MEMBER_ATTR}" /> {if isset($WARN_LD_GROUP_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_GROUP_MEMBER_ATTR}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The attribute field to use when loading the group members from the group.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_user_member_attr">{'User Membership Attribute:'|@translate}</label> -->
-                                <!-- <input size="70" type="text" id="ld_user_member_attr" name="LD_USER_MEMBER_ATTR" value="{$LD_USER_MEMBER_ATTR}" /> {if isset($WARN_LD_USER_MEMBER_ATTR)}<i style="color:red;">{$WARN_LD_USER_MEMBER_ATTR}</i>{/if} -->
-                                <!-- <br> <i style="margin:15%;">{'The attribute field when loading groups from a user.'|@translate}</i> </p> -->
-                                <!-- <p> -->
-                                <!-- <label style="display:inline-block; width:15%;" for="ld_membership_user"> {if isset($LD_MEMBERSHIP_USER) } -->
-                                <!-- <input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" checked /> {else} -->
-                                    <!-- <input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" /> {/if}{'Use user membership attribute'|@translate}</label> {if isset($WARN_LD_MEMBERSHIP_USER)}<i style="color:red;">{$WARN_LD_MEMBERSHIP_USER}</i>{/if} </p> -->
-                                    <!-- </fieldset> -->
-                                    <!-- <fieldset class="form-group"> -->
-                                    <!-- <legend>{'Membership Settings'|@translate}</legend> <a href="https://piwigo.org/doc/doku.php?id=user_documentation:use:features:user_status" target="_blank	" style="position: relative;display: inline-block;border-bottom: 1px dotted black;margin-left: 10px;">More info about built-in groups on Piwigo.org</a> -->
-                                    <!-- <br> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_user">{'Group corresponding with users:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_user" name="LD_GROUP_USER" value="{$LD_GROUP_USER}" /> {if isset($WARN_LD_GROUP_USER)}<i style="color:red;">{$WARN_LD_GROUP_USER}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The group that will get user rights (DN).'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_admin">{'Group corresponding with administrators:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_admin" name="LD_GROUP_ADMIN" value="{$LD_GROUP_ADMIN}" /> {if isset($WARN_LD_GROUP_ADMIN)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The group that will get admininistrator rights (DN).'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_WEBMASTER">{'Group corresponding with webmasters:'|@translate}</label> -->
-                                    <!-- <input size="70" type="text" id="ld_group_webmaster" name="LD_GROUP_WEBMASTER" value="{$LD_GROUP_WEBMASTER}" /> {if isset($WARN_LD_GROUP_WEBMASTER)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER}</i>{/if} -->
-                                    <!-- <br> <i style="margin:15%;">{'The group that will get webmaster rights (DN).'|@translate}</i> </p> -->
-                                    <!-- <p> -->
-                                    <!-- <label style="display:inline-block; width:15%;" for="ld_group_user_active"> {if isset($LD_GROUP_USER_ACTIVE) } -->
-                                    <!-- <input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" checked /> {else} -->
-                                        <!-- <input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" /> {/if}{'Use user groups'|@translate}</label> <i>Note: Minimum membership to gain access. Disabled, no check for group membership.</i> {if isset($WARN_LD_GROUP_USER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_USER_ACTIVE}</i>{/if} -->
-                                        <!-- <br> </p> -->
-                                        <!-- <p> -->
-                                        <!-- <label style="display:inline-block; width:15%;" for="ld_group_admin_active"> {if isset($LD_GROUP_ADMIN_ACTIVE) } -->
-                                        <!-- <input type="checkbox" id="ld_group_admin_active" name="ld_group_admin_active" value="{$LD_GROUP_ADMIN_ACTIVE}" checked /> {else} -->
-                                            <!-- <input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="{$LD_GROUP_ADMIN_ACTIVE}" /> {/if}{'Use administrator groups.'|@translate}</label> <i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i> {if isset($WARN_LD_GROUP_ADMIN_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_ADMIN_ACTIVE}</i>{/if} </p> -->
-                                            <!-- <p> -->
-                                            <!-- <label style="display:inline-block; width:15%;" for="ld_group_webmaster_active"> {if $LD_GROUP_WEBMASTER_ACTIVE } -->
-                                            <!-- <input type="checkbox" id="ld_group_webmaster_active" name="ld_group_WEBMASTER_active" value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked /> {else} -->
-                                                <!-- <input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="{$LD_GROUP_WEBMASTER_ACTIVE}" /> {/if}{'Use Webmaster groups.'|@translate}</label> <i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i> {if isset($WARN_LD_GROUP_WEBMASTER_ACTIVE)}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER_ACTIVE}</i>{/if} </p> -->
-                                                <!-- </fieldset> -->
-                                                <!-- </div> -->
-                                                <!-- </div> -->
                                                 <br>
                                                 <div class="row">
                                                 <div class="col-12">
-                                                    <!-- <input type="submit" value="{'Save'|@translate}" name="save" /> -->
-                                                    <!-- <input type="submit" value="{'Save & test'|@translate}" name="savetest" />  -->
                                                     <button type="submit" class="btn btn-primary btn-lg btn-block" value="{'Save'|@translate}"
                                                         name="save">{'Save'|@translate}</button>
-                                                    <!-- <button type="submit" class="btn btn-secondary btn-lg btn-block btn-warning" value="{'Save & test'|@translate}" name="savetest">{'Save & test'|@translate}</button>         -->
                                                 </div>
                                             </div>                                                
                                         </form>
-                                               
-                                                        <!-- <ul> -->
-                                                        <!-- <li> -->
-                                                        <!-- <label for="username">{'Username'|@translate}</label> -->
-                                                        <!-- <br> -->
-                                                        <!-- <input type="text" id="username" name="USERNAME" value="{$USERNAME}" /> </li> -->
-                                                        <!-- <li> -->
-                                                        <!-- <label for="password">{'Your password'|@translate}</label> -->
-                                                        <!-- <br> -->
-                                                        <!-- <input type="password" id="password" name="PASSWORD" value="{if isset($WARN_LD_BINDPW)}{$PASSWORD}{/if}" /> </li> -->
-                                                        <!-- </ul> {if (!empty($LD_CHECK_LDAP))} {$LD_CHECK_LDAP} {/if} </fieldset> -->
-                                                        <!-- <p> -->
-                                                        <!-- <input type="submit" value="{'Test Settings'|@translate}" name="check_ldap" /> </p> -->
         </fieldset>
         </div>
     </form>
@@ -948,62 +794,3 @@
 
     </div>
 </div>
-                                                {*<!--
-                                                    <fieldset class="mainConf">
-                                                    <legend>{'Ldap attributes'|@translate}</legend>
-                                                    <ul>
-                                            <li>
-        <label for="ld_server">{'Server mode:'|@translate}</label><br>
-        <select name="LD_SERVER" id="ld_server">
-          <option value="ad" 		{if 'ad' == {$LD_SERVER}}selected{/if}>Active Directory</option>
-          <option value="openldap"	{if 'openldap' == {$LD_SERVER}}selected{/if}>OpenLDAP</option>
-        </select>
-        </li>
-        <i>{'If using MS AD, choose Active Directory, else choose OpenLDAP'|@translate}</i>		
-		<i>{'If using MS AD, choose Active Directory, else choose OpenLDAP'|@translate}</i>		
-        <i>{'If using MS AD, choose Active Directory, else choose OpenLDAP'|@translate}</i>		
-        <li>
-        <label for="basedn">{'Base DN'|@translate}</label>
-        <br>
-        <input size="70" type="text" id="basedn" name="BASEDN" value="{$BASEDN}" />
-        </li>
-        <br>
-        <li>
-        <label for="ld_attr">{'Attribute corresponding to the user name'|@translate}</label>
-        <br>
-        <input type="text" id="ld_attr" name="LD_ATTR" value="{$LD_ATTR}" />
-        </li>
-        <i>For AD it is often 'sAMAccountName'. For OpenLDAP, it is often 'userid'. Please check your directory details for the correct attribute.</i>
-        </ul>
-        </fieldset>
-        <fieldset class="mainConf">
-        <legend>{'Ldap Group attributes'|@translate}</legend>
-        <ul>
-        <li>
-        <label for="groupdn">{'DN of group for membership-check and calculated CN (using RegEx)'|@translate}</label>
-        <br>
-        <input size="70" type="text" id="ld_group" name="LD_GROUP" value="{$LD_GROUP}" /><input disabled type="text" value='{$LD_GROUP|regex_replace:"/,[a-z]+.*/":""}' />
-        </li>
-        <li>
-        <label for="groupdn_class">{'Class of group:'|@translate}</label>
-        <br>
-        <select name="LD_GROUP_CLASS" id="ld_group_class" >
-        <option value="group"  		{if 'group' == {$LD_GROUP_CLASS}}selected{/if}>group</option>
-        <option value="posixgroup" 	{if 'posixgroup' == {$LD_GROUP_CLASS}}selected{/if}>posixGroup</option>
-        </select>
-        </li>
-        <i>{'Depending on server configuration the class may differ, choose accordingly. OpenLDAP: posixGroup. AD: group.'|@translate}</i>
-        <br>
-        <li>
-        <label for="ld_group_member_attrib">{'Attribute for members in group:'|@translate}</label>
-        <br>
-        <select name="LD_GROUP_MEMBER_ATTRIB" id="ld_group_member_attrib" >
-        <option value="member"  		>member</option>
-        <option value="memberUid" 	{if 'memberUid' == {$LD_GROUP_MEMBER_ATTRIB}}selected{/if}>memberUid</option>
-        </select>
-        </li>
-        <i>{'Depending on server configuration the attribute may differ, choose accordingly. OpenLDAP: memberUid. AD:member.'|@translate}</i>
-        
-        </ul>
-        </fieldset>
--->*}
