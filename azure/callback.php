@@ -65,10 +65,10 @@ if (isset($_GET['code'])) {
         //echo("<pre>");print_r($userResource);
 
 		global $prefixeTable;
-		// search user in piwigo database
-		$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' ;';
+		// search user in piwigo database based on username & additional search on email
+		$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' OR '.$conf['user_fields']['email'].' = \''.pwg_db_real_escape_string($userResource['data']['mail']).'\' ;';
 		$row = pwg_db_fetch_assoc(pwg_query($query));
-		$ldap->write_log("[azure_login]> user found in db:" . (!empty($row['id'])) );
+		$ldap->write_log("[azure_login]> username found in db:" . (!empty($row1['id'])) . " mail found in db: " . (!empty($row['id'])));
 		// if query is not empty, it means everything is ok and we can continue, auth is done !
 		if (!empty($row['id'])) {
 		//user exist
@@ -90,7 +90,10 @@ if (isset($_GET['code'])) {
                 trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
                 $ldap->write_log("[azure_login]> User does not have role / claim as user to login");
                 return false;
-            }                                
+            }
+            $ldap->write_log("[azure_login]> Update username in db based on return values of OAuth2 & userIdentifier");                                
+            $query = 'UPDATE `'.USERS_TABLE.'` SET `username` =  \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' WHERE `'.USERS_TABLE.'`.`id` = ' . $row['id'] . ';';
+            pwg_query($query);
             $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $row['id'] . ';';
             pwg_query($query);        
 			log_user($row['id'], False);
