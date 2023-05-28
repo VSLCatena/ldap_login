@@ -3,10 +3,8 @@
 require_once realpath(__DIR__ . '/../vendor/autoload.php');
 require_once realpath(__DIR__ . '/../class.ldap.php');
 
-
-use Microsoft\Graph\Graph;
-use Microsoft\Graph\Model;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
@@ -46,35 +44,29 @@ if (isset($_GET['code'])) {
         $responseBody = json_decode($tokenResponse->getBody()->getContents());
         $accessToken = $responseBody->access_token;
         $idToken = $responseBody->id_token;
-        $user = new stdClass();;
-
+        $userResource = array();
         try {
             $azureKeys = json_decode(file_get_contents($jwks_url),true);
             $decodedIdToken = JWT::decode($idToken, JWK::parseKeySet($azureKeys,'RS256')); //works
-            $user->claim=$decodedIdToken->groups ?? array();
-            //$user->claim=$decodedIdToken[$ldap->config['ldap_azure_claim_name']] ?? array();
+            $userResource['claim']=$decodedIdToken->{$ldap->config['ld_azure_claim_name']} ?? array();
+            //$userResource->claim=$decodedIdToken[$ldap->config['ldap_azure_claim_name']] ?? array();
         } catch (\Exception $e) {
             echo 'Exception catched: ',  $e->getMessage(), "\n";
         }
-
-        //should be replaced...
-        $graph = new Graph;
-        $graph->setAccessToken($accessToken);
-        $graphUser = $graph->createRequest("GET", '/me?$select=' . $ldap->config['ld_azure_user_identifier'] . ',displayName')
-            ->setReturnType(Model\User::class)
-            ->execute();
-        $user->userPrincipalname=$graphUser->getUserPrincipalName();
-        $user->displayName=$graphUser->getDisplayName();
-     //  echo("<pre>");print_r($user);echo("</pre>");
-
-
+        $userIdentifier=$ldap->config['ld_azure_user_identifier'];
+        $resourceClient = new Client();
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken
+        ];
+        $request= new Request('GET', $ldap->config['ld_azure_resource_url'], $headers);          
+        $userResource['data'] = json_decode($resourceClient->sendAsync($request)->wait()->getBody(),true);
         $_SESSION['access_token'] = $accessToken;
-        $_SESSION['userObject'] = $user;
-        
+        $_SESSION['userObject'] = $userResource;
+        //echo("<pre>");print_r($userResource);
 
 		global $prefixeTable;
 		// search user in piwigo database
-		$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($user->userPrincipalname).'\' ;';
+		$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' ;';
 		$row = pwg_db_fetch_assoc(pwg_query($query));
 		$ldap->write_log("[azure_login]> user found in db:" . (!empty($row['id'])) );
 		// if query is not empty, it means everything is ok and we can continue, auth is done !
@@ -85,24 +77,25 @@ if (isset($_GET['code'])) {
             } else {
                 $status='normal';
             }
-            if (in_array($ldap->config['ld_group_user'],  $user->claim)) {
+            if (in_array($ldap->config['ld_group_user'],  $userResource['claim'])) {
                 $status='normal';
             }
-            if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $user->claim))) {
-                $status='administrator';
+            if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $userResource['claim']))) {
+                $status='admin';
             }
-            if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $user->claim))) {
+            if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $userResource['claim']))) {
                 $status='webmaster';
             }
             if($status == false){
-                trigger_notify('login_failure', stripslashes($user->userPrincipalname));
+                trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
                 $ldap->write_log("[azure_login]> User does not have role / claim as user to login");
                 return false;
             }                                
             $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $row['id'] . ';';
             pwg_query($query);        
 			log_user($row['id'], False);
-			trigger_notify('login_success', stripslashes($user->userPrincipalname));
+			trigger_notify('login_success', stripslashes($userResource['data'][$userIdentifier]));
+            redirect('index.php');
 			return true;
 		} else {
 		//user doest not (yet) exist
@@ -113,10 +106,10 @@ if (isset($_GET['code'])) {
 				$mail=null;
 				if($ldap->config['ld_use_mail']){
 					//retrieve LDAP e-mail address and create a new user
-					$mail = $user->userPrincipalName;
+					$mail = $userResource['data']['mail'];
 				}
 				$errors=[];
-				$new_id = register_user($user->userPrincipalname,random_password(32),$user->userPrincipalname,true,$errors);
+				$new_id = register_user($userResource['data'][$userIdentifier],random_password(32),$userResource['data'][$userIdentifier],true,$errors);
 				if(count($errors) > 0) {
 					foreach ($errors as &$e){
 						$ldap->write_log("[azure_login]> ".$e, 'ERROR');
@@ -128,17 +121,17 @@ if (isset($_GET['code'])) {
                 } else {
                     $status='normal';
                 }
-                if (in_array($ldap->config['ld_group_user'],  $user->claim)) {
+                if (in_array($ldap->config['ld_group_user'],  $userResource['claim'])) {
                     $status='normal';
                 }
-                if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $user->claim))) {
-                    $status='administrator';
+                if (($ldap->config['ld_group_admin_active'] == 1) && (in_array($ldap->config['ld_group_admin'],  $userResource['claim']))) {
+                    $status='admin';
                 }
-                if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $user->claim))) {
+                if (($ldap->config['ld_group_webmaster_active'] == 1) && (in_array($ldap->config['ld_group_webmaster'],  $userResource['claim']))) {
                     $status='webmaster';
                 }
                 if($status == false){
-                    trigger_notify('login_failure', stripslashes($user->userPrincipalname));
+                    trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
                     $ldap->write_log("[azure_login]> User does not have role / claim as user to login");
                     return false;
                 }                              
@@ -147,7 +140,7 @@ if (isset($_GET['code'])) {
                 
 				//Login user
 				log_user($new_id, False);
-				trigger_notify('login_success', stripslashes($user->userPrincipalname));
+				trigger_notify('login_success', stripslashes($userResource['data'][$userIdentifier]));
 
 				//in case the e-mail address is empty, redirect to profile page
 				if ($ldap->config['ld_allow_profile']) {
@@ -155,11 +148,12 @@ if (isset($_GET['code'])) {
 				} else {
 		//                    redirect('index.php');
 				}
+                redirect('index.php');
 				return true;
 			}
 			//else : this is the normal behavior ! user is not created.
 			else {
-				trigger_notify('login_failure', stripslashes($user->userPrincipalname));
+				trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
 				$ldap->write_log("[azure_login]> Not allowed to create user (ld_allow_newusers=false)");
 				return false;
 			}
