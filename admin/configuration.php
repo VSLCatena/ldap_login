@@ -1,10 +1,13 @@
 <?php
+
+
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 global $template;
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/configuration.tpl') );
+
 $template->assign(
-  array(
+    array(
     'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-configuration',
     'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-configuration',
     ));
@@ -18,9 +21,9 @@ $me->write_log("New LDAP Instance");
 ###
 
 if (isset($_POST['RESET_AD'])) {
-	 ld_sql('update','reset_ad');
-	 $me->write_log("Default values for MS Active directory loaded");
-	 $me->load_config();
+    ld_sql('update','reset_ad');
+	$me->write_log("Default values for MS Active directory loaded");
+    $me->load_config();
 }
 if (isset($_POST['RESET_OL'])) {
 	ld_sql('update','reset_openldap');
@@ -29,16 +32,23 @@ if (isset($_POST['RESET_OL'])) {
 }
 
 
+
+
 // Save LDAP configuration when submitted
 if (isset($_POST['save']) or isset($_POST['savetest'])){
-	$me->config['ld_forgot_url'] 	 = $_POST['LD_FORGOT_URL'];
-	$me->config['ld_debug_location'] 	 = $_POST['LD_DEBUG_LOCATION'];
-	$me->config['ld_debug_level'] 	 = $_POST['LD_DEBUG_LEVEL'];
-	$me->config['ld_debug_php'] 	 = $_POST['LD_DEBUG_PHP'];
 	
-	$me->config['ld_auth_type']	= $_POST['LD_AUTH_TYPE'];
-	if(isset($_POST['LD_AZURE_CLIENT_ID'])){
-		$me->config['ld_azure_client_id'] = $_POST['LD_AZURE_CLIENT_ID'];
+	$special = array(
+		"LD_AZURE_CLIENT_SECRET",
+		"LD_BINDPW",
+		"LD_ANONBIND",
+		"LD_MEMBERSHIP_USER",
+	);
+	$POSTVALUES = array_diff_key($_POST, array_flip($special));
+
+	foreach ($POSTVALUES as $key => $value) {
+		if(isset($_POST[strtoupper($key)])){
+			$me->config[strtolower($key)] 	 = $_POST[strtoupper($key)];
+		}
 	}
 	if(isset($_POST['LD_AZURE_CLIENT_SECRET'])){
 		if($_POST['LD_AZURE_CLIENT_SECRET'] != '************************'){
@@ -47,59 +57,6 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 			// do nothing.
 		}	
 	}
-	if(isset($_POST['LD_AZURE_TENANT_ID'])){
-		$me->config['ld_azure_tenant_id']  = $_POST['LD_AZURE_TENANT_ID'];
-	}
-	if(isset($_POST['LD_AZURE_REDIRECT_URI'])){
-		$me->config['ld_azure_redirect_uri']  = $_POST['LD_AZURE_REDIRECT_URI'];
-	}
-	if(isset($_POST['LD_AZURE_AUTH_URL'])){
-		$me->config['ld_azure_auth_url']  = $_POST['LD_AZURE_AUTH_URL'];
-	}
-	if(isset($_POST['LD_AZURE_TOKEN_URL'])){
-		$me->config['ld_azure_token_url']  = $_POST['LD_AZURE_TOKEN_URL'];
-	}	
-	if(isset($_POST['LD_AZURE_RESOURCE_URL'])){
-		$me->config['ld_azure_resource_url']  = $_POST['LD_AZURE_RESOURCE_URL'];
-	}	
-	if(isset($_POST['LD_AZURE_LOGOUT_URL'])){
-		$me->config['ld_azure_logout_url']  = $_POST['LD_AZURE_LOGOUT_URL'];
-	}		
-	if(isset($_POST['LD_AZURE_JWKS_URL'])){
-		$me->config['ld_azure_jwks_url']  = $_POST['LD_AZURE_JWKS_URL'];
-	}		
-	if(isset($_POST['LD_AZURE_CLAIM_NAME'])){
-		$me->config['ld_azure_claim_name']  = $_POST['LD_AZURE_CLAIM_NAME'];
-	}			
-	if(isset($_POST['LD_AZURE_USER_IDENTIFIER'])){
-		$me->config['ld_azure_user_identifier']  = $_POST['LD_AZURE_USER_IDENTIFIER'];
-	}	
-	if(isset($_POST['LD_AZURE_SCOPES'])){
-		$me->config['ld_azure_scopes']  = $_POST['LD_AZURE_SCOPES'];
-	}		
-	$me->config['ld_host'] 	 = $_POST['LD_HOST'];
-	$me->config['ld_port']      = $_POST['LD_PORT'];
-	$me->config['ld_basedn']    = $_POST['LD_BASEDN'];
-
-	$me->config['ld_user_class']   = $_POST['LD_USER_CLASS'];
-	$me->config['ld_user_attr']   = $_POST['LD_USER_ATTR'];
-	$me->config['ld_user_filter']   = $_POST['LD_USER_FILTER']; 
-	
-	$me->config['ld_group_class']   = $_POST['LD_GROUP_CLASS'];
-	$me->config['ld_group_filter']   = $_POST['LD_GROUP_FILTER'];
-	$me->config['ld_group_attr']   = $_POST['LD_GROUP_ATTR'];
-	$me->config['ld_group_desc']   = $_POST['LD_GROUP_DESC'];
-	
-	$me->config['ld_group_member_attr']   = $_POST['LD_GROUP_MEMBER_ATTR'];
-	$me->config['ld_user_member_attr']   = $_POST['LD_USER_MEMBER_ATTR'];
-	
-	$me->config['ld_group_user']   = $_POST['LD_GROUP_USER'];
-	$me->config['ld_group_admin']   = $_POST['LD_GROUP_ADMIN'];
-	$me->config['ld_group_webmaster']   = $_POST['LD_GROUP_WEBMASTER'];
-	
-	$me->config['ld_binddn'] = $_POST['LD_BINDDN']; //reverted, did not work
-	//$me->config['ld_binddn'] = ldap_escape($_POST['LD_BINDDN'], '', LDAP_ESCAPE_DN);
-	#$me->config['ld_bindpw'] =  $_POST['LD_BINDPW']; //reverted, did not work
 	if($_POST['LD_BINDPW'] != '************************'){
 		$me->config['ld_bindpw'] =  $_POST['LD_BINDPW'];
 	} else {
@@ -107,58 +64,11 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	}
 	//$me->config['ld_bindpw'] =  ldap_escape($_POST['LD_BINDPW'], '', LDAP_ESCAPE_DN);
 
-	if (isset($_POST['LD_DEBUG'])){
-		$me->config['ld_debug'] = 1;
-	} else {
-		$me->config['ld_debug'] = 0;
-	}
-
-	if (isset($_POST['LD_DEBUG_PHP'])){
-		$me->config['ld_debug_php'] = 1;
-	} else {
-		$me->config['ld_debug_php'] = 0;
-	}	
-	
-	if (isset($_POST['LD_DEBUG_CLEARUPDATE'])){
-		$me->config['ld_debug_clearupdate'] = 1;
-	} else {
-		$me->config['ld_debug_clearupdate'] = 0;
-	}
 
 	if (strlen($_POST['LD_BINDDN'])<1 && strlen($_POST['LD_BINDPW'])<1 ){
 		$me->config['ld_anonbind'] = 1;
 	} else {
 		$me->config['ld_anonbind'] = 0;
-	}
-
-	if (isset($_POST['LD_USE_SSL'])){
-		$me->config['ld_use_ssl'] = 1;
-	} else {
-		$me->config['ld_use_ssl'] = 0;
-	}	
-	
-	if (isset($_POST['LD_MEMBERSHIP_USER'])){
-		$me->config['ld_membership_user'] = 1;
-	} else {
-		$me->config['ld_membership_user'] = 0;
-	}
-	
-	if (isset($_POST['LD_GROUP_USER_ACTIVE'])){
-		$me->config['ld_group_user_active'] = 1;
-	} else {
-		$me->config['ld_group_user_active'] = 0;
-	}
-
-	if (isset($_POST['LD_GROUP_ADMIN_ACTIVE'])){
-		$me->config['ld_group_admin_active'] = 1;
-	} else {
-		$me->config['ld_group_admin_active'] = 0;
-	}
-	
-	if (isset($_POST['LD_GROUP_WEBMASTER_ACTIVE'])){
-		$me->config['ld_group_webmaster_active'] = 1;
-	} else {
-		$me->config['ld_group_webmaster_active'] = 0;
 	}
 	$me->save_config();
 }
@@ -214,61 +124,26 @@ if (isset($_POST['check_ldap']) or isset($_POST['savetest'])){
 }
 
 
+# Fill template
+
+# Automatic values
+$templateKeys = array_keys($me->default_val);
+$special = array(
+	"LD_AZURE_CLIENT_SECRET",
+	"LD_BINDPW"
+);
+$templateKeys = array_diff_key($templateKeys, array_flip($special));
+foreach ($templateKeys as $tkey) {
+	$template->assign(strtoupper($tkey),$me->config[strtolower($tkey)]);
+}
+# Manual values
 $template->assign('LDAP_LOGIN_PATH',LDAP_LOGIN_PATH);
-
-$template->assign('LD_FORGOT_URL',$me->check_config('ld_forgot_url'));
-$template->assign('LD_DEBUG_LOCATION',$me->check_config('ld_debug_location'));
-$template->assign('LD_DEBUG',$me->check_config('ld_debug'));
-$template->assign('LD_DEBUG_PHP',$me->check_config('ld_debug_php'));
-$template->assign('LD_DEBUG_CLEARUPDATE',$me->check_config('ld_debug_clearupdate'));
-$template->assign('LD_DEBUG_LEVEL',$me->check_config('ld_debug_level'));
-
-$template->assign('LD_AUTH_TYPE',$me->check_config('ld_auth_type'));
-$template->assign('LD_AZURE_CLIENT_ID',$me->config['ld_azure_client_id']);
-#$template->assign('LD_AZURE_CLIENT_SECRET',$me->config['ld_azure_client_secret']);
 if($me->config['ld_azure_client_secret'] == ''){
 	//only if empty then give back empty
 	$template->assign('LD_AZURE_CLIENT_SECRET',$me->config['ld_azure_client_secret']);
 } else {
 	$template->assign('LD_AZURE_CLIENT_SECRET','************************');
-}	
-$template->assign('LD_AZURE_TENANT_ID',$me->config['ld_azure_tenant_id']);
-$template->assign('LD_AZURE_AUTH_URL',$me->config['ld_azure_auth_url']);
-$template->assign('LD_AZURE_TOKEN_URL',$me->config['ld_azure_token_url']);
-$template->assign('LD_AZURE_LOGOUT_URL',$me->config['ld_azure_logout_url']);
-$template->assign('LD_AZURE_RESOURCE_URL',$me->config['ld_azure_resource_url']);
-$template->assign('LD_AZURE_REDIRECT_URI',$me->config['ld_azure_redirect_uri']);
-$template->assign('LD_AZURE_JWKS_URL',$me->config['ld_azure_jwks_url']);
-$template->assign('LD_AZURE_CLAIM_NAME',$me->config['ld_azure_claim_name']);
-$template->assign('LD_AZURE_USER_IDENTIFIER',$me->config['ld_azure_user_identifier']);
-$template->assign('LD_AZURE_SCOPES',$me->config['ld_azure_scopes']);
-
-$template->assign('LD_HOST',$me->check_config('ld_host'));
-$template->assign('LD_PORT',$me->check_config('ld_port'));
-$template->assign('LD_USE_SSL',$me->check_config('ld_use_ssl'));
-$template->assign('LD_BASEDN',$me->check_config('ld_basedn'));
-
-$template->assign('LD_USER_CLASS',$me->check_config('ld_user_class'));
-$template->assign('LD_USER_ATTR',$me->check_config('ld_user_attr'));
-$template->assign('LD_USER_FILTER',$me->config['ld_user_filter']); 
-
-$template->assign('LD_GROUP_CLASS',$me->check_config('ld_group_class'));
-$template->assign('LD_GROUP_FILTER',$me->config['ld_group_filter']);
-$template->assign('LD_GROUP_ATTR',$me->check_config('ld_group_attr'));
-$template->assign('LD_GROUP_DESC',$me->check_config('ld_group_desc'));
-
-$template->assign('LD_GROUP_MEMBER_ATTR',$me->check_config('ld_group_member_attr'));
-$template->assign('LD_USER_MEMBER_ATTR',$me->check_config('ld_user_member_attr'));
-$template->assign('LD_MEMBERSHIP_USER',$me->check_config('ld_membership_user'));
-
-$template->assign('LD_GROUP_USER',$me->check_config('ld_group_user'));
-$template->assign('LD_GROUP_ADMIN',$me->check_config('ld_group_admin'));
-$template->assign('LD_GROUP_WEBMASTER',$me->check_config('ld_group_webmaster'));
-$template->assign('LD_GROUP_USER_ACTIVE',$me->check_config('ld_group_user_active'));
-$template->assign('LD_GROUP_ADMIN_ACTIVE',$me->check_config('ld_group_admin_active'));
-$template->assign('LD_GROUP_WEBMASTER_ACTIVE',$me->check_config('ld_group_webmaster_active'));
-
-//$template->assign('LD_BINDPW',$me->config['ld_bindpw']);
+}
 if($me->config['ld_bindpw'] == ''){
 	//only if empty then give back empty
 	$template->assign('LD_BINDPW',$me->config['ld_bindpw']);
@@ -276,7 +151,7 @@ if($me->config['ld_bindpw'] == ''){
 	$template->assign('LD_BINDPW','************************');
 }
 
-$template->assign('LD_BINDDN',$me->config['ld_binddn']);
+
 
 if (is_array($me->warn_msg) && sizeof($me->warn_msg)>0){
 	if($me->config['ld_debug_level'] == "debug"){
