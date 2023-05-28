@@ -109,7 +109,7 @@ if (isset($_GET['code'])) {
 					$mail = $userResource['data']['mail'];
 				}
 				$errors=[];
-				$new_id = register_user($userResource['data'][$userIdentifier],random_password(32),$userResource['data'][$userIdentifier],true,$errors);
+				$new_id = register_user($userResource['data'][$userIdentifier],random_password(32),$userResource['data']['mail'],true,$errors);
 				if(count($errors) > 0) {
 					foreach ($errors as &$e){
 						$ldap->write_log("[azure_login]> ".$e, 'ERROR');
