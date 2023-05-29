@@ -67,5 +67,19 @@ if (isset($_POST['check_ldap']) ){
 	}
 }
 
+$auth_base = str_replace("{TENANT_ID}",$me->config['ld_azure_tenant_id'],$me->config['ld_azure_auth_url']);
+$form_params = array(
+	'response_type' => 'code',
+	'client_id' => $me->config['ld_azure_client_id'],
+	'redirect_uri' => $me->config['ld_azure_redirect_uri'],
+	'scope' => $me->config['ld_azure_scopes'],
+	'prompt' =>'select_account'
+);
+$oAuthURL = $auth_base . '?' .http_build_query($form_params);
+
+
+$template->assign('LD_AUTH_TYPE',$me->config['ld_auth_type']);
+$template->assign('OAUTH_URL',$oAuthURL);
+
 $template->assign_var_from_handle( 'ADMIN_CONTENT', 'plugin_admin_content');
 ?>
