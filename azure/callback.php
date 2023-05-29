@@ -18,26 +18,30 @@ define('TENANT_ID', $ldap->config['ld_azure_tenant_id']);
 define('CLIENT_ID', $ldap->config['ld_azure_client_id']);
 define('CLIENT_SECRET', $ldap->config['ld_azure_client_secret']);
 define('REDIRECT_URI', $ldap->config['ld_azure_redirect_uri']);
-$jwks_url = str_replace("{TENANT_ID}",$ldap->config['ld_azure_tenant_id'],$ldap->config['ld_azure_jwks_url']);
+$jwks_url = str_replace("{TENANT_ID}",TENANT_ID,$ldap->config['ld_azure_jwks_url']);
 
 if (isset($_GET['code'])) {
     $client = new Client();
-    $token_url = str_replace("{TENANT_ID}",$ldap->config['ld_azure_tenant_id'],$ldap->config['ld_azure_token_url']);
-    $tokenResponse = $client->post($token_url, [
-        'form_params' => [
-            'code' => $_GET['code'],
-            'grant_type' => 'authorization_code',
-            'client_id' => CLIENT_ID,
-            'client_secret' => CLIENT_SECRET,
-            'redirect_uri' => REDIRECT_URI,
-        ],
-        // These options are needed to enable getting
-        // the response body from a 4xx response
-        'http_errors' => true,
-        'curl' => [
-            CURLOPT_FAILONERROR => false
-        ]
-    ]);
+    $token_url = str_replace("{TENANT_ID}",TENANT_ID,$ldap->config['ld_azure_token_url']);
+    try{
+        $tokenResponse = $client->post($token_url, [
+            'form_params' => [
+                'code' => $_GET['code'],
+                'grant_type' => 'authorization_code',
+                'client_id' => CLIENT_ID,
+                'client_secret' => CLIENT_SECRET,
+                'redirect_uri' => REDIRECT_URI,
+            ],
+            // These options are needed to enable getting
+            // the response body from a 4xx response
+            'http_errors' => true,
+            'curl' => [
+                CURLOPT_FAILONERROR => false
+            ]
+        ]);
+    } catch (GuzzleHttp\Exception\ClientException $e) {
+        $tokenResponse = $e->getResponse();
+    }
 
     if ($tokenResponse->getStatusCode() == 200) {
         // Return the access_token
@@ -163,9 +167,7 @@ if (isset($_GET['code'])) {
 		}		
 
 
-  	      
-        
-    } else if ($tokenResponse->getStatusCode() == 400) {
+    } else if (preg_match('/^4[0-9]+/', $tokenResponse->getStatusCode())){
         // Check the error in the response body
         $responseBody = json_decode($tokenResponse->getBody()->getContents());
         if (isset($responseBody->error)) {
@@ -173,11 +175,11 @@ if (isset($_GET['code'])) {
             $error_description = $responseBody->error_description;
             // authorization_pending means we should keep polling
             if (strcmp($error, 'authorization_pending') != 0) {
-                throw new Exception('Token endpoint returned: ' . $error . ' ' . $error_description, 100);
+                $ldap->write_log('Token endpoint returned: ' . $error . ' ' . $error_description);
+                return false;
             }
         }
     }
 } else {
-//   $redirect = 'https://' . $_SERVER['HTTP_HOST'] . '/piwigo/index.php';
-//    header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
+    return false;
 }
