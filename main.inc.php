@@ -17,7 +17,10 @@ define('LDAP_LOGIN_ID',      basename(dirname(__FILE__)));
 define('LDAP_LOGIN_PATH' ,   PHPWG_PLUGINS_PATH . LDAP_LOGIN_ID . '/');
 define('LDAP_LOGIN_ADMIN',   get_root_url() . 'admin.php?page=plugin-' . LDAP_LOGIN_ID);
 
-include_once(LDAP_LOGIN_PATH.'/class.ldap.php');
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Logger;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\StreamHandler;
 include_once(LDAP_LOGIN_PATH.'/functions_sql.inc.php');
 include_once(LDAP_LOGIN_PATH.'/azure/callback.php');
 
@@ -38,6 +41,14 @@ add_event_handler('load_profile_in_template','ld_profile');
 add_event_handler('get_admin_plugin_menu_links', array(&$ldap, 'ldap_admin_menu'));
 
 
+
+// ErrorLogHandler: Logs records to PHP’s error_log() function.
+// StreamHandler: Logs records into any PHP stream, use this for log files.
+global $ld_config,$ld_log;
+$ld_log = new Logger('Ldap_Login');
+$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+$ld_log->pushHandler(new BrowserConsoleHandler()); //to Browser Console 
+$ld_log->pushHandler(new StreamHandler(LDAP_LOGIN_PATH . '/logs/ldap_login.log')); //To local file
 // +-----------------------------------------------------------------------+
 // | Admin menu loading                                                    |
 // +-----------------------------------------------------------------------+
