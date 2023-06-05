@@ -1,5 +1,5 @@
 <?php
-defined('LDAP_LOGIN_PATH') or die('Hacking attempt!');
+if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 global $template, $page, $conf;
 

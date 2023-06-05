@@ -1,5 +1,5 @@
 <?php
-defined('PHPWG_ROOT_PATH') or die('Hacking attempt!');
+if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 /**
  * This class is used to expose maintenance methods to the plugins manager

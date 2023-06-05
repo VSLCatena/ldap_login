@@ -1,7 +1,5 @@
 <?php
-
-require_once realpath(__DIR__ . '/../vendor/autoload.php');
-require_once realpath(__DIR__ . '/../class.ldap.php');
+if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
