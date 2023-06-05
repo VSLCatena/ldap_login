@@ -95,22 +95,24 @@ function ld_init(){
 	load_language('plugin.lang', LDAP_LOGIN_PATH);
 }
 
-function ld_forgot(){
+
 /**
- * Piggyback function after initialising menu and blocks
+ * Piggyback function after initialising menu and blocks 'blockmanager_apply'
  * 		Loads alternative link for 'forgot password' via Smarty Template
  *
  *
- * @since ~ 
+ * @since ~2.2
+ * @return void
  *
  */
-	global $template;
-	$base = new Ldap();
-	$base->load_config();
-	if(!($base->config['ld_forgot_url']=="")){
-		$template->assign('U_LOST_PASSWORD',$base->config['ld_forgot_url']);
+function ld_forgot(){
+	global $template,$ld_config;
+	$forgoturl=$ld_config->getValue('ld_forgot_url');
+	if(!($forgoturl=="")){
+		$template->assign('U_LOST_PASSWORD',$forgoturl);
+	} else {
+		$template->clear_assign('U_LOST_PASSWORD');
 	}
-	unset($base);
 }
 
 	/**
