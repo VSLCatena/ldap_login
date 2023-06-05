@@ -65,10 +65,10 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */
-		global $conf,$prefixeTable;
+		global $prefixeTable;
 		
 		$ld_config=new Config();
-		$ld_log=new Log($ld_config);
+		$ld_log=new Log();
 		
 		if(!ld_table_exist()){ //new install or from old situation
 			$ld_config->loadDefaultConfig();
@@ -76,7 +76,7 @@ class Ldap_Login_maintain extends PluginMaintain
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Created SQL-table");
 			ld_sql('create','create_table');
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Created SQL-data from default values");
-			ld_sql('create','create_data',$ld_config->config);
+			ld_sql('create','create_data',$ld_config->getAllValues($default=true));
 			
 			//everyone, in old situation (ONCE)
 			if (file_exists(LDAP_LOGIN_PATH .'/data.dat' ) && !file_exists(LDAP_LOGIN_PATH .'/config/data.dat' )) { //only in root not in .config/
@@ -99,7 +99,7 @@ class Ldap_Login_maintain extends PluginMaintain
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Default config loaded ");
 			$ld_config->loadConfig($merge=True);
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Merged old config");
-			ld_sql('create','create_data',$ld_config->config);
+			ld_sql('create','create_data',$ld_config->getAllValues());
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Expanded database");
 			ld_sql('update','update_sql_structure');
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Added Column with timestamps");
@@ -128,11 +128,11 @@ class Ldap_Login_maintain extends PluginMaintain
 	 *
 	 */
 		$ld_config=new Config();
-		$ld_log=new Log($ld_config);
+		$ld_log=new Log();
 		$ld_config->loadDefaultConfig();
 		$ld_config->loadConfig($merge=True);
 		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> activate");
-		if (!isset($ld_config->getValue('ld_debug_clearupdate')) OR ($ld_config->getValue('ld_debug_clearupdate') == True))
+		if (($ld_config->getValue('ld_debug_clearupdate') == 1) OR ($ld_config->getValue('ld_debug_clearupdate') == True))
 		{   
 			$full="\n";
 			
@@ -157,6 +157,7 @@ class Ldap_Login_maintain extends PluginMaintain
 		if (!$this->installed)
 		{ 
 			//this first after activation.
+
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> [Maintain.inc.php/Install] ");
 			$this->install($plugin_version, $errors); //then install
 			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> plugin activated");
@@ -195,7 +196,7 @@ class Ldap_Login_maintain extends PluginMaintain
 	 	
 	 
 	 	$ld_config=new Config();
-	 	$ld_log=new Log($ld_config);
+	 	$ld_log=new Log();
 		$ld_log->warning("[".basename(__FILE__)."/".__FUNCTION__."]> Check value of 'allow_user_registration' as no user is currently able to register.");
 		$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> deactivated");
 		unset($ld_config);
@@ -215,7 +216,7 @@ class Ldap_Login_maintain extends PluginMaintain
 	 *
 	 */	
 		$ld_config=new Config();
-		$ld_log=new Log($ld_config);
+		$ld_log=new Log();
 		$ld_config->loadConfig();
 		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> uninstall");
 		ld_sql('delete','delete_table');
