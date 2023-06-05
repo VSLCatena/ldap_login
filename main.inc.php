@@ -62,25 +62,23 @@ unset($ldap);
 // | functions                                                             |
 // +-----------------------------------------------------------------------+
 
-
-function random_password( $length = 8 ) {
 /**
  * Create random password
- * Depending on length, it can return :
  * 
- *    - Default:
- *       "Nh=4*CGN"   
+ *  Example:
  * 
- *    - With other length ($length=16):
- *       "9a-jn3P,AtG%u,%M"   
+ *       ")DqEfMGik=,ut@h!*jF+r2Y9XNlKLQ$V"   
  *
- *
- * @since ~ 
+ * @since ~13.6
  *
  * @param int $length
  * @return string
  */
+function random_password( $length = 32, $limited=false ) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+	if($limited == true){
+		$chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	}
     $password = substr( str_shuffle( $chars ), 0, $length );
     return $password;
 }
