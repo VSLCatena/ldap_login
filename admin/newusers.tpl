@@ -34,8 +34,8 @@ label
 		<input type="checkbox" id="ld_use_mail" name="LD_USE_MAIL" value="{$LD_USE_MAIL}" />
 	{/if}
 	{'Import mailadress from LDAP to Piwigo?'|@translate}
-    <input type="submit" value="{'Clear all mail addresses in Piwigo'|@translate}" name="clear_mail" />
-	<i>This will delete all imported mailaddresses in Piwigo user database (excluding the main admin)</i>
+    <br><br><input type="submit" value="{'Clear all mail addresses in Piwigo'|@translate}" name="clear_mail" /><br>
+	<i>This will delete all imported mailaddresses in Piwigo user database (excluding the main admin)</i><br>
 	</p> 
 	<p>
 	{if $LD_ALLOW_PROFILE}
