@@ -9,9 +9,9 @@ $template->assign(
     'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-ldap_login-test',
     ));
 
-$me = new Ldap();
-$me->load_config();
-$me->write_log("New LDAP Instance");
+global $ld_config;
+
+$ld_log->debug("New LDAP Instance");
 
 ###
 ### POST (submit/load page)
@@ -20,65 +20,65 @@ $me->write_log("New LDAP Instance");
 // Checking LDAP configuration
 
 if (isset($_POST['check_ldap']) ){
-	$me->ldap_conn();
-	$me->write_log("[function]> Ldap_Login Test");
-	if($me->config['ld_anonbind'] == 0){
-		$p_username=isset($_POST['savetest'])? ldap_explode_dn($_POST['LD_BINDDN'],1)[0] : $_POST['USERNAME'];
-		$p_password=isset($_POST['savetest'])? $_POST['LD_BINDPW'] : $_POST['PASSWORD'];
-		
-		$username = $me->ldap_search_dn($p_username);
-		$error=$me->check_ldap();
-		if($error==1 && $username) { //need to clean this part..
-			if ($me->ldap_bind_as($username,$p_password)){
-				if($me->check_ldap_group_membership($username,$p_username)){
-								$template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK : '.$username.'</p>');
-				} else {
-					$template->assign('LD_CHECK_LDAP','<p style="color:orange;">Credentials OK, Check GroupMembership for: '.$username.'</p>');
-				}
-					}
-					else {
-				$template->assign('LD_CHECK_LDAP','<p style="color:red;"> Binding OK, but check credentials on server '.$me->config['uri'].' for user '.$username.'</p>');
-					}
-		} elseif($error==1 && !$username){
-			$template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but no valid DN found on server '.$me->config['uri'].' for user '.$p_username.'</p>');
-		} elseif($error && $username){
-			$template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but check credentials on '.$me->config['uri'].' for user '.$username.'</p>');
-		} else {
-			$template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server '.$me->config['uri'].' for user '.$p_username.', check your binding!</p>');
-		}
+    $ld_config->ldap_conn();
+    $ld_config->debug("[function]> Ldap_Login Test");
+    if($ld_config->getValue('ld_anonbind') == 0){
+        $p_username=isset($_POST['savetest'])? ldap_explode_dn($_POST['LD_BINDDN'],1)[0] : $_POST['USERNAME'];
+        $p_password=isset($_POST['savetest'])? $_POST['LD_BINDPW'] : $_POST['PASSWORD'];
+        
+        $username = $ld_config->ldap_search_dn($p_username);
+        $error=$ld_config->check_ldap();
+        if($error==1 && $username) { //need to clean this part..
+            if ($ld_config->ldap_bind_as($username,$p_password)){
+                if($ld_config->check_ldap_group_membership($username,$p_username)){
+                                $template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK : '.$username.'</p>');
+                } else {
+                    $template->assign('LD_CHECK_LDAP','<p style="color:orange;">Credentials OK, Check GroupMembership for: '.$username.'</p>');
+                }
+                    }
+                    else {
+                $template->assign('LD_CHECK_LDAP','<p style="color:red;"> Binding OK, but check credentials on server '.$ld_config->getValue('uri').' for user '.$username.'</p>');
+                    }
+        } elseif($error==1 && !$username){
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but no valid DN found on server '.$ld_config->getValue('uri').' for user '.$p_username.'</p>');
+        } elseif($error && $username){
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but check credentials on '.$ld_config->getValue('uri').' for user '.$username.'</p>');
+        } else {
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server '.$ld_config->getValue('uri').' for user '.$p_username.', check your binding!</p>');
+        }
 
-	}
-	if($me->config['ld_anonbind'] == 1){
-		//anonymous binding
-		$error=$me->check_ldap();
-		$username = $me->ldap_search_dn($_POST['USERNAME']);
-		if($error==1) {
-			if(!$username){
-				$template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK, user not found </p>');
-			}
-			else {
-				$template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK, user: '.ldap_explode_dn($username,1)[0] .' </p>');
-			}
-		}
-		else {
-			$template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server, check your config!</p>');
-		}
-		
-	}
+    }
+    if($ld_config->getValue('ld_anonbind') == 1){
+        //anonymous binding
+        $error=$ld_config->check_ldap();
+        $username = $ld_config->ldap_search_dn($_POST['USERNAME']);
+        if($error==1) {
+            if(!$username){
+                $template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK, user not found </p>');
+            }
+            else {
+                $template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK, user: '.ldap_explode_dn($username,1)[0] .' </p>');
+            }
+        }
+        else {
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server, check your config!</p>');
+        }
+        
+    }
 }
 
-$auth_base = str_replace("{TENANT_ID}",$me->config['ld_azure_tenant_id'],$me->config['ld_azure_auth_url']);
+$auth_base = str_replace("{TENANT_ID}",$ld_config->getValue('ld_azure_tenant_id'),$ld_config->getValue('ld_azure_auth_url'));
 $form_params = array(
-	'response_type' => 'code',
-	'client_id' => $me->config['ld_azure_client_id'],
-	'redirect_uri' => $me->config['ld_azure_redirect_uri'],
-	'scope' => $me->config['ld_azure_scopes'],
-	'prompt' =>'select_account'
+    'response_type' => 'code',
+    'client_id' => $ld_config->getValue('ld_azure_client_id'),
+    'redirect_uri' => $ld_config->getValue('ld_azure_redirect_uri'),
+    'scope' => $ld_config->getValue('ld_azure_scopes'),
+    'prompt' =>'select_account'
 );
 $oAuthURL = $auth_base . '?' .http_build_query($form_params);
 
 
-$template->assign('LD_AUTH_TYPE',$me->config['ld_auth_type']);
+$template->assign('LD_AUTH_TYPE',$ld_config->getValue('ld_auth_type'));
 $template->assign('OAUTH_URL',$oAuthURL);
 
 $template->assign_var_from_handle( 'ADMIN_CONTENT', 'plugin_admin_content');
