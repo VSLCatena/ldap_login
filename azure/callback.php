@@ -9,6 +9,13 @@ use Firebase\JWT\JWT;
 
 if (isset($_GET['code'])) {
     global $ld_config,$ld_log;
+    $state = pwg_get_session_var('oauth2_state');
+    $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> State of Session: $state , ". $_GET['state']);
+    if ($_GET['state'] != $state) {
+        $ld_log->warning("[".basename(__FILE__)."/".__FUNCTION__."]> invalid state");
+        return false;
+    }
+    echo("<pre>");debug_backtrace();debug_print_backtrace();echo("</pre>");
     define('TENANT_ID', $ld_config->getValue('ld_azure_tenant_id'));
     define('CLIENT_ID', $ld_config->getValue('ld_azure_client_id'));
     define('CLIENT_SECRET', $ld_config->getValue('ld_azure_client_secret'));
