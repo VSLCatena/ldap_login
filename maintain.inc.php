@@ -1,5 +1,5 @@
 <?php
-defined('PHPWG_ROOT_PATH') or die('Hacking attempt!');
+if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 /**
  * This class is used to expose maintenance methods to the plugins manager
@@ -35,7 +35,8 @@ class Ldap_Login_maintain extends PluginMaintain
 			define('LDAP_LOGIN_ID',      basename(dirname(__FILE__)));
 			define('LDAP_LOGIN_PATH' ,   PHPWG_PLUGINS_PATH . LDAP_LOGIN_ID . '/');
 		
-			include_once(LDAP_LOGIN_PATH.'/class.ldap.php');
+			include_once(LDAP_LOGIN_PATH.'/class.config.php');
+			include_once(LDAP_LOGIN_PATH.'/class.log.php');
 			include_once(LDAP_LOGIN_PATH.'/functions_sql.inc.php'); 
 		}
 		
@@ -64,48 +65,51 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */
-		global $conf;
+		global $prefixeTable;
 		
-		$ldap=new Ldap();
+		$ld_config=new Config();
+		$ld_log=new Log();
 		
 		if(!ld_table_exist()){ //new install or from old situation
-			$ldap->load_default_config();
+			$ld_config->loadDefaultConfig();
 			//prepare sql-table
-			$ldap->write_log("[Maintain.inc.php/Install]> Created SQL-table");
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Created SQL-table");
 			ld_sql('create','create_table');
-			$ldap->write_log("[Maintain.inc.php/Install]> Created SQL-data from default values");
-			ld_sql('create','create_data',$ldap->config);
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Created SQL-data from default values");
+			ld_sql('create','create_data',$ld_config->getAllValues($default=true));
 			
 			//everyone, in old situation (ONCE)
 			if (file_exists(LDAP_LOGIN_PATH .'/data.dat' ) && !file_exists(LDAP_LOGIN_PATH .'/config/data.dat' )) { //only in root not in .config/
 				rename(LDAP_LOGIN_PATH . '/data.dat', LDAP_LOGIN_PATH .'/config/data.dat'); //migrate old location to new
-				$ldap->write_log("[Maintain.inc.php/Install]> Moved data.dat");
+				$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Moved data.dat");
 			}
 			
 			//future, in new situation (inactivated plugin)
 			if (file_exists(LDAP_LOGIN_PATH .'/config/data.dat' )) { 
-				$ldap->write_log("[Maintain.inc.php/Install]> loading ./config/data.dat ");
-				$ldap->write_log("[Maintain.inc.php/Install]> function load_old_config ");
-				$ldap->load_old_config();; // will overwrite default values
+				$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> loading ./config/data.dat ");
+				$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> function load_old_config ");
+				$ld_config->loadOldConfig(); // will overwrite default values
 				unlink( LDAP_LOGIN_PATH .'/config/data.dat'  ); //delete data.dat
-				$ldap->write_log("[Maintain.inc.php/Install]> deleted ./config/data.dat ");
+				$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> deleted ./config/data.dat ");
 			}
 			
 		}
 		else { 
-			$ldap->load_default_config();
-			$ldap->write_log("[Maintain.inc.php/Install]> Default config loaded ");
-			$ldap->load_config($merge=True);
-			$ldap->write_log("[Maintain.inc.php/Install]> Merged old config");
-			ld_sql('create','create_data',$ldap->config);
-			$ldap->write_log("[Maintain.inc.php/Install]> Expanded database");
+			$ld_config->loadDefaultConfig();
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Default config loaded ");
+			$ld_config->loadConfig($merge=True);
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Merged old config");
+			ld_sql('create','create_data',$ld_config->getAllValues());
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Expanded database");
 			ld_sql('update','update_sql_structure');
-			$ldap->write_log("[Maintain.inc.php/Install]> Added Column with timestamps");
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Added Column with timestamps");
 		}
-		$ldap->write_log("[Maintain.inc.php/Install]> Saving config");
-		$ldap->save_config();
-		$ldap->write_log("[Maintain.inc.php/Install]> plugin installed");
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Saving config");
+		$ld_config->saveConfig();
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> plugin installed");
 		$this->installed = true;
+		unset($ld_config);
+		unset($ld_log);
 
 	}
 
@@ -123,42 +127,43 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */
-		$ldap=new Ldap();
-		$ldap->load_default_config();
-		$ldap->load_config($merge=True);
-		$ldap->write_log("[function]> activate");
-		if (!isset($ldap->config['ld_debug_clearupdate']) OR ($ldap->config['ld_debug_clearupdate'] == True))
+		$ld_config=new Config();
+		$ld_log=new Log();
+		$ld_config->loadDefaultConfig();
+		$ld_config->loadConfig($merge=True);
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> activate");
+		if (($ld_config->getValue('ld_debug_clearupdate') == 1) OR ($ld_config->getValue('ld_debug_clearupdate') == True))
 		{   
 			$full="\n";
 			
-			if(str_starts_with( $ldap->check_config('ld_debug_location') , "/")) {
+			if(str_starts_with( $ld_config->getValue('ld_debug_location') , "/")) {
 				# absolute
-				if(is_writable( $ldap->check_config('ld_debug_location') . 'ldap_login.log')){
-					file_put_contents( $ldap->check_config('ld_debug_location') . 'ldap_login.log',$full."\n");
+				if(is_writable( $ld_config->getValue('ld_debug_location') . 'ldap_login.log')){
+					file_put_contents( $ld_config->getValue('ld_debug_location') . 'ldap_login.log',$full."\n");
 				} else {
-					error_log("Unable to write to " .  $ldap->check_config('ld_debug_location') . 'ldap_login.log');
+					$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " .  $ld_config->getValue('ld_debug_location') . 'ldap_login.log');
 				}
 			} else {
 				# relative (nothing or ./logs/)
 				if(is_writable(LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log')){
 					file_put_contents( LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log',$full."\n");
 				} else {
-					error_log("Unable to write to " . LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log');
+					$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " . LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log');
 				}
 			}			
-			
-			
-			$ldap->write_log("[Maintain.inc.php/Activate]> Ldap_login.log cleared");
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> Ldap_login.log cleared");
 		}
 		
 		if (!$this->installed)
 		{ 
 			//this first after activation.
-			$ldap->write_log("[Maintain.inc.php/Activate]> [Maintain.inc.php/Install] ");
+
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> [Maintain.inc.php/Install] ");
 			$this->install($plugin_version, $errors); //then install
-			$ldap->write_log("[Maintain.inc.php/Activate]> plugin activated");
+			$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> plugin activated");
 		}
-		unset($ldap);
+		unset($ld_config);
+		unset($ld_log);
 	}
 	
 
@@ -186,13 +191,16 @@ class Ldap_Login_maintain extends PluginMaintain
 	 *
 	 * @since ~
 	 *
-	 */	$ldap=new Ldap();
-		$ldap->write_log("[Maintain.inc.php/deactivate]> function load_config ");
-		$ldap->load_config();
-		$ldap->write_log("[function]> deactivate");
-		$ldap->export_config(); 	//exports config
-		$ldap->write_log("[deactivate]> data exported to ./config/data.dat & plugin deactivated");
-		unset($ldap);
+	 * 
+	 * */
+	 	
+	 
+	 	$ld_config=new Config();
+	 	$ld_log=new Log();
+		$ld_log->warning("[".basename(__FILE__)."/".__FUNCTION__."]> Check value of 'allow_user_registration' as no user is currently able to register.");
+		$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> deactivated");
+		unset($ld_config);
+		unset($ld_log);
 	}
 
 	function uninstall()
@@ -207,13 +215,15 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */	
-	 	$ldap=new Ldap();
-		$ldap->load_config();
-		$ldap->write_log("[function]> uninstall");
+		$ld_config=new Config();
+		$ld_log=new Log();
+		$ld_config->loadConfig();
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> uninstall");
 		ld_sql('delete','delete_table');
-		$ldap->write_log("[function]> removed piwigo_ldap_login_config table");
-		$ldap->write_log("[deactivate]> plugin uninstalled");
-		unset($ldap);
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> removed piwigo_ldap_login_config table");
+		$ld_log->writeLog("[".basename(__FILE__)."/".__FUNCTION__."]> plugin uninstalled");
+		unset($ld_config);
+		unset($ld_log);
 	}
 }
 ?>
