@@ -60,6 +60,7 @@ class Config {
     public function __construct(){
         global $ld_log;
         $this->log=$ld_log;
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> initialized Config Class");
 
     }
 
