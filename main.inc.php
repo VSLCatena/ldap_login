@@ -113,9 +113,21 @@ function ld_forgot(){
 	unset($base);
 }
 
-function ld_azure(){
 	/**
-	 * Piggyback function after initialising menu and blocks
+ * Piggyback function after initialising page and blocks 'loc_begin_identification'
+ *
+ *
+ * @since ~13.7
+ * @return void
+ *
+ */
+function ld_redirect_identification(){
+	global $ld_config;
+	if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
+		redirect('index.php');
+	}
+}
+
 	 * 		Loads alternative link for 'login' via Smarty Template
 	 *
 	 *
