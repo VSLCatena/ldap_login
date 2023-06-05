@@ -325,6 +325,23 @@ function ld_profile(){
 }
 
 
+/**
+ * Piggyback function for admin menu links 'get_admin_plugin_menu_links'
+ * 	
+ *
+ *
+ * @since 2.10.1
+ *
+ */
+function ldap_admin_menu($menu)
+{
+	array_push($menu,
+	array(
+	'NAME' => str_replace("_"," ",LDAP_LOGIN_ID),
+	'URL' => get_admin_plugin_menu_link(LDAP_LOGIN_PATH . 'admin.php') )
+	);
+	return $menu;
+}
 /* function update_user($username,$id) {
 	$up = new Ldap();
 	$up->load_config();
