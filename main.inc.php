@@ -34,13 +34,15 @@ use Monolog\Handler\StreamHandler;
 add_event_handler('init', 'ld_init');
 
 // ld_azure included in 'ld_init' 
-// add_event_handler('blockmanager_apply', 'ld_azure');
-
-add_event_handler('blockmanager_apply', 'ld_forgot');
+// add_event_handler('blockmanager_apply', 'ld_redirect_login');
 
 add_event_handler('loc_begin_identification', 'ld_redirect_identification');
 
-add_event_handler('try_log_user','login', 0, 4);
+add_event_handler('blockmanager_apply', 'ld_forgot');
+
+add_event_handler('try_log_user','LDAP_login', 0, 4);
+
+add_event_handler('try_log_user','OAuth2_login', 0, 4);
 
 add_event_handler('load_profile_in_template','ld_profile');
 
@@ -103,18 +105,21 @@ function ld_init(){
     $ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
     $ld_log->pushHandler(new BrowserConsoleHandler()); //to Browser Console 
     $ld_log->pushHandler(new StreamHandler(LDAP_LOGIN_PATH . '/logs/ldap_login.log')); //To local file
+    $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> initialized Logger");
+    
     $ld_config = new Config();
     $ld_config->loadConfig();	
     
     $template->clear_assign('U_REGISTER'); // disable self-registration of users while using this plugin
-    if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){	
+    if($ld_config->getValue('ld_auth_type')=="ld_auth_ldap"){
         include_once(LDAP_LOGIN_PATH.'/class.ldap.php');
+    }elseif($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
+        include_once(LDAP_LOGIN_PATH.'/azure/callback.php');
     }
-    
 
     if (is_a_guest()){
         // only when not logged in it will replace the 'login'  link , else it wil break identification menu
-        add_event_handler('blockmanager_apply', 'ld_azure');
+        add_event_handler('blockmanager_apply', 'ld_redirect_login');
     }
     if(!pwg_get_session_var('oauth2_state')){
         $stateValue= random_password(64,$limited=true);
@@ -170,13 +175,12 @@ function ld_redirect_identification(){
  * @return void
  *
  */
-function ld_azure(){
+function ld_redirect_login(){
     global $template,$ld_config,$ld_log;
     if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
-
-        include_once(LDAP_LOGIN_PATH.'/azure/callback.php');
+        
         $state = pwg_get_session_var('oauth2_state');
-        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Get state from session: $state");
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Get state from session to build Login URI: $state");
         $auth_base = str_replace("{TENANT_ID}",$ld_config->getValue('ld_azure_tenant_id'),$ld_config->getValue('ld_azure_auth_url'));
         $form_params = array(
             'response_type' => 'code',
@@ -189,6 +193,131 @@ function ld_azure(){
         $oAuthURL = $auth_base . '?' .http_build_query($form_params);
         $template->assign('U_LOGIN',$oAuthURL);
     }
+}
+
+
+/**
+ * Piggyback function for logging in 'try_log_user'
+ * Tries to login with OAuth2
+ * 	
+ *
+ *
+ * @since ~13.7
+ *
+ * @param array $userResource
+ * @param string $userIdentifier 
+ * @return boolean
+ */
+function OAuth2_login($userResource,$userIdentifier){
+    global $ld_log,$ld_config;
+    
+    if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> New login session: ld_auth_azure");
+        
+
+        global $prefixeTable,$conf;
+        // search user in piwigo database based on username & additional search on email
+        $query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' OR '.$conf['user_fields']['email'].' = \''.pwg_db_real_escape_string($userResource['data']['mail']).'\' ;';
+        $row = pwg_db_fetch_assoc(pwg_query($query));
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> username found in db:" . (!empty($row1['id'])) . " mail found in db: " . (!empty($row['id'])));
+        // if query is not empty, it means everything is ok and we can continue, auth is done !
+        if (!empty($row['id'])) {
+        //user exist
+            if($ld_config->getValue('ld_group_user_active') == 1) {
+                $status=false;
+            } else {
+                $status='normal';
+            }
+            if (in_array($ld_config->getValue('ld_group_user'),  $userResource['claim'])) {
+                $status='normal';
+            }
+            if (($ld_config->getValue('ld_group_admin_active') == 1) && (in_array($ld_config->getValue('ld_group_admin'),  $userResource['claim']))) {
+                $status='admin';
+            }
+            if (($ld_config->getValue('ld_group_webmaster_active') == 1) && (in_array($ld_config->getValue('ld_group_webmaster'),  $userResource['claim']))) {
+                $status='webmaster';
+            }
+            if($status == false){
+                trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
+                $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> User does not have role / claim as user to login");
+                return false;
+            }
+            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Update username in db based on return values of OAuth2 & userIdentifier");                                
+            $query = 'UPDATE `'.USERS_TABLE.'` SET `username` =  \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' WHERE `'.USERS_TABLE.'`.`id` = ' . $row['id'] . ';';
+            pwg_query($query);
+            $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $row['id'] . ';';
+            pwg_query($query); 
+            
+            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Login Success. Returning to index");
+            pwg_unset_session_var("oauth2_state");
+            
+            log_user($row['id'], false);
+            trigger_notify('login_success', stripslashes($userResource['data'][$userIdentifier]));
+            redirect(get_gallery_home_url());
+
+        } else {
+        //user doest not (yet) exist
+            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> User found in Azure but not in SQL");
+            //this is where we check we are allowed to create new users upon that.
+            if ($ld_config->getValue('ld_allow_newusers')) {
+                $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Creating new user and store in SQL");
+                $mail=null;
+                if($ld_config->getValue('ld_use_mail')){
+                    //retrieve LDAP e-mail address and create a new user
+                    $mail = $userResource['data']['mail'];
+                }
+                $errors=[];
+                $new_id = register_user($userResource['data'][$userIdentifier],random_password(32),$userResource['data']['mail'],true,$errors);
+                if(count($errors) > 0) {
+                    foreach ($errors as &$e){
+                        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ".$e, 'ERROR');
+                    }
+                    return false;
+                }
+                if($ld_config->getValue('ld_group_user_active') == 1) {
+                    $status=false;
+                } else {
+                    $status='normal';
+                }
+                if (in_array($ld_config->getValue('ld_group_user'),  $userResource['claim'])) {
+                    $status='normal';
+                }
+                if (( $ld_config->getValue('ld_group_admin_active') == 1 ) && ((in_array($ld_config->getValue('ld_group_admin'),  $userResource['claim'])))) {
+                    $status='admin';
+                }
+                if (( $ld_config->getValue('ld_group_webmaster_active') == 1) && ((in_array($ld_config->getValue('ld_group_webmaster'),  $userResource['claim'])))) {
+                    $status='webmaster';
+                }
+                if($status == false){
+                    trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
+                    $ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]> User does not have role / claim as user to login");
+                    return false;
+                }                              
+                $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $new_id . ';';
+                pwg_query($query);
+                
+                //Login user
+                log_user($new_id, false);
+                trigger_notify('login_success', stripslashes($userResource['data'][$userIdentifier]));  
+                pwg_unset_session_var("oauth2_state");
+                
+                //in case the e-mail address is empty, redirect to profile page
+                if ($ld_config->getValue('ld_allow_profile')) {
+                    redirect('profile.php');
+                } else {
+                    redirect(get_gallery_home_url());
+                }
+                return true;
+            }
+            //else : this is the normal behavior ! user is not created.
+            else {
+                trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
+                $ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]> Not allowed to create user (ld_allow_newusers=false)");
+                return false;
+            }
+        }        
+    }
+    unset($ld_config,$ld_log);
 }
 
 
@@ -217,9 +346,9 @@ function ld_azure(){
  * @param boolean $remember_me
  * @return boolean
  */
-function login($success, $username, $password, $remember_me){
+function LDAP_login($success, $username, $password, $remember_me){
     //force users to lowercase name, or else duplicates will be made, like user,User,uSer etc.
-    $username=strtolower($username);
+    $username=strtolower($username); // should be replaced by $conf['insensitive_case_logon']
     global $conf;
     if(strlen(trim($username)) == 0 || strlen(trim($password)) == 0){
             trigger_notify('login_failure', stripslashes($username));
@@ -327,7 +456,8 @@ function login($success, $username, $password, $remember_me){
                 $mail=null;
                 if($ld_config->getValue('ld_use_mail')){
                     // retrieve LDAP e-mail address and create a new user
-                    $mail = array_shift($ld_ldap->getAttribute($user_dn,array('mail')));
+                    $mail = $ld_ldap->getAttribute($user_dn,array('mail'));
+                    $mail = array_shift( $mail );
                 }
                 $errors=[];
                 $new_id = register_user($username,random_password(),$mail,true,$errors);
@@ -358,10 +488,8 @@ function login($success, $username, $password, $remember_me){
             }
         }
     }
-    if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
-        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> New login session: ld_auth_azure");
-    }
     unset($ld_config,$ld_log);
+    return false;
 }
 
 /**
