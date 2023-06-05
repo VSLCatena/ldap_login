@@ -305,17 +305,17 @@ function login($success, $username, $password, $remember_me){
 	}
 }
 
-
-function ld_profile(){
 /**
- * Piggyback function for profile page
- * Removes email/password block
+ * Piggyback function for profile page 'load_profile_in_template'
+ * Removes email/password 'block'
  * 	
  *
  *
  * @since 2.10.1
  *
  */
+function ld_profile(){
+
 	//removes the Profile/Registration block for new users.
 	global $template;
 	global $userdata;
