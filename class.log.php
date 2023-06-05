@@ -27,11 +27,11 @@ class Log extends Logger {
 
 		global $ld_config;
         $this->config           =   $ld_config;
-        $this->debug            =   $this->getConfigValue('ld_debug');
-        $this->debug_location   =   $this->getConfigValue('ld_debug_location');
-        $this->debug_php        =   $this->getConfigValue('ld_debug_php');		
+        $this->debug            =   $this->$ld_config->getConfigValue('ld_debug');
+        $this->debug_location   =   $this->$ld_config->getConfigValue('ld_debug_location');
+        $this->debug_php        =   $this->$ld_config->getConfigValue('ld_debug_php');
 	}
-   
+
 
     
     public function writeLog($message,$loglevel='DEBUG',$format="Y:m:d H:i:u"){
