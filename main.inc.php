@@ -21,24 +21,25 @@ use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
-include_once(LDAP_LOGIN_PATH.'/functions_sql.inc.php');
-include_once(LDAP_LOGIN_PATH.'/azure/callback.php');
 
 // +-----------------------------------------------------------------------+
-// | Event handlers                                                        |
+// | Set Event Handlers                                                    |
 // +-----------------------------------------------------------------------+
 
 add_event_handler('init', 'ld_init');
 
+// ld_azure included in 'ld_init' 
+// add_event_handler('blockmanager_apply', 'ld_azure');
+
 add_event_handler('blockmanager_apply', 'ld_forgot');
 
-add_event_handler('blockmanager_apply', 'ld_azure');
+add_event_handler('loc_begin_identification', 'ld_redirect_identification');
 
 add_event_handler('try_log_user','login', 0, 4);
 
 add_event_handler('load_profile_in_template','ld_profile');
 
-add_event_handler('get_admin_plugin_menu_links', array(&$ldap, 'ldap_admin_menu'));
+add_event_handler('get_admin_plugin_menu_links', 'ldap_admin_menu');
 
 
 
@@ -93,6 +94,10 @@ function ld_init(){
  *
  */
 	load_language('plugin.lang', LDAP_LOGIN_PATH);
+	if (is_a_guest()){
+		// only when not logged in it will replace the 'login'  link , else it wil break identification menu
+		add_event_handler('blockmanager_apply', 'ld_azure');
+	}
 }
 
 
