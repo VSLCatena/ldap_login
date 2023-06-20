@@ -1,6 +1,8 @@
 <?php
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
+check_status(ACCESS_ADMINISTRATOR);
+
 global $template, $page, $conf;
 
 
