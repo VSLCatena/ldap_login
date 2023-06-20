@@ -1,15 +1,13 @@
 <?php
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
-global $template;
+global $template, $ld_config, $ld_log;
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/test.tpl') );
 $template->assign(
-  array(
-    'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-ldap_login-test',
-    'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-ldap_login-test',
+    array(
+        'PLUGIN_ACTION' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-test',
+        'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-test',
     ));
-
-global $ld_config;
 
 $ld_log->debug("New LDAP Instance");
 
@@ -17,7 +15,8 @@ $ld_log->debug("New LDAP Instance");
 ### POST (submit/load page)
 ###
 
-// Checking LDAP configuration
+// Checking LDAP configuration --> rewrite!
+
 
 if (isset($_POST['check_ldap']) ){
     $ld_config->ldap_conn();
@@ -77,9 +76,13 @@ $form_params = array(
 );
 $oAuthURL = $auth_base . '?' .http_build_query($form_params);
 
-
+$template->assign('LDAP_LOGIN_PATH',LDAP_LOGIN_PATH);
 $template->assign('LD_AUTH_TYPE',$ld_config->getValue('ld_auth_type'));
 $template->assign('OAUTH_URL',$oAuthURL);
+
+$jwt_data = pwg_get_session_var('jwt_data_test' );
+
+$template->assign('JWT_CONTENT',$jwt_data);
 
 $template->assign_var_from_handle( 'ADMIN_CONTENT', 'plugin_admin_content');
 ?>
