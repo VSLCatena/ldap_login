@@ -61,11 +61,29 @@ jobs:
           cd docker-piwigo
           docker-compose run piwigo.composer require --dev phpunit/phpunit # composer.json  composer.lock  vendor
           cd ..
-      - name: Run tests
+      - name: Run connectivity test
+        shell: pwsh
+        run: |
+          Test-Connection -TargetName ldap -TcpPort 389  -ErrorAction stop
+          Test-Connection -TargetName ldap -TcpPort 636  -ErrorAction stop
+          Test-Connection -TargetName db   -TcpPort 1433 -ErrorAction stop
+          Test-Connection -TargetName php  -TcpPort 443  -ErrorAction stop
+      - name: Run tests on 389
         env:
           #DATABASE_URL: mysql://ldap_login:password@localhost/ldap_login
           LDAP_HOST: ldap://ldap
           LDAP_PORT: 389
+          LDAP_VERSION: 3
+          LDAP_USERNAME: admin
+        run: |
+          cd docker-piwigo
+          docker-compose run piwigo.phpunit --bootstrap vendor/autoload.php /piwigo/piwigo/plugins/ldap_login/.tests/LdapLoginTest.php # /app/vendor/bin/phpunit , /piwigo/piwigo/plugins/
+          cd ..
+      - name: Run tests on 636
+        env:
+          #DATABASE_URL: mysql://ldap_login:password@localhost/ldap_login
+          LDAP_HOST: ldaps://ldap
+          LDAP_PORT: 636
           LDAP_VERSION: 3
           LDAP_USERNAME: admin
         run: |

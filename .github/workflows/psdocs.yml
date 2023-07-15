@@ -1,0 +1,39 @@
+name: PSDocs
+on:
+  workflow_dispatch:
+    
+jobs:
+  NewPSDocs:
+    runs-on: ubuntu-latest
+    environment: actions-ci
+    steps:
+      
+      - uses: actions/checkout@v3
+      - name: CreatePSDocs
+        shell: pwsh
+        run: |
+          $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.ps1 -WorkingDir $(System.DefaultWorkingDirectory) -DocTemplatePath $(System.DefaultWorkingDirectory)/.scripts/Update-ReadmeWikiPage.doc.ps1
+      - name: CommitReadme
+        shell: pwsh
+        run: |
+            ECHO "git config"
+            git config --global user.email "$(git_sa_email)"
+            git config --global user.name "$(git_sa_username)"
+
+            ECHO "git status"
+            git status
+
+            ECHO "checkout $(Build.SourceBranchName)"
+            git checkout -b $(Build.SourceBranchName)
+
+            ECHO "git add ./Readme.md"
+            git add $(System.DefaultWorkingDirectory)/Readme.md
+
+            ECHO "git commit"
+            git commit -m "Readme.md Update from pipeline" -m "[ci skip]"
+
+            ECHO "git push"
+            git push -u origin $(Build.SourceBranchName)
+
+            ECHO "git status"
+            git status

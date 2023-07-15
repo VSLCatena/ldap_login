@@ -1,0 +1,112 @@
+{
+  "itemDisplayName": "Ldap Login",
+  "description": "Ldap_Login is a piwigo plugin to allow people to connect and get access to a piwigo website with their Ldap credentials.\nThere is an option to allow creation of new users if they are granted access by ldap but don't exist in Piwigo DB.\n\nOriginal work: stephane @ 22decembre.eu.",
+  "keys": [
+    {
+      "key": "ld_advertise_admin_new_ldapuser",
+      "description": "Should admin get mail if new users registrates?"
+    },{
+      "key": "ld_allow_newusers",
+      "description": "Are new users allowed to be created using LDAP when logging in"
+    },{
+      "key": "ld_allow_profile",
+      "description": "Redirect to user profile?"
+    },{
+      "key": "ld_anonbind",
+      "description": "if binddn / bindpw empty then this is true, else false. This enables anonymous binding"
+    },{
+      "key": "ld_basedn",
+      "description": "your base directory DN"
+    },{
+      "key": "ld_binddn",
+      "description": "Your (service)account for binding"
+    },{
+      "key": "ld_bindpw",
+      "description": "The password"
+    },{
+      "key": "ld_debug",
+      "description": "enable/disable loggin"
+    },{
+      "key": "ld_debug_clearupdate",
+      "description": "clear debug log after update"
+    },{
+      "key": "ld_debug_level",
+      "description": "default debug level (currently only 'debug')"
+    },{
+      "key": "ld_debug_location",
+      "description": "log location"
+    },{
+      "key": "ld_forgot_url",
+      "description": "custom password forget link"
+    },{
+      "key": "ld_group_admin",
+      "description": "Group containing Admins"
+    },{
+      "key": "ld_group_admin_active",
+      "description": "Are admins automatically queried using LDAP?"
+    },{
+      "key": "ld_group_attr",
+      "description": "Not in use (reserved)"
+    },{
+      "key": "ld_group_basedn",
+      "description": "Base of your Piwigo Groups for Group sync"
+    },{
+      "key": "ld_group_class",
+      "description": "class of group [group, groupOfNames]"
+    },{
+      "key": "ld_group_desc",
+      "description": "Not in use (reserved)"
+    },{
+      "key": "ld_group_filter",
+      "description": "additional group filter"
+    },{
+      "key": "ld_group_member_attr",
+      "description": "Attribute for user in group"
+    },{
+      "key": "ld_group_user",
+      "description": "Group containing Users"
+    },{
+      "key": "ld_group_user_active",
+      "description": "Is there a group restriction on all users?"
+    },{
+      "key": "ld_group_webmaster",
+      "description": "Group containing webmasters"
+    },{
+      "key": "ld_group_webmaster_active",
+      "description": "Are webmaster automatically queried using LDAP?"
+    },{
+      "key": "ld_host",
+      "description": "hostname"
+    },{
+      "key": "ld_membership_user",
+      "description": "Should group be tested on user (memberOf in user = 1) or user be tested on group (member in group = 0). Recommended to keep on 0"
+    },{
+      "key": "ld_port",
+      "description": "port of ldap (can be empty or 636)"
+    },{
+      "key": "ld_send_password_by_mail_ldap",
+      "description": "Should users get a mail with info when registrating?"
+    },{
+      "key": "ld_sync_data",
+      "description": "Magic atrribute containing data of new Group Management system"
+    },{
+      "key": "ld_use_mail",
+      "description": "Use email"
+    },{
+      "key": "ld_use_ssl",
+      "description": "Untested! Usage of LDAPS"
+    },{
+      "key": "ld_user_attr",
+      "description": "login attribute [cn,sAMAccounName]"
+    },{
+      "key": "ld_user_class",
+      "description": "your user class [inetOrgPerson, person, user]"
+    },{
+      "key": "ld_user_filter",
+      "description": "additional user filter"
+    },{
+      "key": "ld_user_member_attr",
+      "description": "Attribute for group in user"
+    }
+  ]
+}
