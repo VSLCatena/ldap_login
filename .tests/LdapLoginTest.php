@@ -1,17 +1,29 @@
 <?php
-require_once '/app/vendor/autoload.php';
-include_once('class.ldap.php');
-include_once('functions_sql.inc.php');
+define('PHPWG_ROOT_PATH','./');
+
+define('LDAP_LOGIN_ID',  basename(dirname(dirname(__FILE__))));
+define('LDAP_LOGIN_PATH' , PHPWG_ROOT_PATH .  'plugins/'  . LDAP_LOGIN_ID . '/');
+
+require_once(LDAP_LOGIN_PATH . 'vendor/autoload.php');
+include_once(LDAP_LOGIN_PATH . 'class.ldap.php');
+include_once(LDAP_LOGIN_PATH . 'functions_sql.inc.php');
 
 class LdapLoginTest extends \PHPUnit\Framework\TestCase {
     private $ldap;
 
     protected function setUp(): void {
-        $host = 'ldap://ldap.example.com';
+        $host = 'ldap://ldap';  #dc=domain,dc=tld
         $port = 389;
         $version = 3;
+        $baseDn = "dc=domain,dc=tld";
+        $bindDn = "cn=testadmin,ou=admins,ou=domain,dc=domain,dc=tld";
+        $bindPassword = "";
+        $userFilter = "(&(objectClass='person')('cn'='%username%'))"; 
+        $attributes = ['uid', 'cn','userPrincipalName'];
+        
+        
 
-        $this->ldap = new Ldap($host, $port, $version);
+        $this->ldap = new Ldap($host, $port, $baseDn, $bindDn, $bindPassword, $userFilter, $attributes);
     }
 
     protected function tearDown(): void {
@@ -30,8 +42,8 @@ class LdapLoginTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testSearch() {
-        $baseDn = 'ou=people,dc=example,dc=com';
-        $filter = '(uid=testuser)';
+        $baseDn = 'dc=domain,dc=tld';
+        $filter = '(cn=testuser)';
         $attributes = ['uid', 'cn'];
 
         $entries = $this->ldap->search($baseDn, $filter, $attributes);
