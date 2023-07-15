@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Ldap_Login
-Version: 13.5
+Version: 13.7
 Description: Allow piwigo authentication along an ldap
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=650
 Author: Kipjr (Member of Netcie)
@@ -214,37 +214,52 @@ function OAuth2_login($userResource,$userIdentifier){
     if($ld_config->getValue('ld_auth_type')=="ld_auth_azure"){
         $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> New login session: ld_auth_azure");
         
-
+        
         global $prefixeTable,$conf;
         // search user in piwigo database based on username & additional search on email
-        $query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' OR '.$conf['user_fields']['email'].' = \''.pwg_db_real_escape_string($userResource['data']['mail']).'\' ;';
-        $row = pwg_db_fetch_assoc(pwg_query($query));
-        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> username found in db:" . (!empty($row1['id'])) . " mail found in db: " . (!empty($row['id'])));
+        
+        $row = array('id' => (get_userid($userResource['data'][$userIdentifier]) ? get_userid($userResource['data'][$userIdentifier]) : get_userid_by_email($userResource['data']['mail'])));
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> IdByName:".get_userid($userResource['data'][$userIdentifier]) . " IdByEmail: " .   get_userid_by_email($userResource['data']['mail']) );
+        
+        #Azure: identifier can be userPrincipalName , mail
+        
+        #$query = 'SELECT '.$conf['user_fields']['id'].' AS id FROM '.USERS_TABLE.' WHERE '.$conf['user_fields']['username'].' = \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' OR '.$conf['user_fields']['email'].' = \''.pwg_db_real_escape_string($userResource['data']['mail']).'\' ;';
+        #$row = pwg_db_fetch_assoc(pwg_query($query));
+        #$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> username found in db:" . (!empty($row1['id'])) . " mail found in db: " . (!empty($row['id'])));
+        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> id found in db:" . $row['id']);
         // if query is not empty, it means everything is ok and we can continue, auth is done !
-        if (!empty($row['id'])) {
+        if ($row['id'] != false) {
+        #if($id) {
         //user exist
             if($ld_config->getValue('ld_group_user_active') == 1) {
+                // if remote user_group is used
                 $status=false;
             } else {
+                // if not , then user must be regular user
                 $status='normal';
             }
             if (in_array($ld_config->getValue('ld_group_user'),  $userResource['claim'])) {
+                // if login claim contains remote user_group , then user must be regular user
                 $status='normal';
             }
             if (($ld_config->getValue('ld_group_admin_active') == 1) && (in_array($ld_config->getValue('ld_group_admin'),  $userResource['claim']))) {
+                // if login claim contains remote admin_group and is active , then user must be admin
                 $status='admin';
             }
             if (($ld_config->getValue('ld_group_webmaster_active') == 1) && (in_array($ld_config->getValue('ld_group_webmaster'),  $userResource['claim']))) {
+                // if login claim contains remote webmaster_group and is active , then user must be webmaster
                 $status='webmaster';
             }
             if($status == false){
+                //if remote user_group is active but user is not found in any group, fail login 
                 trigger_notify('login_failure', stripslashes($userResource['data'][$userIdentifier]));
                 $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> User does not have role / claim as user to login");
                 return false;
             }
-            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Update username in db based on return values of OAuth2 & userIdentifier");                                
+            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Update username in db based on return values of OAuth2 with userIdentifier: ". $userIdentifier);
             $query = 'UPDATE `'.USERS_TABLE.'` SET `username` =  \''.pwg_db_real_escape_string($userResource['data'][$userIdentifier]).'\' WHERE `'.USERS_TABLE.'`.`id` = ' . $row['id'] . ';';
             pwg_query($query);
+            
             $query = 'UPDATE `'.USER_INFOS_TABLE.'` SET `status` = "'. $status . '" WHERE `'.USER_INFOS_TABLE.'`.`user_id` = ' . $row['id'] . ';';
             pwg_query($query); 
             
@@ -267,10 +282,10 @@ function OAuth2_login($userResource,$userIdentifier){
                     $mail = $userResource['data']['mail'];
                 }
                 $errors=[];
-                $new_id = register_user($userResource['data'][$userIdentifier],random_password(32),$userResource['data']['mail'],true,$errors);
+                $new_id = register_user($userResource['data'][$userIdentifier],random_password(32), $mail ,true,$errors);
                 if(count($errors) > 0) {
                     foreach ($errors as &$e){
-                        $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ".$e, 'ERROR');
+                        $ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]> ".$e );
                     }
                     return false;
                 }

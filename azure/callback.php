@@ -49,17 +49,40 @@ function Callback(){
             $decodedIdToken = JWT::decode($idToken, JWK::parseKeySet($azureKeys,'RS256')); //works
             $userResource['claim']=$decodedIdToken->{$ld_config->getValue('ld_azure_claim_name')} ?? array();
         } catch (\Exception $e) {
-            echo 'Exception catched: ',  $e->getMessage(), "\n";
+            $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Exception catched:" . $e->getMessage() );
         }
+        
+        // currently unable to decode access token
+        
         $userIdentifier=$ld_config->getValue('ld_azure_user_identifier');
         $resourceClient = new Client();
         $headers = [
             'Authorization' => 'Bearer ' . $accessToken
         ];
-        $request= new Request('GET', $ld_config->getValue('ld_azure_resource_url'), $headers);          
+        $request= new Request('GET', $ld_config->getValue('ld_azure_resource_url'), $headers);        
         $userResource['data'] = json_decode($resourceClient->sendAsync($request)->wait()->getBody(),true);
-        $_SESSION['access_token'] = $accessToken;
-        $_SESSION['userObject'] = $userResource;
+        $jwt_data=array(
+            "access_token" => array(
+                "app_displayname" => $decodedAccessToken ->app_displayname ?? null,
+                "appid" =>$decodedAccessToken ->app_id ?? null,
+                "scp" =>$decodedAccessToken ->scp ?? null,
+                "tid" =>$decodedAccessToken ->tid ?? null,
+                "tenant_region_scope" =>$decodedAccessToken ->tenant_region_scope ?? null,
+                "ipaddr" =>$decodedAccessToken ->ipaddr ?? null,
+                "idtyp" =>$decodedAccessToken ->idtyp ?? null,
+                "unique_name" =>$decodedAccessToken ->unique_name ?? null,
+                "upn" =>$decodedAccessToken ->upn ?? null,
+                "name" =>$decodedAccessToken ->name ?? null,
+            ),
+            "id_token" => array(
+                "roles" => $decodedIdToken ->roles ?? null,
+                "groups" => $decodedIdToken ->groups ?? null
+            )
+        );
+        
+        pwg_set_session_var('userResource',$userResource );
+        pwg_set_session_var('jwt_data_test',$jwt_data );
+        
         //echo("<pre>");print_r($userResource);
 		$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Oauth2_login(Array,$userIdentifier)");
         Oauth2_login($userResource,$userIdentifier);
