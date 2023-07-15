@@ -10,12 +10,12 @@ on:
       version_php:
         description: 'PHP Version'
         required: true
-        default: '8.1'
+        default: '8.2'
         type: string
       version_piwigo:
         description: 'Piwigo Version'
         required: true
-        default: '13.6'
+        default: '13.7'
         type: string
 
 jobs:
@@ -90,7 +90,8 @@ jobs:
           cd docker-piwigo
           docker-compose run piwigo.phpunit --bootstrap vendor/autoload.php /piwigo/piwigo/plugins/ldap_login/.tests/LdapLoginTest.php # /app/vendor/bin/phpunit , /piwigo/piwigo/plugins/
           cd ..
-
+      - name: Disable LDAP and enable Azure Auth
+        run: docker-compose run piwigo.db mysql --database pwg -uroot -p${PASSWORD_DB_ROOT} "update ldap_login_config SET value = 'ld_auth_azure' WHERE param = 'ld_auth_type';"
       - name: Stop containers
         if: always()
         run: cd docker-piwigo && docker-compose down

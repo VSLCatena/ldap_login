@@ -33,7 +33,7 @@ services:
       - ${PIWIGO_PATH}/ldap_bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/50-bootstrap.ldif
     environment:
       TZ: "Europe/Amsterdam"
-      LDAP_TLS: "False"
+      LDAP_TLS: "True"
       LDAP_LOG_LEVEL: 256
       KEEP_EXISTING_CONFIG: "False"
       LDAP_REMOVE_CONFIG_AFTER_SETUP: "False"
@@ -56,7 +56,7 @@ services:
       TZ: "Europe/Amsterdam"
 #      PHPLDAPADMIN_LDAP_HOSTS: *LDAP_HOST
 #      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap':[{'server':[{'tls':False}]},{'login':[{'attr':'cn'}]}]}]"
-      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap':[{'server':[{'tls':False}]}]}]"
+      PHPLDAPADMIN_LDAP_HOSTS: "#PYTHON2BASH:[{'ldap':[{'server':[{'tls':true}]}]}]"
       PHPLDAPADMIN_HTTPS: "false"
     command: --loglevel debug
     profiles:
