@@ -5,7 +5,7 @@ global $template;
 $template->set_filenames( array('plugin_admin_content' => dirname(__FILE__).'/support.tpl') );
 $template->assign(
   array(
-    'PLUGIN_NEWUSERS' => get_root_url().'admin.php?page=plugin-Ldap_Login-support',
+    'PLUGIN_NEWUSERS' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-support',
     ));
 
 

@@ -1,7 +1,6 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors',1);
+if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
 
 function ld_table_exist() {
@@ -17,11 +16,13 @@ function ld_table_exist() {
  * @return boolean 
  */
 
-	global $prefixeTable, $conf;
+	global $prefixeTable, $conf, $ld_log;
+	
 	$query = "SELECT count(*) as count FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . $conf['db_base'] . "') AND (TABLE_NAME = '" . $prefixeTable . "ldap_login_config')";
-	error_log('[ld_table_exist] > ' . $query);
+	$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query);
+
 	try {
-		error_log('[ld_table_exist] > Try query on database');
+		$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Try query on database");
 		$qresult = query2array($query);
 		if ($qresult[0]['count'] == 0) {
 			$result = false;
@@ -29,11 +30,11 @@ function ld_table_exist() {
 			$result = true;
 		}
 	} catch(mysqli_sql_exception $mes) {
-		error_log('[ld_table_exist] > mysqli_sql_exception caught.');
-		error_log('[ld_table_exist] > ' . $mes);
+		$ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]> mysqli_sql_exception caught.");
+		$ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]> " . $mes);
 		$result = false;
 	}
-	error_log('[ld_table_exist] > ' .  ($result ? 'true' : 'false'));
+	$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ".  ($result ? 'true' : 'false'));
 	return $result;
 }
 
@@ -74,7 +75,7 @@ function ld_sql($action='get',$type=null,$data=null){
  * @return array $result
  */
 
-global $prefixeTable;
+global $prefixeTable,$ld_log;
 	
 	###
 	### GET 
@@ -83,6 +84,7 @@ global $prefixeTable;
 	if ($action === 'get') {
 		if(ld_table_exist()){
 			$query ='SELECT param,value FROM ' . $prefixeTable . 'ldap_login_config';
+			$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query);
 			$result = query2array($query,'param','value');
 			return $result;
 		}
@@ -94,6 +96,10 @@ global $prefixeTable;
 	if ($action == 'create'){
 		if ($type == 'create_table') {
 			$query="CREATE TABLE IF NOT EXISTS `" . $prefixeTable . "ldap_login_config` (`param` varchar(40) CHARACTER SET utf8 NOT NULL,`value` text CHARACTER SET utf8,`comment` varchar(255) CHARACTER SET utf8 DEFAULT NULL,UNIQUE KEY `param` (`param`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_general_ci;";
+			$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query);
+			pwg_query($query);
+			$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query);
+			$query="ALTER TABLE `" . $prefixeTable . "ldap_login_config` ADD `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `value`;";
 			pwg_query($query);
 		
 		}	
@@ -189,8 +195,18 @@ global $prefixeTable;
 			}			
 			if ($type == 'clear_mail_address') {
 				$query="update piwigo_users SET mail_address = null WHERE id > 2";
+				$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query);
 				pwg_query($query);				
 			}
+			if ($type == 'update_sql_structure') {
+				$query1="SHOW COLUMNS FROM  `" . $prefixeTable . "ldap_login_config` LIKE 'modified'; ";
+				$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query1);
+				$query2="ALTER TABLE `" . $prefixeTable . "ldap_login_config` ADD `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `value`;";
+				if(!pwg_query($query1)){
+					$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> ". $query2);
+					pwg_query($query2);
+				}		
+			}			
 		}
 	}
 
