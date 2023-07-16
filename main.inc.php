@@ -23,7 +23,7 @@ define('LDAP_LOGIN_ADMIN',   get_root_url() . 'admin.php?page=plugin-' . LDAP_LO
 
 require_once realpath(LDAP_LOGIN_PATH . '/vendor/autoload.php');
 use Monolog\Handler\BrowserConsoleHandler;
-use Monolog\Logger;
+use Monolog\Logger as MLogger;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 
@@ -101,9 +101,7 @@ function ld_init(){
     // ErrorLogHandler: Logs records to PHP’s error_log() function.
     // StreamHandler: Logs records into any PHP stream, use this for log files.
     global $ld_config,$ld_log;
-    $ld_log = new Logger('Ldap_Login');
-    $ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
-    $ld_log->pushHandler(new BrowserConsoleHandler()); //to Browser Console 
+    $ld_log = new MLogger('Ldap_Login');
     $ld_log->pushHandler(new StreamHandler(LDAP_LOGIN_PATH . '/logs/ldap_login.log')); //To local file
     $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> initialized Logger");
     

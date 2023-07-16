@@ -1,6 +1,6 @@
 <?php
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
-
+use Monolog\Logger as MLogger;
 /**
  * This class is used to expose maintenance methods to the plugins manager
  * It must extends PluginMaintain and be named "PLUGINID_maintain"
@@ -36,7 +36,6 @@ class Ldap_Login_maintain extends PluginMaintain
 			define('LDAP_LOGIN_PATH' ,   PHPWG_PLUGINS_PATH . LDAP_LOGIN_ID . '/');
 		
 			include_once(LDAP_LOGIN_PATH.'/class.config.php');
-			include_once(LDAP_LOGIN_PATH.'/class.log.php');
 			include_once(LDAP_LOGIN_PATH.'/functions_sql.inc.php'); 
 		}
 		
@@ -67,6 +66,7 @@ class Ldap_Login_maintain extends PluginMaintain
 	 */
 		global $prefixeTable;
 		
+		$ld_log=new MLogger(LDAP_LOGIN_ID);
 		$ld_config=new Config();
 		$ld_log=new Log();
 		
@@ -127,6 +127,8 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */
+		global $ld_config,$ld_log;
+	 	$ld_log=new MLogger(LDAP_LOGIN_ID);
 		$ld_config=new Config();
 		$ld_log=new Log();
 		$ld_config->loadDefaultConfig();
@@ -194,7 +196,8 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * 
 	 * */
 	 	
-	 
+	 	global $ld_config,$ld_log;
+		$ld_log=new MLogger(LDAP_LOGIN_ID);
 	 	$ld_config=new Config();
 	 	$ld_log=new Log();
 		$ld_log->warning("[".basename(__FILE__)."/".__FUNCTION__."]> Check value of 'allow_user_registration' as no user is currently able to register.");
@@ -215,6 +218,8 @@ class Ldap_Login_maintain extends PluginMaintain
 	 * @since ~
 	 *
 	 */	
+		$ld_log=new MLogger(LDAP_LOGIN_ID);
+		$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
 		$ld_config=new Config();
 		$ld_log=new Log();
 		$ld_config->loadConfig();
