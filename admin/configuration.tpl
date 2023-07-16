@@ -123,7 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br>
+                                <br>                               
 
                                 <div class="form-check form-switch">
                                     <input type='hidden' value='0' name='LD_DEBUG_FILE'>
@@ -161,12 +161,12 @@
                                         <div class="col-sm-4">
                                             <select class="form-select" aria-label="{'Debug level'|@translate}"
                                                 id="ld_debug_level" name="LD_DEBUG_LEVEL">
-                                                <option id="ld_debug_level_fatal" name="LD_DEBUG_LEVEL_fatal" value="fatal"
-                                                    disabled {if 'fatal'==$LD_DEBUG_LEVEL}selected{/if}>Fatal</option>
+                                                <option id="ld_debug_level_critical" name="LD_DEBUG_LEVEL_critical" value="critical"
+                                                    {if 'critical'==$LD_DEBUG_LEVEL}selected{/if}>Critical</option>
                                                 <option id="ld_debug_level_error" name="LD_DEBUG_LEVEL_error" value="error"
-                                                    disabled {if 'error'==$LD_DEBUG_LEVEL}selected{/if}> Error</option>
+                                                    {if 'error'==$LD_DEBUG_LEVEL}selected{/if}> Error</option>
                                                 <option id="ld_debug_level_warning" name="LD_DEBUG_LEVEL_warning"
-                                                    value="warning" disabled {if 'warning'==$LD_DEBUG_LEVEL}selected{/if}>
+                                                    value="warning" {if 'warning'==$LD_DEBUG_LEVEL}selected{/if}>
                                                     Warning</option>
                                                 <option id="ld_debug_level_info" name="LD_DEBUG_LEVEL_info" value="info"
                                                     {if 'info'==$LD_DEBUG_LEVEL}selected{/if}>Info</option>
@@ -175,14 +175,15 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <span class="icon-help-circled tiptip" style="cursor:help" title="
-                                        <b>FATAL</b>: The service/app is going to stop or becomes unusable. 
+                                    <a target="_blank" href="https://datatracker.ietf.org/doc/html/rfc5424"><span class="icon-help-circled tiptip" style="cursor:help" title="
+                                        <b>Based on RFC 5424</b><br>
+                                        <br><b>CRITICAL</b>: The service/app is going to stop or becomes unusable. 
                                         <br><b>ERROR</b>: Fatal for a particular request, but the service/app continues servicing.
                                         <br><b>WARN</b>: A note on something that should probably be looked at
                                         <br><b>INFO</b>: Detail on regular operation.
                                         <br><b>DEBUG</b>: Anything else, i.e. too verbose to be included in INFO level.
                                         </div>
-                                    ">More info..</span> 
+                                    ">More info..</span></a>
                                     {if isset($WARN_LD_DEBUG_LEVEL)}<i style="color:red;">{$WARN_LD_DEBUG_LEVEL}</i>{/if}
                                 </div>
                             </div>

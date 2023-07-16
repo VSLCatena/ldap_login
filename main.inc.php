@@ -24,6 +24,7 @@ define('LDAP_LOGIN_ADMIN',   get_root_url() . 'admin.php?page=plugin-' . LDAP_LO
 require_once realpath(LDAP_LOGIN_PATH . '/vendor/autoload.php');
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Logger as MLogger;
+use Monolog\Level;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 
@@ -102,14 +103,21 @@ function ld_init(){
     // StreamHandler: Logs records into any PHP stream, use this for log files.
     global $ld_config,$ld_log;
     $ld_log = new MLogger('Ldap_Login');
-    $ld_log->pushHandler(new StreamHandler(LDAP_LOGIN_PATH . '/logs/ldap_login.log')); //To local file
+    #$ld_log->pushHandler(new \Monolog\Handler\NullHandler());
     $ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> initialized Logger");
     
     $ld_config = new Config();
     $ld_config->loadConfig();	
+    $level = Level::fromName($ld_config->getValue('ld_debug_level') ?? 'debug');
+    $handler=array();
+    array_push($handler, new ErrorLogHandler(level: Level::Error)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
     if($ld_config->getValue('ld_debug_php')==1){
-        $ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+        array_push($handler, new ErrorLogHandler(level: $level)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
     }
+    if($ld_config->getValue('ld_debug_file')==1){
+        array_push($handler, new StreamHandler(LDAP_LOGIN_PATH . '/logs/ldap_login.log',level: $level)); //To local file
+    }
+    $ld_log->setHandlers($handler);
     
     $template->clear_assign('U_REGISTER'); // disable self-registration of users while using this plugin
     if($ld_config->getValue('ld_auth_type')=="ld_auth_ldap"){

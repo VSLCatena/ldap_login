@@ -2,6 +2,7 @@
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Logger as MLogger;
+use Monolog\Level;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 /**
@@ -73,7 +74,10 @@ class Ldap_Login_maintain extends PluginMaintain
 		global $prefixeTable;
 		
 		$ld_log=new MLogger(LDAP_LOGIN_ID);
-		$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$handler=array();
+		array_push($handler, new ErrorLogHandler(level: Level::Debug)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$ld_log->setHandlers($handler);
+		
 		$ld_config=new Config();
 				
 		if(!ld_table_exist()){ //new install or from old situation
@@ -134,8 +138,10 @@ class Ldap_Login_maintain extends PluginMaintain
 	 *
 	 */
 		global $ld_config,$ld_log;
-	 	$ld_log=new MLogger(LDAP_LOGIN_ID);
-		$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$ld_log=new MLogger(LDAP_LOGIN_ID);
+		$handler=array();
+		array_push($handler, new ErrorLogHandler(level: Level::Debug)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$ld_log->setHandlers($handler);
 		$ld_config=new Config();
 		
 		$ld_config->loadDefaultConfig();
@@ -149,7 +155,7 @@ class Ldap_Login_maintain extends PluginMaintain
 				file_put_contents( LDAP_LOGIN_PATH . 'logs/ldap_login.log',$full."\n");
 			} else {
 				$ld_log->fatal("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " . LDAP_LOGIN_PATH . 'logs/ldap_login.log');
-				}
+			}
 						
 			$ld_log->info("[".basename(__FILE__)."/".__FUNCTION__."]> Ldap_login.log cleared");
 		}
@@ -196,7 +202,9 @@ class Ldap_Login_maintain extends PluginMaintain
 	 	
 	 	global $ld_config,$ld_log;
 		$ld_log=new MLogger(LDAP_LOGIN_ID);
-		$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$handler=array();
+		array_push($handler, new ErrorLogHandler(level: Level::Debug)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$ld_log->setHandlers($handler);
 		$ld_config=new Config();
 		$ld_log->warning("[".basename(__FILE__)."/".__FUNCTION__."]> Check value of 'allow_user_registration' as no user is currently able to register.");
 		$ld_log->info("[".basename(__FILE__)."/".__FUNCTION__."]> deactivated");
@@ -217,7 +225,7 @@ class Ldap_Login_maintain extends PluginMaintain
 	 *
 	 */	
 		$ld_log=new MLogger(LDAP_LOGIN_ID);
-		$ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+		$ld_log->pushHandler(new ErrorLogHandler(level: Level::Debug)); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
 		$ld_config=new Config();
 		$ld_log->info("[".basename(__FILE__)."/".__FUNCTION__."]> uninstall");
 		ld_sql('delete','delete_table');
