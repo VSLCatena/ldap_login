@@ -20,7 +20,7 @@
         <div class="container">
             <fieldset class="form-group">
                 <legend>{'ldap_login Test'|@translate}</legend>
-                <i>{'You must save the settings with the Save button just up there before testing here.'|@translate}</i>
+                <i>{'Test the configuration of your authentication below.'|@translate}</i>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">

@@ -9,48 +9,53 @@ $template->assign(
         'PLUGIN_CHECK' => get_root_url().'admin.php?page=plugin-' . LDAP_LOGIN_ID . '-test',
     ));
 
-$ld_log->debug("New LDAP Instance");
-
-###
-### POST (submit/load page)
-###
-
-// Checking LDAP configuration --> rewrite!
-
-
+    
+    ###
+    ### POST (submit/load page)
+    ###
+    
+    // Checking LDAP configuration --> rewrite!
+    
+    
 if (isset($_POST['check_ldap']) ){
-    $ld_config->ldap_conn();
-    $ld_config->debug("[function]> Ldap_Login Test");
+    $ld_log->debug("[function]> Ldap_Login Test");
     if($ld_config->getValue('ld_anonbind') == 0){
-        $p_username=isset($_POST['savetest'])? ldap_explode_dn($_POST['LD_BINDDN'],1)[0] : $_POST['USERNAME'];
-        $p_password=isset($_POST['savetest'])? $_POST['LD_BINDPW'] : $_POST['PASSWORD'];
-        
-        $username = $ld_config->ldap_search_dn($p_username);
-        $error=$ld_config->check_ldap();
-        if($error==1 && $username) { //need to clean this part..
-            if ($ld_config->ldap_bind_as($username,$p_password)){
-                if($ld_config->check_ldap_group_membership($username,$p_username)){
+        $ld_ldap=new ldap();
+        $result = $ld_ldap->authenticate($_POST['USERNAME'], $_POST['PASSWORD'],$test = True);
+        if($result->bindSuccess == True && $result->credentialsCorrect == True) {
+            $statusMessage = '<p style="color:green;">Configuration LDAP OK:<pre>' . json_encode($result, JSON_PRETTY_PRINT) . '</pre></p>';
+        } elseif($result->credentialsCorrect == False) {
+            $statusMessage = '<p style="color:orange;">Binding OK, but there are errors: '. $result->lastError . '<br><pre>' . json_encode($result, JSON_PRETTY_PRINT) . '</pre></p>';
+        } else {
+            $statusMessage = '<p style="color:red;">Error :'.$result->lastError . '<br><pre>' . json_encode($result, JSON_PRETTY_PRINT) . '</pre></p>';
+        }
+        $template->assign('LD_CHECK_LDAP',$statusMessage);
+        #$username = $ld_ldap->ldap_search_dn($_POST['USERNAME']);
+        #$error=$ld_ldap->check_ldap();
+/*         if($error==1 && $_POST['USERNAME']) { //need to clean this part..
+            if ($ld_ldap->ldap_bind_as($_POST['USERNAME'],$_POST['PASSWORD'])){
+                if($ld_ldap->check_ldap_group_membership($username,$p_username)){
                                 $template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK : '.$username.'</p>');
                 } else {
                     $template->assign('LD_CHECK_LDAP','<p style="color:orange;">Credentials OK, Check GroupMembership for: '.$username.'</p>');
                 }
                     }
                     else {
-                $template->assign('LD_CHECK_LDAP','<p style="color:red;"> Binding OK, but check credentials on server '.$ld_config->getValue('uri').' for user '.$username.'</p>');
+                $template->assign('LD_CHECK_LDAP','<p style="color:red;"> Binding OK, but check credentials on server '.$ld_config->getValue('ld_host').' for user '.$username.'</p>');
                     }
         } elseif($error==1 && !$username){
-            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but no valid DN found on server '.$ld_config->getValue('uri').' for user '.$p_username.'</p>');
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but no valid DN found on server '.$ld_config->getValue('ld_host').' for user '.$username.'</p>');
         } elseif($error && $username){
-            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but check credentials on '.$ld_config->getValue('uri').' for user '.$username.'</p>');
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : Binding OK, but check credentials on '.$ld_config->getValue('ld_host').' for user '.$username.'</p>');
         } else {
-            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server '.$ld_config->getValue('uri').' for user '.$p_username.', check your binding!</p>');
-        }
+            $template->assign('LD_CHECK_LDAP','<p style="color:red;">Error : '.$error.' for binding on server '.$ld_config->getValue('ld_host').' for user '.$username.', check your binding!</p>');
+        } */
 
     }
     if($ld_config->getValue('ld_anonbind') == 1){
         //anonymous binding
-        $error=$ld_config->check_ldap();
-        $username = $ld_config->ldap_search_dn($_POST['USERNAME']);
+        $error=$ld_ldap->check_ldap();
+        $username = $ld_ldap->ldap_search_dn($_POST['USERNAME']);
         if($error==1) {
             if(!$username){
                 $template->assign('LD_CHECK_LDAP','<p style="color:green;">Configuration LDAP OK, user not found </p>');
