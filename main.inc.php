@@ -107,6 +107,9 @@ function ld_init(){
     
     $ld_config = new Config();
     $ld_config->loadConfig();	
+    if($ld_config->getValue('ld_debug_php')==1){
+        $ld_log->pushHandler(new ErrorLogHandler()); //To php_error.log | NOTICE: PHP message: [2023-05-31T19:39:38.832666+00:00] Ldap_Login.DEBUG
+    }
     
     $template->clear_assign('U_REGISTER'); // disable self-registration of users while using this plugin
     if($ld_config->getValue('ld_auth_type')=="ld_auth_ldap"){
