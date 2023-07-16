@@ -124,27 +124,13 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="form-inline">
-                                    <div class="form-group row">
-                                        <label for="ld_debug_location" class="col-sm-2 col-form-label">{'Log location'|@translate}</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="ld_debug_location" name="LD_DEBUG_LOCATION"
-                                                class="form-control" value="{$LD_DEBUG_LOCATION}" placeholder="/var/log/"
-                                                aria-describedby="ld_debug_location_label">
-                                            <small id="ld_debug_location_help" class="text-muted">
-                                                {'Log location help: Field to define the location of ldap_login.log. Protect the location with .htaccess or store in /var/log/ (most secure)'|@translate}
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                
 
                                 <div class="form-check form-switch">
-                                    <input type='hidden' value='0' name='LD_DEBUG'>
-                                    <input class="form-check-input" id="ld_debug" name="LD_DEBUG" type="checkbox"
-                                        value="1"  {if $LD_DEBUG== 1}checked{/if}>
-                                    <label class="form-check-label" for="ld_debug">
-                                        {'Write to ldap_login.log file'|@translate}
+                                    <input type='hidden' value='0' name='LD_DEBUG_FILE'>
+                                    <input class="form-check-input" id="ld_debug_file" name="LD_DEBUG_FILE" type="checkbox"
+                                        value="1"  {if $LD_DEBUG_FILE== 1}checked{/if}>
+                                    <label class="form-check-label" for="ld_debug_file">
+                                        {'Write to ./logs/ldap_login.log'|@translate}
                                     </label>
                                 </div>
 
@@ -162,7 +148,7 @@
                                     <input class="form-check-input" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE"
                                         type="checkbox" value="1"  {if $LD_DEBUG_CLEARUPDATE== 1}checked{/if}>
                                     <label class="form-check-label" for="ld_debug_clearupdate">
-                                        {'Clear logs after plugin update'|@translate}
+                                        {'Clear logfile after plugin update'|@translate}
                                     </label>
                                 </div>
                                 <br>

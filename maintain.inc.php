@@ -144,23 +144,14 @@ class Ldap_Login_maintain extends PluginMaintain
 		if (($ld_config->getValue('ld_debug_clearupdate') == 1) OR ($ld_config->getValue('ld_debug_clearupdate') == True))
 		{   
 			$full="\n";
-			
-			if(str_starts_with( $ld_config->getValue('ld_debug_location') , "/")) {
-				# absolute
-				if(is_writable( $ld_config->getValue('ld_debug_location') . 'ldap_login.log')){
-					file_put_contents( $ld_config->getValue('ld_debug_location') . 'ldap_login.log',$full."\n");
-				} else {
-					$ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " .  $ld_config->getValue('ld_debug_location') . 'ldap_login.log');
-				}
+			# relative (./logs/ldap_login.log)
+			if(is_writable(LDAP_LOGIN_PATH . 'logs/ldap_login.log')){
+				file_put_contents( LDAP_LOGIN_PATH . 'logs/ldap_login.log',$full."\n");
 			} else {
-				# relative (nothing or ./logs/)
-				if(is_writable(LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log')){
-					file_put_contents( LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log',$full."\n");
-				} else {
-					$ld_log->error("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " . LDAP_LOGIN_PATH . 'logs/' . 'ldap_login.log');
+				$ld_log->fatal("[".basename(__FILE__)."/".__FUNCTION__."]>Unable to write to " . LDAP_LOGIN_PATH . 'logs/ldap_login.log');
 				}
-			}			
-			$ld_log->debug("[".basename(__FILE__)."/".__FUNCTION__."]> Ldap_login.log cleared");
+						
+			$ld_log->info("[".basename(__FILE__)."/".__FUNCTION__."]> Ldap_login.log cleared");
 		}
 		
 		if (!$this->installed)
