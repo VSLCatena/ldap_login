@@ -50,7 +50,7 @@
         <div class="container">
             <div class="card">
                 <div class="card-body">
-                    <center><a href="{{$OAUTH_URL}}"><img
+                    <center>{if isset($JWT_CONTENT)}<a href="{{$OAUTH_URL}}">{else}{/if}<img
                                 src="https://learn.microsoft.com/en-us/azure/active-directory/develop/media/howto-add-branding-in-apps/ms-symbollockup_signin_dark.png"></a>
                     </center>
                     {if isset($JWT_CONTENT)}

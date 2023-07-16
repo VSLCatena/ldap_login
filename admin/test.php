@@ -65,24 +65,25 @@ if (isset($_POST['check_ldap']) ){
         
     }
 }
-
-$auth_base = str_replace("{TENANT_ID}",$ld_config->getValue('ld_azure_tenant_id'),$ld_config->getValue('ld_azure_auth_url'));
-$form_params = array(
-    'response_type' => 'code',
-    'client_id' => $ld_config->getValue('ld_azure_client_id'),
-    'redirect_uri' => $ld_config->getValue('ld_azure_redirect_uri'),
-    'scope' => $ld_config->getValue('ld_azure_scopes'),
-    'prompt' =>'select_account'
-);
-$oAuthURL = $auth_base . '?' .http_build_query($form_params);
-
+if($ld_config->getValue('ld_auth_type') == 'ld_auth_azure'){
+    if(null !== $ld_config->getValue('ld_azure_tenant_id')){
+        $auth_base = str_replace("{TENANT_ID}",$ld_config->getValue('ld_azure_tenant_id'),$ld_config->getValue('ld_azure_auth_url'));
+    }
+    if(null !== $ld_config->getValue('ld_azure_client_id') && null !== $ld_config->getValue('ld_azure_redirect_uri') && null !== $ld_config->getValue('ld_azure_scopes' ) ){
+        $form_params = array(
+            'response_type' => 'code',
+            'client_id' => $ld_config->getValue('ld_azure_client_id'),
+            'redirect_uri' => $ld_config->getValue('ld_azure_redirect_uri'),
+            'scope' => $ld_config->getValue('ld_azure_scopes'),
+            'prompt' =>'select_account'
+        );
+        $oAuthURL = $auth_base . '?' .http_build_query($form_params);
+        $template->assign('OAUTH_URL',$oAuthURL);
+        $jwt_data = pwg_get_session_var('jwt_data_test' );
+        $template->assign('JWT_CONTENT',$jwt_data);
+    }
+}
 $template->assign('LDAP_LOGIN_PATH',LDAP_LOGIN_PATH);
 $template->assign('LD_AUTH_TYPE',$ld_config->getValue('ld_auth_type'));
-$template->assign('OAUTH_URL',$oAuthURL);
-
-$jwt_data = pwg_get_session_var('jwt_data_test' );
-
-$template->assign('JWT_CONTENT',$jwt_data);
-
 $template->assign_var_from_handle( 'ADMIN_CONTENT', 'plugin_admin_content');
 ?>
