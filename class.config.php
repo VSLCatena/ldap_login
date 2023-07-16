@@ -8,7 +8,7 @@ class Config {
     private    $default_val = array(
         'ld_forgot_url' => 'password.php',
         'ld_debug_location' =>'./logs/',
-        'ld_debug' => 1,
+        'ld_debug_file' => 1,
         'ld_debug_clearupdate' => 1,
         'ld_debug_level' => 'debug',
         'ld_debug_php' => 1,
