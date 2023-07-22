@@ -1,22 +1,9 @@
 name: Publish Wiki
-on
-  push:
-  
-  push
-  push:
-  
-  pus
-  push:
-  push:
-  
-  pu
+on:
   push:
     paths:
       - '.wiki/*.md'
-
   workflow_dispatch:
-
-      
 
 jobs:
   tests:
