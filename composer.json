@@ -1,0 +1,26 @@
+{
+    "name": "kipjr/ldap_login",
+    "description": "Ldap_Login for Piwigo",
+    "license": "Apache-2.0",
+    "type": "project",
+    "keywords": [
+        "Piwigo",
+        "Ldap_login"
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.8.1",
+        "guzzlehttp/guzzle": "^7.7",
+        "monolog/monolog": "^3.4"
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "dragon-code/codestyler": true,
+            "ergebnis/composer-normalize": true,
+            "symfony/thanks": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

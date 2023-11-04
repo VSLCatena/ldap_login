@@ -11,13 +11,13 @@
          failOnWarning="true">
     <testsuites>
         <testsuite name="default">
-            <directory>/piwigo/piwigo/plugins/ldap_login/.tests</directory>
+            <directory>/piwigo/piwigo/plugins/Ldap_Login/.tests</directory>
         </testsuite>
     </testsuites>
 
     <coverage>
         <include>
-            <directory suffix=".php">/piwigo/piwigo/plugins/ldap_login</directory>
+            <directory suffix=".php">/piwigo/piwigo/plugins/Ldap_Login</directory>
         </include>
     </coverage>
 </phpunit>

@@ -23,15 +23,15 @@ class LdapLoginTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testldap_bind_as() {
-        $username = 'testuser';
-        $password = 'testpass';
+        $username = 'professor';
+        $password = 'professor';
 
         $this->assertTrue($this->ldap->bind($username, $password));
     }
 
     public function testSearch() {
-        $baseDn = 'ou=people,dc=example,dc=com';
-        $filter = '(uid=testuser)';
+        $baseDn = 'dc=planetexpress,dc=com';
+        $filter = '(uid=fry)';
         $attributes = ['uid', 'cn'];
 
         $entries = $this->ldap->search($baseDn, $filter, $attributes);
@@ -43,7 +43,7 @@ class LdapLoginTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testGetEntry() {
-        $dn = 'uid=testuser,ou=people,dc=example,dc=com';
+        $dn = 'uid=amy,dc=planetexpress,dc=com';
         $attributes = ['uid', 'cn'];
 
         $entry = $this->ldap->getEntry($dn, $attributes);

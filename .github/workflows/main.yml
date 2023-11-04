@@ -10,12 +10,12 @@ on:
       version_php:
         description: 'PHP Version'
         required: true
-        default: '8.1'
+        default: '8.2'
         type: string
       version_piwigo:
         description: 'Piwigo Version'
         required: true
-        default: '13.6'
+        default: '13.7'
         type: string
 
 jobs:
@@ -61,7 +61,14 @@ jobs:
           cd docker-piwigo
           docker-compose run piwigo.composer require --dev phpunit/phpunit # composer.json  composer.lock  vendor
           cd ..
-      - name: Run tests
+      - name: Run connectivity test
+        shell: pwsh
+        run: |
+          Test-Connection -TargetName ldap -TcpPort 389  -ErrorAction stop
+          Test-Connection -TargetName ldap -TcpPort 636  -ErrorAction stop
+          Test-Connection -TargetName db   -TcpPort 1433 -ErrorAction stop
+          Test-Connection -TargetName php  -TcpPort 443  -ErrorAction stop
+      - name: Run tests on 389
         env:
           #DATABASE_URL: mysql://ldap_login:password@localhost/ldap_login
           LDAP_HOST: ldap://ldap
@@ -72,7 +79,19 @@ jobs:
           cd docker-piwigo
           docker-compose run piwigo.phpunit --bootstrap vendor/autoload.php /piwigo/piwigo/plugins/ldap_login/.tests/LdapLoginTest.php # /app/vendor/bin/phpunit , /piwigo/piwigo/plugins/
           cd ..
-
+      - name: Run tests on 636
+        env:
+          #DATABASE_URL: mysql://ldap_login:password@localhost/ldap_login
+          LDAP_HOST: ldaps://ldap
+          LDAP_PORT: 636
+          LDAP_VERSION: 3
+          LDAP_USERNAME: admin
+        run: |
+          cd docker-piwigo
+          docker-compose run piwigo.phpunit --bootstrap vendor/autoload.php /piwigo/piwigo/plugins/ldap_login/.tests/LdapLoginTest.php # /app/vendor/bin/phpunit , /piwigo/piwigo/plugins/
+          cd ..
+      - name: Disable LDAP and enable Azure Auth
+        run: docker-compose run piwigo.db mysql --database pwg -uroot -p${PASSWORD_DB_ROOT} "update ldap_login_config SET value = 'ld_auth_azure' WHERE param = 'ld_auth_type';"
       - name: Stop containers
         if: always()
         run: cd docker-piwigo && docker-compose down

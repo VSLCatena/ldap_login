@@ -7,6 +7,10 @@ assignees: ''
 
 ---
 
+#### Important
+Due to the available resources support is only for non-EoL environments (PHP8.x), OpenLDAP, Active Directory and Azure AD (OAuth2).
+<hr>
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
