@@ -95,7 +95,7 @@ function ld_forgot(){
 	global $template;
 	$base = new Ldap();
 	$base->load_config();
-	if(!($base->config['ld_forgot_url']=="")){
+	if(!(empty($base->config['ld_forgot_url']))){
 		$template->assign('U_LOST_PASSWORD',$base->config['ld_forgot_url']);
 	}
 	unset($base);
