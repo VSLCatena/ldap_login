@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'kipjr/ldap_login',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-dev',
+        'version' => 'dev-dev',
+        'reference' => 'cf45e79733ea5571b0f4161241f384465ddec284',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -47,9 +47,9 @@
             'dev_requirement' => false,
         ),
         'kipjr/ldap_login' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-dev',
+            'version' => 'dev-dev',
+            'reference' => 'cf45e79733ea5571b0f4161241f384465ddec284',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
