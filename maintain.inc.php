@@ -210,7 +210,7 @@ class Ldap_Login_maintain extends PluginMaintain
 
     public function uninstall()
     {
-        /**
+        /*
          * Perform here all cleaning tasks when the plugin is removed
          * you should revert all changes made in 'install'.
          *
@@ -218,7 +218,7 @@ class Ldap_Login_maintain extends PluginMaintain
          *
          * @since ~
          */
-        error_log('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> uninstall') ;
+        error_log('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> uninstall');
         ld_sql('delete', 'delete_table');
         error_log('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> removed piwigo_ldap_login_config table');
         error_log('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> plugin uninstalled');

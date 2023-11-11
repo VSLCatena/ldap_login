@@ -4,12 +4,14 @@ if (! defined('PHPWG_ROOT_PATH')) {
     exit('Hacking attempt!');
 }
 
-function tryLog($logString,$level='debug')
+function tryLog($logString, $level = 'debug')
 {
     global $ld_log;
-    if(is_null($ld_log)){
+
+    if (is_null($ld_log)) {
         error_log($logString);
-    } else {
+    }
+    else {
         $ld_log->{$level}($logString);
     }
 }
@@ -30,13 +32,14 @@ function ld_table_exist()
 
     global $prefixeTable, $conf, $ld_log;
 
-    $query = "SELECT count(*) as count FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . $conf['db_base'] . "') AND (TABLE_NAME = '" . $prefixeTable . "ldap_login_config')";
-    $logString='[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . $query;
+    $query     = "SELECT count(*) as count FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . $conf['db_base'] . "') AND (TABLE_NAME = '" . $prefixeTable . "ldap_login_config')";
+    $logString = '[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . $query;
     tryLog($logString);
+
     try {
-        $logString='[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> Try query on database';
+        $logString = '[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> Try query on database';
         tryLog($logString);
-        
+
         $qresult = query2array($query);
 
         if ($qresult[0]['count'] == 0) {
@@ -47,15 +50,15 @@ function ld_table_exist()
         }
     }
     catch (mysqli_sql_exception $mes) {
-        $logString='[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> mysqli_sql_exception caught.';
+        $logString = '[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> mysqli_sql_exception caught.';
         tryLog($logString);
-               
-        $logString ='[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . $mes;
-        tryLog($logString,'error');
-               
+
+        $logString = '[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . $mes;
+        tryLog($logString, 'error');
+
         $result = false;
     }
-    $logString ='[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . ($result ? 'true' : 'false');
+    $logString = '[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> ' . ($result ? 'true' : 'false');
     tryLog($logString);
 
     return $result;
