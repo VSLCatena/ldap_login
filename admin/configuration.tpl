@@ -165,11 +165,10 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_membership_user">
-	{if isset($LD_MEMBERSHIP_USER) }
-	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" checked />
-	{else}
-	<input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="{$LD_MEMBERSHIP_USER}" />
-	{/if}{'Use user membership attribute'|@translate}</label>
+	<label style="display:inline-block; width:15%;" for="ld_group_user_active">
+        <input type='hidden' value='0' name='LD_MEMBERSHIP_USER'>
+        <input type="checkbox" id="ld_membership_user" name="LD_MEMBERSHIP_USER" value="1" {if $LD_MEMBERSHIP_USER== 1}checked{/if}>
+	{'Use user membership attribute'|@translate}</label>
 	{if isset($WARN_LD_MEMBERSHIP_USER) and $WARN_LD_MEMBERSHIP_USER}<i style="color:red;">{$WARN_LD_MEMBERSHIP_USER}</i>{/if}
 	</p>
 
