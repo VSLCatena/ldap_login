@@ -213,7 +213,7 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_webmaster_active">
-	<input type='hidden' value='0' name='LD_GROUP_ADMIN_ACTIVE'>
+	<input type='hidden' value='0' name='LD_GROUP_WEBMASTER_ACTIVE'>
         <input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="1" {if $LD_GROUP_WEBMASTER_ACTIVE== 1}checked{/if}>
 	{'Use Webmaster groups.'|@translate}</label>
 	<i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i>
