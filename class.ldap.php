@@ -18,9 +18,9 @@ class Ldap {
 		'ld_basedn' => 'ou=base,dc=example,dc=com',
 		'ld_user_class' => 'person',
 		'ld_user_attr' => 'samaccountName',
-		'ld_user_filter' => null, 
+		'ld_user_filter' => 'cn=*', 
 		'ld_group_class' => 'group',
-		'ld_group_filter' => null,
+		'ld_group_filter' => 'cn=*',
 		'ld_group_attr' => 'name',
 		'ld_group_desc' => 'description',
 		'ld_group_basedn' => 'cn=groups,dc=domain,dc=tld',
@@ -337,7 +337,7 @@ class Ldap {
 	// return userdn (and username) for authentication
 	public function ldap_search_dn($value_to_search){
 		$this->write_log("[function]> ldap_search_dn ");
-		$user_filter = strlen($this->config['ld_user_filter'])<1?"cn=*":$this->config['ld_user_filter'];
+		$user_filter = empty($this->config['ld_user_filter'])?"cn=*":$this->config['ld_user_filter'];
 		$this->write_log("[function]> ldap_search_dn(".$value_to_search.")");
 		$filter = '(&(&(objectClass='.$this->config['ld_user_class'].')('.$this->config['ld_user_attr'].'='.$value_to_search.'))('.$user_filter.'))';
 
@@ -376,7 +376,7 @@ class Ldap {
 		$this->write_log("[function]> check_ldap_group_membership");
 		$base_dn = $this->config['ld_basedn'];		
 		$group_class = $this->config['ld_group_class'];		
-		$group_filter = strlen($this->config['ld_group_filter'])<1?"cn=*":$this->config['ld_group_filter'];
+		$group_filter = empty($this->config['ld_group_filter'])?"cn=*":$this->config['ld_group_filter'];
 		$group_dn = is_null($group_dn)?$this->config['ld_group_user']:$group_dn;
 		$group_cn = ldap_explode_dn($group_dn,1)[0];
 		$member_attr = $this->config['ld_group_member_attr'];
