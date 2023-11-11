@@ -30,19 +30,15 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug">
-	{if isset($LD_DEBUG) }
-		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" checked />
-	{else}
-		<input type="checkbox" id="ld_debug" name="LD_DEBUG" value="{$LD_DEBUG}" />
-	{/if}{'Enable logs'|@translate}</label>{if isset($WARN_LD_DEBUG) and $WARN_LD_DEBUG}<i style="color:red;">{$WARN_LD_DEBUG}</i>{/if}
+        <input type='hidden' value='0' name='LD_DEBUG'>
+        <input type="checkbox" id="ld_debug" name="LD_DEBUG" value="1" {if $LD_DEBUG== 1}checked{/if}>
+        {'Enable logs'|@translate}</label>{if isset($WARN_LD_DEBUG) and $WARN_LD_DEBUG}<i style="color:red;">{$WARN_LD_DEBUG}</i>{/if}
     </p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_debug_clearupdate">
-	{if isset($LD_DEBUG_CLEARUPDATE) }
-		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" checked />
-	{else}
-		<input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="{$LD_DEBUG_CLEARUPDATE}" />
-	{/if}{'Clear logs after plugin update'|@translate}</label>
+        <input type='hidden' value='0' name='LD_DEBUG_CLEARUPDATE'>
+        <input type="checkbox" id="ld_debug_clearupdate" name="LD_DEBUG_CLEARUPDATE" value="1" {if $LD_DEBUG_CLEARUPDATE== 1}checked{/if}>
+	{'Clear logs after plugin update'|@translate}</label>
 	{if isset($WARN_LD_DEBUG_CLEARUPDATE) and $WARN_LD_DEBUG_CLEARUPDATE}<i style="color:red;">{$WARN_LD_DEBUG_CLEARUPDATE}</i>{/if}
     </p>
 	<div style="margin:1em;">
@@ -203,31 +199,25 @@
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_user_active">
-	{if isset($LD_GROUP_USER_ACTIVE) }
-	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" checked />
-	{else}
-	<input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="{$LD_GROUP_USER_ACTIVE}" />
-	{/if}{'Use user groups'|@translate}</label>
+        <input type='hidden' value='0' name='LD_GROUP_USER_ACTIVE'>
+        <input type="checkbox" id="ld_group_user_active" name="LD_GROUP_USER_ACTIVE" value="1" {if $LD_GROUP_USER_ACTIVE== 1}checked{/if}>
+	{'Use user groups'|@translate}</label>
 	<i>Note: Minimum membership to gain access. Disabled, no check for group membership.</i>
 	{if isset($WARN_LD_GROUP_USER_ACTIVE) and $WARN_LD_GROUP_USER_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_USER_ACTIVE}</i>{/if}<br>
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_admin_active">
-	{if isset($LD_GROUP_ADMIN_ACTIVE) }
-	<input type="checkbox" id="ld_group_admin_active" name="ld_group_admin_active" value="{$LD_GROUP_ADMIN_ACTIVE}" checked />
-	{else}
-	<input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="{$LD_GROUP_ADMIN_ACTIVE}" />
-	{/if}{'Use administrator groups.'|@translate}</label>
+        <input type='hidden' value='0' name='LD_GROUP_ADMIN_ACTIVE'>
+        <input type="checkbox" id="ld_group_admin_active" name="LD_GROUP_ADMIN_ACTIVE" value="1" {if $LD_GROUP_ADMIN_ACTIVE== 1}checked{/if}>
+	{'Use administrator groups.'|@translate}</label>
 	<i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i>
 	{if isset($WARN_LD_GROUP_ADMIN_ACTIVE) and $WARN_LD_GROUP_ADMIN_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_ADMIN_ACTIVE}</i>{/if}
 	</p>
 	<p>
 	<label style="display:inline-block; width:15%;" for="ld_group_webmaster_active">
-	{if $LD_GROUP_WEBMASTER_ACTIVE }
-	<input type="checkbox" id="ld_group_webmaster_active" name="ld_group_WEBMASTER_active" value="{$LD_GROUP_WEBMASTER_ACTIVE}" checked />
-	{else}
-	<input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="{$LD_GROUP_WEBMASTER_ACTIVE}" />
-	{/if}{'Use Webmaster groups.'|@translate}</label>
+	<input type='hidden' value='0' name='LD_GROUP_ADMIN_ACTIVE'>
+        <input type="checkbox" id="ld_group_webmaster_active" name="LD_GROUP_WEBMASTER_ACTIVE" value="1" {if $LD_GROUP_WEBMASTER_ACTIVE== 1}checked{/if}>
+	{'Use Webmaster groups.'|@translate}</label>
 	<i>Note: Dynamic when enabled and persistent when disabled. Change manual 'level' of user when disabled.</i>
 	{if isset($WARN_LD_GROUP_WEBMASTER_ACTIVE) and $WARN_LD_GROUP_WEBMASTER_ACTIVE}<i style="color:red;">{$WARN_LD_GROUP_WEBMASTER_ACTIVE}</i>{/if}
 	</p>
