@@ -61,53 +61,20 @@ if (isset($_POST['save']) or isset($_POST['savetest'])){
 	$me->config['ld_bindpw'] =  $_POST['LD_BINDPW']; //reverted, did not work
 	//$me->config['ld_bindpw'] =  ldap_escape($_POST['LD_BINDPW'], '', LDAP_ESCAPE_DN);
 
-	if (isset($_POST['LD_DEBUG'])){
-		$me->config['ld_debug'] = 1;
-	} else {
-		$me->config['ld_debug'] = 0;
-	}
-
-	if (isset($_POST['LD_DEBUG_CLEARUPDATE'])){
-		$me->config['ld_debug_clearupdate'] = 1;
-	} else {
-		$me->config['ld_debug_clearupdate'] = 0;
-	}
-
+	$me->config['ld_debug'] = $_POST['LD_DEBUG'];
+	$me->config['ld_debug_clearupdate'] = $_POST['LD_DEBUG_CLEARUPDATE'];
+	
 	if (strlen($_POST['LD_BINDDN'])<1 && strlen($_POST['LD_BINDPW'])<1 ){
 		$me->config['ld_anonbind'] = 1;
 	} else {
 		$me->config['ld_anonbind'] = 0;
 	}
+	$me->config['ld_use_ssl'] = $_POST['LD_USE_SSL'];
+	$me->config['ld_membership_user'] = $_POST['LD_MEMBERSHIP_USER'];
+	$me->config['ld_group_user_active'] = $_POST['LD_GROUP_USER_ACTIVE'];
+	$me->config['ld_group_admin_active'] = $_POST['LD_GROUP_ADMIN_ACTIVE'];
+	$me->config['ld_group_webmaster_active'] = $_POST['LD_GROUP_WEBMASTER_ACTIVE'];
 
-	if (isset($_POST['LD_USE_SSL'])){
-		$me->config['ld_use_ssl'] = 1;
-	} else {
-		$me->config['ld_use_ssl'] = 0;
-	}	
-	
-	if (isset($_POST['LD_MEMBERSHIP_USER'])){
-		$me->config['ld_membership_user'] = 1;
-	} else {
-		$me->config['ld_membership_user'] = 0;
-	}
-	
-	if (isset($_POST['LD_GROUP_USER_ACTIVE'])){
-		$me->config['ld_group_user_active'] = 1;
-	} else {
-		$me->config['ld_group_user_active'] = 0;
-	}
-
-	if (isset($_POST['LD_GROUP_ADMIN_ACTIVE'])){
-		$me->config['ld_group_admin_active'] = 1;
-	} else {
-		$me->config['ld_group_admin_active'] = 0;
-	}
-	
-	if (isset($_POST['LD_GROUP_WEBMASTER_ACTIVE'])){
-		$me->config['ld_group_webmaster_active'] = 1;
-	} else {
-		$me->config['ld_group_webmaster_active'] = 0;
-	}
 	$me->save_config();
 }
 
