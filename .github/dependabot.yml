@@ -5,7 +5,7 @@ updates:
       target-branch: "dev"
       schedule:
         interval: daily
-        
+
     - package-ecosystem: composer
       directory: /
       target-branch: "dev"
