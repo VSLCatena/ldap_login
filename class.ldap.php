@@ -87,19 +87,19 @@ class Ldap
         else {
             $this->resultObject->connectedToLdap = true;
         }
-        ldap_set_option((object) $this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option((object) $this->connection, LDAP_OPT_REFERRALS, 0);
+        ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
     }
 
     private function bind()
     {
         $this->resultObject->anonymousBindSuccess = false;
 
-        if (ldap_bind((object) $this->connection) && $this->ldap_check_basedn()) {
+        if (ldap_bind($this->connection) && $this->ldap_check_basedn()) {
             $this->resultObject->anonymousBindSuccess = true;
         }
 
-        if (! ldap_bind((object) $this->connection, $this->bindDn, $this->bindPassword)) {
+        if (! ldap_bind($this->connection, $this->bindDn, $this->bindPassword)) {
             $this->log->critical('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> Could not bind to LDAP server.');
             $this->resultObject->bindSuccess = false;
 
