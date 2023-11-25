@@ -47,24 +47,11 @@ echo PIWIGO_PATH: $PIWIGO_PATH
 /bin/rm $PIWIGO_PATH/docker-compose.yml
 
 if [ ! -f "$PIWIGO_PATH/docker-compose.override.yml" ]; then
-    PASSWORD_LDAP_ADMIN=$(GetRandom)
-    PASSWORD_LDAP_CONFIG=$(GetRandom)
-
-    declare -x PASSWORD_LDAP_ADMIN
-    declare -x PASSWORD_LDAP_CONFIG
     declare -x PIWIGO_PATH
     
     envsubst < $LDAP_PATH/.tests/docker-compose.override.template > $PIWIGO_PATH/docker-compose.override.yml
 fi
 
-
-echo -e  "\nCreate ldap bootstrap"
-    envsubst < $LDAP_PATH/.tests/ldap_bootstrap.ldif.template > $PIWIGO_PATH/ldap_bootstrap.ldif
-
-
-#docker cp /tmp/ldap_bootstrap.ldif piwigo.ldap:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif #overwrite
-#docker cp /tmp/ldap_bootstrap.ldif piwigo.ldap:/container/service/slapd/assets/config/bootstrap/ldif/custom/50-bootstrap.ldif
-# docker-compose run --rm --name piwigo.ldap -d piwigo.ldap --copy-service
 
 
 ###
