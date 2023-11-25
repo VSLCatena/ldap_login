@@ -72,3 +72,13 @@ cd "$PIWIGO_PATH" || return
 #docker-compose down
 
 echo -e "\nExiting $0\n"
+
+
+
+IPLDAP=$(docker inspect docker-piwigo_net -f json | jq '.[].Containers | to_entries |.[].value | select(.Name == "piwigo.ldap").IPv4Address[:-3]')
+# member
+docker compose run -it --entrypoint '/usr/bin/ldapsearch' --rm piwigo.ldap -H ldap://${IPLDAP}:10389 -x -b "ou=people,dc=planetexpress,dc=com" -D "cn=admin,dc=planetexpress,dc=com" -w GoodNewsEveryone "(&(objectclass=group)(cn=ship_crew)(member=cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com)(cn=*))" dn | grep 'numEntries'
+# bind
+docker compose run -it --entrypoint '/usr/bin/ldapsearch' --rm piwigo.ldap -H ldap://${IPLDAP}:10389 -x -b "ou=people,dc=planetexpress,dc=com" -D "cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com" -w fry "(cn=*)" dn  | grep 'numEntries'
+# attribute
+docker compose run -it --entrypoint '/usr/bin/ldapsearch' --rm piwigo.ldap -H ldap://${IPLDAP}:10389 -x -b "ou=people,dc=planetexpress,dc=com" -D "cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com" -w fry "(cn=John A. Zoidberg)"  mail | grep 'mail' 
