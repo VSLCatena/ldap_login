@@ -9,6 +9,7 @@
   <source>
     <include>
       <directory suffix=".php">/app/piwigo/plugins/Ldap_Login</directory>
+      <directory suffix=".php">/app/piwigo</directory>
     </include>
   </source>
 </phpunit>

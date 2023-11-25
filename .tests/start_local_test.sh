@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 echo "Running $0"
 
 PIWIGO_PATH=${1-"../docker-piwigo"}
@@ -23,8 +24,6 @@ if [ -d "$PIWIGO_PATH" ]; then
     # local path of piwigo found
     PIWIGO_PATH=$(realpath "$PIWIGO_PATH" )
     cd "$PIWIGO_PATH" || exit 1
-    ./bin/start_piwigo.sh
-    cd "$ROOTPATH"  || exit 1
 else
     # no local path of piwigo found
     echo "unable to find local repo of docker-piwigo, check your arguments"
@@ -49,17 +48,23 @@ else
 fi
 
 echo -e "\nCheck if phpunit is installed"
-if [ "$( docker-compose run --rm --entrypoint "bash -c" piwigo.phpunit "ls /app/vendor/bin/phpunit 2>/dev/null" | wc -l)" == 0 ];then
+docker compose run --entrypoint 'bash -c' -it --rm  piwigo.phpunit "test -f /app/piwigo/plugins/${BASE}/vendor/bin/phpunit"  2> /dev/null;
+exist=$?;  # 0=succes, 1=missing
+if [ $exist -eq 1 ]; then
     cd "$PIWIGO_PATH" || return
     echo "Install phpunit using composer"
     docker-compose run --rm piwigo.composer composer require --dev phpunit/phpunit # composer.json  composer.lock  vendor
     cd "$ROOTPATH" || return
+else
+   echo "/app/piwigo/plugins/${BASE}/vendor/bin/phpunit exists"
 fi
 
 echo -e "\nRun tests"
 cd "$PIWIGO_PATH" || return
-docker-compose run --rm piwigo.phpunit  --bootstrap vendor/autoload.php --configuration /app/piwigo/plugins/${BASE}/.tests/phpunit.xml \
-/app/piwigo/plugins/${BASE}/.tests/LdapLoginTest.php
+docker-compose run --rm piwigo.phpunit  \
+    --bootstrap /app/piwigo/plugins/${BASE}/vendor/autoload.php \
+    --configuration /app/piwigo/plugins/${BASE}/.tests/phpunit.xml \
+    /app/piwigo/plugins/${BASE}/.tests/LdapLoginTest.php
 cd "$ROOTPATH" || return
 
 echo -e "\nshutdown containers"
