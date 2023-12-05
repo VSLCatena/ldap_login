@@ -78,7 +78,7 @@ function random_password($length = 32, $limited = false)
 {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?';
 
-    if ($limited == true) {
+    if ($limited === true) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     }
 
@@ -494,18 +494,18 @@ function LDAP_login($success, $username, $password, $remember_me)
                 $status = null;
 
                 // enable upgrade / downgrade from administrator
-                if (($ld_config->getValue('ld_group_admin_active') == true) && $ld_ldap->isUserMemberOfGroup($user_dn, $ld_config->getValue('ld_group_admin'))) {
+                if (($ld_config->getValue('ld_group_admin_active') === true) && $ld_ldap->isUserMemberOfGroup($user_dn, $ld_config->getValue('ld_group_admin'))) {
                     // is user admin?
                     $status = 'admin'; // according to LDAP
                 }
 
                 // enable upgrade / downgrade from webmaster
-                if (($ld_config->getValue('ld_group_webmaster_active') == true) && $ld_ldap->isUserMemberOfGroup($user_dn, $ld_config->getValue('ld_group_webmaster'))) {
+                if (($ld_config->getValue('ld_group_webmaster_active') === true) && $ld_ldap->isUserMemberOfGroup($user_dn, $ld_config->getValue('ld_group_webmaster'))) {
                     // is user webmaster?
                     $status = 'webmaster'; // according to LDAP
                 }
 
-                if (($ld_config->getValue('ld_group_webmaster_active') == true) && ($ld_config->getValue('ld_group_admin_active') == true) && $status == null) {
+                if (($ld_config->getValue('ld_group_webmaster_active') === true) && ($ld_config->getValue('ld_group_admin_active') === true) && $status === null) {
                     // functionality enabled but user not admin or webmaster.
                     $status = 'normal';
                 }
@@ -515,29 +515,29 @@ function LDAP_login($success, $username, $password, $remember_me)
                 if (is_null($status)) {
                 }// user is not a webmaster / admin or functionality disabled
 
-                elseif ($status == 'admin') {
-                    if ($pwg_status == 'webmaster') {
+                elseif ($status === 'admin') {
+                    if ($pwg_status === 'webmaster') {
                         $status = 'admin';
                     }// ignore & keep webmaster
-                    elseif ($pwg_status == 'admin') {
+                    elseif ($pwg_status === 'admin') {
                         $status = 'admin';
                     } // admin
-                    elseif ($pwg_status == 'normal') {
+                    elseif ($pwg_status === 'normal') {
                         $status = 'admin';
                     } // admin
                 }
-                elseif ($status == 'webmaster') {
-                    if ($pwg_status == 'webmaster') {
+                elseif ($status === 'webmaster') {
+                    if ($pwg_status === 'webmaster') {
                         $status = 'webmaster';
                     }// ignore & keep webmaster
-                    elseif ($pwg_status == 'admin') {
+                    elseif ($pwg_status === 'admin') {
                         $status = 'webmaster';
                     }// ignore & keep webmaster
-                    elseif ($pwg_status == 'normal') {
+                    elseif ($pwg_status === 'normal') {
                         $status = 'webmaster';
                     } // normal
                 }
-                elseif ($status == 'normal') {
+                elseif ($status === 'normal') {
                 } // always downgrade to normal if status was set
 
                 if (isset($status)) {
@@ -573,7 +573,7 @@ function LDAP_login($success, $username, $password, $remember_me)
             if ($ld_config->getValue('ld_use_mail')) {
                 // retrieve LDAP e-mail address and create a new user
                 $mail = $ld_ldap->getAttribute($user_dn, [$ld_config->getValue('ld_user_mail_attr')]);
-                $mail = array_shift($mail)[0];
+                $mail = is_array($mail) ? array_shift($mail)[0] : null;
             }
             $errors = [];
             $new_id = register_user($username, random_password(), $mail, true, $errors);

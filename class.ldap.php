@@ -13,7 +13,7 @@ class Ldap
     
     
     private $attributes;
-    private $userAttributes;
+    private $userAttribute;
     private $groupMemberAttribute;
     private $groupObjectClass;
     private $userClass;
