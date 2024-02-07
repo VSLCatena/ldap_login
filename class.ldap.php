@@ -1,6 +1,5 @@
 <?php
 
-
 global $conf;
 class Ldap {
 	var $cnx;
@@ -134,7 +133,7 @@ class Ldap {
 		$var_l=strtolower($var);
 		if (!(isset($this->config[$var_l]))){ //is var set in loaded config
 			if($ignore){
-				return ""; //return empty string
+				return "";
 			}
 			else{
 				$this->warn_msg[$var_u]="Default loaded"; //give red warning
@@ -147,7 +146,6 @@ class Ldap {
 		 
 	} 
 	public function load_default_config(){
-		
 		foreach($this->default_val as $key=>$value){
 			$this->config[$key]=$value;	
 		}
@@ -180,23 +178,17 @@ class Ldap {
 		}	
 	}
 
-	function save_config()
-	{	
-		
+	function save_config(){	
 		$this->write_log("[save_config]> Saving values in SQL table");
 		ld_sql('update','update_value',$this->config);
-		
 	}
-	function export_config()
-	{			
+	function export_config(){			
 		$file = fopen( LDAP_LOGIN_PATH.'/config/data.dat', 'w' );
 		fwrite($file, serialize($this->config) );
-		fclose( $file );
-		
+		fclose( $file );	
 	}
 
-	function ldap_admin_menu($menu)
-	{
+	function ldap_admin_menu($menu){
 		array_push($menu,
 		array(
 		'NAME' => 'Ldap Login',
@@ -271,7 +263,7 @@ class Ldap {
 		$this->write_log("[ldap_bind_as]> ".$user);
 		
 		if($this->make_ldap_bind_as($this->cnx,$user,$user_passwd)){
-			$this->write_log("[ldap_bind_as]> Bind was successfull");
+			$this->write_log("[ldap_bind_as]> Bind was successful");
 			return true;
 		}
 			$this->write_log("[ldap_bind_as]> Bind failed");
@@ -284,7 +276,7 @@ class Ldap {
 		$this->write_log("[make_ldap_bind_as]> \$conn,".$user);
 		$bind = @ldap_bind($conn,$user,$user_passwd);
 		if($bind ){
-			$this->write_log("[make_ldap_bind_as]> Bind was successfull");
+			$this->write_log("[make_ldap_bind_as]> Bind was successful");
 			return true;
 		}
 		$this->write_log("[make_ldap_bind_as]> Bind failed");
@@ -357,7 +349,7 @@ class Ldap {
 
 		// look for our attribute and get always the DN for login
 		if($search = @ldap_search($this->cnx,$this->config['ld_basedn'],$filter,array('dn'),0,1)){
-			$this->write_log("[ldap_search_dn]> ldap_search successfull");
+			$this->write_log("[ldap_search_dn]> ldap_search successful");
 			$entry = @ldap_get_entries($this->cnx, $search);
 			if (!empty($entry[0]["dn"])) {
 				$this->write_log("[ldap_search_dn]> RESULT: ".$entry[0]["dn"]);
@@ -367,7 +359,7 @@ class Ldap {
 			$this->write_log("[ldap_search_dn]> result is empty!");
 			return false;
 		}
-		$this->write_log("[ldap_search_dn]> ldap_search NOT successfull:");
+		$this->write_log("[ldap_search_dn]> ldap_search NOT successful:");
 		return false;
 	}
 
