@@ -165,7 +165,7 @@ function login($success, $username, $password, $remember_me){
 		if ($obj->config['ld_group_webmaster_active'] || $obj->config['ld_group_admin_active']) {
 			//check admin status
 			$uid = pwg_db_real_escape_string($row['id']);
-			$group_query = 'SELECT user_id, status FROM piwigo_user_infos  WHERE `piwigo_user_infos`.`user_id` = ' . $uid . ';';
+			$group_query = 'SELECT user_id, status FROM '.USER_INFOS_TABLE.' WHERE `user_id` = ' . $uid . ';';
 			$pwg_status = pwg_db_fetch_assoc(pwg_query($group_query))['status']; //status in Piwigo
 			$webmaster = null; // or True or False
 			$admin = null;  // or True or False
@@ -203,8 +203,7 @@ function login($success, $username, $password, $remember_me){
 			if(isset($status)){
 				$obj->write_log("[login]> Target status $status");
 				if ($status!=$pwg_status) {
-					$query = '
-						UPDATE `piwigo_user_infos` SET `status` = "'. $status . '" WHERE `piwigo_user_infos`.`user_id` = ' . $uid . ';';
+					$query = 'UPDATE '.USER_INFOS_TABLE.' SET `status` = "'. $status .'" WHERE `user_id` = ' . $uid . ';';
 					pwg_query($query);
 					$obj->write_log("[login]> Changed $username with id " . $row['id'] . " from ".$pwg_status. " to " . $status);
 					include_once(PHPWG_ROOT_PATH.'admin/include/functions.php');
