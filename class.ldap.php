@@ -270,7 +270,7 @@ class Ldap {
 		$this->write_log("[function]> ldap_bind_as");
 		$this->write_log("[ldap_bind_as]> ".$user);
 		
-		if($this->make_ldap_bind_as($this->cnx,$user,$user_passwd)){
+		if($this->make_ldap_bind_as($this->cnx,$user,stripslashes($user_passwd))){
 			$this->write_log("[ldap_bind_as]> Bind was successfull");
 			return true;
 		}
