@@ -6,7 +6,7 @@ jobs:
   composer-update-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Install dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --prefer-dist
       - name: Update dependencies
