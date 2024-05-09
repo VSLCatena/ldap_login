@@ -3,6 +3,7 @@ name: Create artifact of vendor
 on:
   workflow_dispatch:
   release:
+    types: [created, published]
 
 jobs:
    generate-artifact:
@@ -43,6 +44,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: vendor.zip
-          asset_name: vendor
+          asset_name: vendor.zip
           tag: ${{ github.ref }}
           overwrite: true
