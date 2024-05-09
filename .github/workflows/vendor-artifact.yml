@@ -1,0 +1,26 @@
+name: Create artifact of vendor
+  
+on:
+  workflow_dispatch:
+  release:
+
+jobs:
+   generate-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Remove folder contents of ./vendor/"
+        run: | 
+           find ./vendor/* -maxdepth 0 -type d -execdir  /bin/rm -r {} \;
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--ignore-platform-reqs"
+      - uses: actions/upload-artifact@v4
+        with:
+          compression-level: 9 # minimum compression
+          name: vendor
+          path: |
+            vendor/
