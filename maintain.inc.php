@@ -151,7 +151,7 @@ class Ldap_Login_maintain extends PluginMaintain
                 file_put_contents(LDAP_LOGIN_PATH . 'logs/ldap_login.log', $full . "\n");
             }
             else {
-                $ld_log->fatal('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']>Unable to write to ' . LDAP_LOGIN_PATH . 'logs/ldap_login.log');
+                $ld_log->error('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']>Unable to write to ' . LDAP_LOGIN_PATH . 'logs/ldap_login.log');
             }
 
             $ld_log->info('[' . basename(__FILE__) . '/' . __FUNCTION__ . ':' . __LINE__ . ']> Ldap_login.log cleared');

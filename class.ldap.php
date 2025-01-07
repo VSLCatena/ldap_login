@@ -2,6 +2,27 @@
 
 class Ldap
 {
+    private $config;
+    private $log;
+    
+    private $host;
+    private $port;
+    private $baseDn;
+    private $bindDn;
+    private $bindPassword;
+    
+    
+    private $attributes;
+    private $userAttribute;
+    private $groupMemberAttribute;
+    private $groupObjectClass;
+    private $userClass;
+    private $userFilter;
+    private $ldapGroups;
+    private $resultObject;
+    private $connection;
+     
+ 
     public function __construct()
     {
         global $ld_config,$ld_log;
